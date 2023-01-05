@@ -17,6 +17,14 @@ type User struct {
 	Permission string
 }
 
+type Post struct {
+	Comment  string
+	Userid   int
+	Likes    int
+	Dislikes int
+	Time     interface{}
+}
+
 func CreateDatabase() {
 	// os.Remove("forum.db")
 	log.Println("Creating forum.db...")
@@ -38,7 +46,7 @@ func CreateDatabase() {
 	CREATE TABLE Posts (
 		post_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		comment TEXT,		
-		user INT,
+		user INTEGER,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
@@ -75,6 +83,21 @@ func InsertUser(UUID string, name string, email string, password string, permiss
 	}
 }
 
+func InsertPost(text string, user int, time string, tags string) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("Inserting post...")
+	insertPostData := "INSERT INTO Posts(comment, user, time, tags) VALUES (?, ?, ?, ?)"
+	statement, err := db.Prepare(insertPostData)
+	if err != nil {
+		log.Fatalln("Post Prepare failed: ", err.Error())
+	}
+	_, err = statement.Exec(text, user, time, tags)
+	if err != nil {
+		log.Fatalln("Statement Exec failed: ", err.Error())
+	}
+}
+
 func DisplayAllUsers() {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -93,6 +116,30 @@ func DisplayAllUsers() {
 		row.Scan(&user_id, &UUID, &name, &email, &password, &permission)
 		log.Println("User: ", user_id, " ", UUID, " ", name, " ", email, " ", password, " ", permission)
 	}
+}
+
+func DisplayAllPosts() []Post {
+	var posts []Post
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	row, err := db.Query("SELECT * FROM Posts ORDER BY time")
+	if err != nil {
+		log.Fatalln("Post query failed: ", err.Error())
+	}
+	defer row.Close()
+	for row.Next() {
+		var post_id int
+		var comment string
+		var user int
+		var likes int
+		var dislikes int
+		var time interface{}
+		var tags string
+		row.Scan(&post_id, &comment, &user, &likes, &dislikes, &time, &tags)
+		log.Println("User: ", post_id, " ", comment, " ", user, " ", likes, " ", dislikes, " ", time)
+		posts = append(posts, Post{comment, user, likes, dislikes, time})
+	}
+	return posts
 }
 
 func SelectUniqueUser(userName string) User {
