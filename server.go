@@ -19,15 +19,15 @@ func main() {
 	fs := http.FileServer(http.Dir(path))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		controller.Home(w, r, tmpl)
+	})
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
-
 	dbmanagement.CreateDatabase()
-	dbmanagement.InsertUser("8423479283", "Jupiter", "Koberich-Coles", "387493874", "mod")
-	dbmanagement.InsertUser("8423479283", "Jupiter", "Koberich-Coles", "387493874", "mod")
-	dbmanagement.SelectUser()
+	dbmanagement.DisplayAllUsers()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

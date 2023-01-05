@@ -8,8 +8,17 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type User struct {
+	ID         int
+	UUID       string
+	Name       string
+	Email      string
+	Password   string
+	Permission string
+}
+
 func CreateDatabase() {
-	os.Remove("forum.db")
+	// os.Remove("forum.db")
 	log.Println("Creating forum.db...")
 	file, err := os.Create("forum.db")
 	if err != nil {
@@ -66,7 +75,7 @@ func InsertUser(UUID string, name string, email string, password string, permiss
 	}
 }
 
-func SelectUser() {
+func DisplayAllUsers() {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	row, err := db.Query("SELECT * FROM Users ORDER BY name")
@@ -84,4 +93,19 @@ func SelectUser() {
 		row.Scan(&user_id, &UUID, &name, &email, &password, &permission)
 		log.Println("User: ", user_id, " ", UUID, " ", name, " ", email, " ", password, " ", permission)
 	}
+}
+
+func SelectUniqueUser(userName string) User {
+	var user User
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
+	if err != nil {
+		log.Fatalln("Statement failed: ", err.Error())
+	}
+	err = stm.QueryRow(userName).Scan(&user.ID, &user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	if err != nil {
+		log.Fatalln("Query Row failed: ", err.Error())
+	}
+	return user
 }
