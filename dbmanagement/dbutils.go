@@ -51,16 +51,16 @@ func CreateTable(db *sql.DB, table string) {
 	statement.Exec()
 }
 
-func InsertUser(user_id int, UUID string, name string, email string, password string, permission string) {
+func InsertUser(UUID string, name string, email string, password string, permission string) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting user record...")
-	insertUserData := "INSERT INTO Users(user_id, UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?, ?)"
+	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertUserData)
 	if err != nil {
 		log.Fatalln("User Prepare failed: ", err.Error())
 	}
-	_, err = statement.Exec(user_id, UUID, name, email, password, permission)
+	_, err = statement.Exec(UUID, name, email, password, permission)
 	if err != nil {
 		log.Fatalln("Statement Exec failed: ", err.Error())
 	}
