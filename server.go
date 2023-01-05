@@ -27,6 +27,9 @@ func main() {
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
+	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		controller.Forum(w, r, tmpl)
+	})
 	dbmanagement.CreateDatabase()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(http.ListenAndServe(":8080", nil))
