@@ -8,6 +8,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+<<<<<<< HEAD
 func main() {
 	os.Remove("sqlite-database.db")
 
@@ -78,4 +79,10 @@ func displayStudents(db *sql.DB) {
 		row.Scan(&id, &code, &name, &program)
 		log.Println("Student: ", code, " ", name, " ", program)
 	}
+=======
+func initaliseDatabase() {
+	dbmanagement.CreateDatabase()
+	// dbmanagement.InsertUser("0001", "8423479283", "Jupiter", "Koberich-Coles", "387493874")
+	// dbmanagement.SelectUser()
+>>>>>>> peter
 }
