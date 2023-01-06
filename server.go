@@ -28,8 +28,6 @@ func main() {
 		controller.Register(w, r, tmpl)
 	})
 
-	// dbmanagement.CreateDatabase()
-	// dbmanagement.ModifyDatabase()
 	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(http.ListenAndServe(":8080", nil))
