@@ -27,7 +27,10 @@ func main() {
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
-	dbmanagement.CreateDatabase()
+
+	// dbmanagement.CreateDatabase()
+	// dbmanagement.ModifyDatabase()
+	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
