@@ -2,7 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
-	utils "forum/helpers"
+	"forum/helpers"
 	"log"
 	"os"
 
