@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -17,18 +18,31 @@ func init() {
 func main() {
 	path := "static"
 	fs := http.FileServer(http.Dir(path))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+	mux := http.NewServeMux()
+
+	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
+
+	s := &http.Server{
+		Addr:    ":9000",
+		Handler: mux,
+		TLSConfig: &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		},
+	}
+
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		controller.Home(w, r, tmpl)
 	})
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
 
 	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(s.ListenAndServeTLS("", ""))
 }
