@@ -45,8 +45,7 @@ var createUserTableStatement = `
 		email TEXT,
 		password TEXT,
 		permission TEXT
-	)
-;`
+	);`
 
 var createPostTableStatement = `
 	CREATE TABLE Posts (
@@ -57,8 +56,7 @@ var createPostTableStatement = `
 		dislikes INTEGER,
 		time DATETIME,
 		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
-	)
-;`
+	);`
 
 var createCommentTableStatement = `
 	CREATE TABLE Comments (
@@ -71,25 +69,22 @@ var createCommentTableStatement = `
 		time DATETIME,
 		FOREIGN KEY (postId) REFERENCES Posts(uuid),
 		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
-	)
-;`
+	);`
 
 var createTagsTableStatement = `
 	CREATE TABLE Tags (
 		uuid TEXT NOT NULL PRIMARY KEY,
 		tagname TEXT
-	)
-;`
+	);`
 
 var createTaggedPostsStatement = `
 CREATE TABLE TaggedPosts (
 		tagId TEXT NOT NULL,
 		postId TEXT NOT NULL,
 		FOREIGN KEY (tagId) REFERENCES Tags(uuid),
-		FOREIGN KEY (postId) REFERENCES Posts(uuid)
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
 		PRIMARY KEY (tagId, postId)
-	)
-;`
+	);`
 
 // can represent like as 1, dislike as -1 and neither as 0 as a single value in the reaction field
 var createLikedPostsTableStatement = `
@@ -98,21 +93,19 @@ var createLikedPostsTableStatement = `
 		postId TEXT NOT NULL,
 		reaction INTEGER,
 		FOREIGN KEY (userId) REFERENCES Users(uuid),
-		FOREIGN KEY (postId) REFERENCES Posts(uuid)
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
 		PRIMARY KEY (userId, postId)
-	)
-;`
+	);`
 
 var createLikedCommentsTableStatement = `
 	CREATE TABLE LikedComments (
 		userId TEXT NOT NULL,
 		commentId TEXT NOT NULL,
-		reaction INTEGER
+		reaction INTEGER,
 		FOREIGN KEY (userId) REFERENCES Users(uuid),
-		FOREIGN KEY (commentId) REFERENCES Comments(uuid)
+		FOREIGN KEY (commentId) REFERENCES Comments(uuid),
 		PRIMARY KEY (userId, commentId)
-	)
-;`
+	);`
 
 func CreateDatabaseWithTables() {
 	forumDB := CreateDatabase("forum")
@@ -145,7 +138,7 @@ func CreateDatabase(name string) *sql.DB {
 
 func CreateTable(db *sql.DB, table string) {
 	statement, err := db.Prepare(table)
-	utils.HandleError("", err)
+	utils.HandleError(table, err)
 	statement.Exec()
 }
 

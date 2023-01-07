@@ -2,7 +2,7 @@ package main
 
 import (
 	"forum/controller"
-	"forum/dbmanagement"
+	"forum/rashdb"
 	"html/template"
 	"log"
 	"net/http"
@@ -28,7 +28,7 @@ func main() {
 		controller.Register(w, r, tmpl)
 	})
 
-	dbmanagement.CreateDatabaseWithTables()
-	dbmanagement.DisplayAllUsers()
+	rashdb.CreateDatabaseWithTables()
+	rashdb.DisplayAllUsers()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
