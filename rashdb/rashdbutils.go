@@ -40,7 +40,7 @@ type Comment struct {
 
 var createUserTableStatement = `
 	CREATE TABLE Users (
-		uuid TEXT PRIMARY KEY,		
+		uuid TEXT NOT NULL PRIMARY KEY,		
 		name TEXT,
 		email TEXT,
 		password TEXT,
@@ -50,66 +50,67 @@ var createUserTableStatement = `
 
 var createPostTableStatement = `
 	CREATE TABLE Posts (
-		uuid TEXT PRIMARY KEY,
+		uuid TEXT NOT NULL PRIMARY KEY,
 		content TEXT,		
 		ownerId TEXT,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
-		FOREIGN KEY(ownerId) REFERENCES Users(uuid)
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
 	)
 ;`
 
 var createCommentTableStatement = `
 	CREATE TABLE Comments (
-		uuid TEXT PRIMARY KEY,
+		uuid TEXT NOT NULL PRIMARY KEY,
 		content TEXT,
 		postId TEXT,
 		ownerId TEXT,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
-		FOREIGN KEY(postId) REFERENCES Posts(uuid),
-		FOREIGN KEY(ownerId) REFERENCES Users(uuid)
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
 	)
 ;`
 
 var createTagsTableStatement = `
 	CREATE TABLE Tags (
-		uuid TEXT PRIMARY KEY,
+		uuid TEXT NOT NULL PRIMARY KEY,
 		tagname TEXT
 	)
 ;`
 
 var createTaggedPostsStatement = `
 CREATE TABLE TaggedPosts (
-		uuid TEXT PRIMARY KEY,
-		tagId TEXT,
-		postId TEXT,
-		FOREIGN KEY(tagId) REFERENCES Tags(uuid),
-		FOREIGN KEY(postId) REFERENCES Posts(uuid)
+		tagId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		FOREIGN KEY (tagId) REFERENCES Tags(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid)
+		PRIMARY KEY (tagId, postId)
 	)
 ;`
 
+// can represent like as 1, dislike as -1 and neither as 0 as a single value in the reaction field
 var createLikedPostsTableStatement = `
 	CREATE TABLE LikedPosts (
-		uuid TEXT PRIMARY KEY,
-		userId TEXT,
-		postId TEXT,
-		liked INTEGER,
-		disliked INTEGER,
-		FOREIGN KEY(userId) REFERENCES Users(uuid),
-		FOREIGN KEY(postId) REFERENCES Posts(uuid)
+		userId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		reaction INTEGER,
+		FOREIGN KEY (userId) REFERENCES Users(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid)
+		PRIMARY KEY (userId, postId)
 	)
 ;`
 
 var createLikedCommentsTableStatement = `
 	CREATE TABLE LikedComments (
-		uuid TEXT PRIMARY KEY,
-		userId TEXT,
-		commentId TEXT,
-		FOREIGN KEY(userId) REFERENCES Users(uuid),
-		FOREIGN KEY(commentId) REFERENCES Comments(uuid)
+		userId TEXT NOT NULL,
+		commentId TEXT NOT NULL,
+		reaction INTEGER
+		FOREIGN KEY (userId) REFERENCES Users(uuid),
+		FOREIGN KEY (commentId) REFERENCES Comments(uuid)
+		PRIMARY KEY (userId, commentId)
 	)
 ;`
 
@@ -210,6 +211,32 @@ func InsertComment(content string, postId string, ownerId string, likes int, dis
 	return Comment{UUID, content, postId, ownerId, likes, dislikes, time}
 }
 
+// add either a like or dislike or return to neutral with reaction taking values of 1,-1 or 0
+func AddReactionToPost(userId string, postId string, reaction int) {
+	if reaction > 1 || reaction < -1 {
+		return
+	}
+	addLikeStatement := `
+		INSERT OR IGNORE INTO LikedPosts(userId, postId, reaction) 
+		VALUES (?, ?, ?)
+		UPDATE LikedPosts 
+		SET reaction = ? 
+		WHERE userId = ? and postId = ?
+	`
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement, err := db.Prepare(addLikeStatement)
+	utils.HandleError("Like Prepare failed: ", err)
+
+	_, err = statement.Exec(userId, postId, reaction, reaction, userId, postId)
+	utils.HandleError("statement Exec failed: ", err)
+
+	// need to insert stuff to update the overall like count on the post itself
+	// need to check if the user had already liked it or disliked it to tell how much to change it by
+	// could also do a query on the entire likedposts and count up the likes and dislikes to update it
+}
+
 func DisplayAllUsers() {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -246,11 +273,34 @@ func DisplayAllPosts() {
 		var dislikes int
 		var time time.Time
 		row.Scan(&UUID, &content, &ownerId, &likes, &dislikes, &time)
-		log.Println("Post: ", UUID, " ", content, " ", ownerId, " ", likes, " ", dislikes, " ", time)
+		owner := SelectUserFromUUID(ownerId)
+		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
 	}
 }
 
-func SelectUniqueUser(userName string) User {
+func DisplayAllComments() {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Comments ORDER BY time")
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	for row.Next() {
+		var UUID string
+		var content string
+		var postId string
+		var ownerId string
+		var likes int
+		var dislikes int
+		var time time.Time
+		row.Scan(&UUID, &content, &postId, &ownerId, &likes, &dislikes, &time)
+		owner := SelectUserFromUUID(ownerId)
+		log.Println("Comment: ", UUID, " replying to: ", postId, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
+	}
+}
+
+func SelectUserFromName(Name string) User {
 	var user User
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -258,8 +308,118 @@ func SelectUniqueUser(userName string) User {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(userName).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user
+}
+
+func SelectUserFromEmail(Email string) User {
+	var user User
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM Users WHERE email = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	utils.HandleError("Query Row failed: ", err)
+
+	return user
+}
+
+func SelectUserFromUUID(UUID string) User {
+	var user User
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	utils.HandleError("Query Row failed: ", err)
+
+	return user
+}
+
+func SelectPostFromUUID(UUID string) Post {
+	var post Post
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.content, &post.ownerId, &post.likes, &post.dislikes, &post.time)
+	utils.HandleError("Query Row failed: ", err)
+
+	return post
+}
+
+func SelectCommentFromUUID(UUID string) Comment {
+	var comment Comment
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM Comments WHERE uuid = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.content, &comment.postId, &comment.ownerId, &comment.likes, &comment.dislikes, &comment.time)
+	utils.HandleError("Query Row failed: ", err)
+
+	return comment
+}
+
+func SelectAllPostsFromUser(ownerId string) []Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Posts WHERE ownerId = ?", ownerId)
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allPosts []Post
+
+	for row.Next() {
+		var currentPost Post
+		row.Scan(&currentPost.UUID, &currentPost.content, &currentPost.ownerId, &currentPost.likes, &currentPost.dislikes, &currentPost.time)
+		allPosts = append(allPosts, currentPost)
+	}
+	return allPosts
+}
+
+func SelectAllCommentsFromUser(ownerId string) []Comment {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Comments WHERE ownerId = ?", ownerId)
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allComments []Comment
+
+	for row.Next() {
+		var currentComment Comment
+		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		allComments = append(allComments, currentComment)
+	}
+	return allComments
+}
+
+func SelectAllCommentsFromPost(postId string) []Comment {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Comments WHERE postId = ?", postId)
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allComments []Comment
+
+	for row.Next() {
+		var currentComment Comment
+		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		allComments = append(allComments, currentComment)
+	}
+	return allComments
 }
