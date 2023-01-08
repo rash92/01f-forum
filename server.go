@@ -24,7 +24,7 @@ func main() {
 	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
 
 	s := &http.Server{
-		Addr:    ":9000",
+		Addr:    ":8080",
 		Handler: mux,
 		TLSConfig: &tls.Config{
 			Certificates: []tls.Certificate{cert},
@@ -42,8 +42,12 @@ func main() {
 		controller.Register(w, r, tmpl)
 	})
 
+	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
+		controller.RegisterAcount(w, r, tmpl)
+	})
+
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		controller.Register(w, r, tmpl)
+		controller.UserLoggedIn(w, r, tmpl)
 	})
 
 	dbmanagement.CreateDatabaseWithTables()
