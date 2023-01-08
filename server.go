@@ -42,6 +42,10 @@ func main() {
 		controller.Register(w, r, tmpl)
 	})
 
+	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+		controller.Register(w, r, tmpl)
+	})
+
 	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
