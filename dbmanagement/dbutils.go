@@ -5,6 +5,7 @@ import (
 	utils "forum/helpers"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -20,12 +21,13 @@ type User struct {
 }
 
 type Post struct {
-	UUID     string
-	Content  string
-	OwnerId  string
-	Likes    int
-	Dislikes int
-	Time     time.Time
+	UUID          string
+	Content       string
+	OwnerId       string
+	Likes         int
+	Dislikes      int
+	Time          time.Time
+	FormattedTime string
 }
 
 type Comment struct {
@@ -186,7 +188,7 @@ func InsertUser(name string, email string, password string, permission string) U
 }
 
 // there is the option to generate time internally rather than needing to pass it through (similarly for comments below) using time.Now
-func InsertPost(content string, ownerId string, likes int, dislikes int, tag string, time time.Time) Post {
+func InsertPost(content string, ownerId string, likes int, dislikes int, tag string, inputtime time.Time) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting post record...")
@@ -196,10 +198,8 @@ func InsertPost(content string, ownerId string, likes int, dislikes int, tag str
 	statement, err := db.Prepare(insertPostData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, content, ownerId, likes, dislikes, time)
+	_, err = statement.Exec(UUID, content, ownerId, likes, dislikes, inputtime)
 	utils.HandleError("Statement Exec failed: ", err)
-
-	return Post{UUID, content, ownerId, likes, dislikes, time}
 }
 
 func InsertComment(content string, postId string, ownerId string, likes int, dislikes int, time time.Time) Comment {
@@ -357,7 +357,7 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time, &post.FormattedTime)
 	utils.HandleError("Query Row failed: ", err)
 
 	return post
@@ -386,10 +386,10 @@ func SelectAllPosts() []Post {
 	defer row.Close()
 
 	var allPosts []Post
-
 	for row.Next() {
 		var currentPost Post
 		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time)
+		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts

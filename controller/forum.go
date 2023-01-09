@@ -9,47 +9,30 @@ import (
 )
 
 type Data struct {
-	ListOfData []string
+	ListOfData []dbmanagement.Post
 	Cookie     string
-	UserInfo   string
+	UserInfo   dbmanagement.User
 }
 
-// func UserLoggedIn(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-// 	if r.Method == "POST" {
-// 		comment := r.FormValue("post")
-// 		if comment != "" {
-// 			dbmanagement.InsertPost(comment, "1", 0, 0, "general", time.Now())
-
-// 		}
-// 	}
-// 	posts := dbmanagement.SelectAllPostsFromUser("1")
-// 	data := Data{}
-// 	for _, v := range posts {
-// 		data.ListOfData = append(data.ListOfData, v.content)
-// 	}
-// 	tmpl.ExecuteTemplate(w, "user.html", data)
-// }
-
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-
-	if r.Method == "POST" {
-		comment := r.FormValue("post")
-		if comment != "" {
-			dbmanagement.InsertPost(comment, "1", 0, 0, "general", time.Now())
-
-		}
-	}
-	posts := dbmanagement.SelectAllPosts()
 	sessionId, err := Session(w, r)
 	// log.Println("sessonID:", sessionId)
 	utils.HandleError("cant get user", err)
 	user := dbmanagement.SelectUserFromSession(sessionId)
+
+	if r.Method == "POST" {
+		comment := r.FormValue("post")
+		if comment != "" {
+			dbmanagement.InsertPost(comment, dbmanagement.SelectUserFromUUID(user.UUID).Name, 0, 0, "general", time.Now())
+
+		}
+	}
+	posts := dbmanagement.SelectAllPosts()
+
 	// log.Println("user is:", user)
 	data := Data{}
 	data.Cookie = sessionId
-	data.UserInfo = user.Name
-	for _, v := range posts {
-		data.ListOfData = append(data.ListOfData, v.Content)
-	}
+	data.UserInfo = user
+	data.ListOfData = append(data.ListOfData, posts...)
 	tmpl.ExecuteTemplate(w, "forum.html", data)
 }
