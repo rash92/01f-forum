@@ -16,8 +16,6 @@ func init() {
 }
 
 func main() {
-	path := "static"
-	fs := http.FileServer(http.Dir(path))
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
 	s := &http.Server{
@@ -27,7 +25,11 @@ func main() {
 			Certificates: []tls.Certificate{cert},
 		},
 	}
+
+	path := "./static"
+	fs := http.FileServer(http.Dir(path))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		controller.Home(w, r, tmpl)
 	})
