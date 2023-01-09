@@ -11,6 +11,7 @@ import (
 type Data struct {
 	ListOfData []string
 	Cookie     string
+	UserInfo   string
 }
 
 // func UserLoggedIn(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -39,10 +40,14 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		}
 	}
 	posts := dbmanagement.SelectAllPosts()
-	cookie, err := Session(w, r)
+	sessionId, err := Session(w, r)
+	// log.Println("sessonID:", sessionId)
 	utils.HandleError("cant get user", err)
+	user := dbmanagement.SelectUserFromSession(sessionId)
+	// log.Println("user is:", user)
 	data := Data{}
-	data.Cookie = cookie
+	data.Cookie = sessionId
+	data.UserInfo = user.Name
 	for _, v := range posts {
 		data.ListOfData = append(data.ListOfData, v.Content)
 	}

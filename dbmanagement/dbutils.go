@@ -104,7 +104,7 @@ var createLikedPostsTableStatement = `
 	);`
 
 var createLikedCommentsTableStatement = `
-	CREATE TABLE LikedComments (
+	CREATE TABLE LikedComments  (
 		userId TEXT NOT NULL,
 		commentId TEXT NOT NULL,
 		reaction INTEGER,
@@ -429,6 +429,21 @@ func SelectAllCommentsFromUser(ownerId string) []Comment {
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
+}
+
+func SelectUserFromSession(UUID string) User {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	var userID string
+	err := db.QueryRow("SELECT userId FROM Sessions WHERE uuid = ?", UUID).Scan(&userID)
+	utils.HandleError("User query failed: ", err)
+
+	var user User
+	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	utils.HandleError("User query failed: ", err)
+
+	return user
 }
 
 func SelectAllCommentsFromPost(postId string) []Comment {
