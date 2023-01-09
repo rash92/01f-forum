@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"forum/controller"
-	"forum/dbmanagement"
+	"forum/rashdb"
 	"html/template"
 	"log"
 	"net/http"
@@ -42,6 +42,7 @@ func main() {
 		controller.Register(w, r, tmpl)
 	})
 
+<<<<<<< HEAD
 	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
 		controller.RegisterAcount(w, r, tmpl)
 	})
@@ -53,4 +54,9 @@ func main() {
 	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
+=======
+	rashdb.CreateDatabaseWithTables()
+	rashdb.DisplayAllUsers()
+	log.Fatal(http.ListenAndServe(":8080", nil))
+>>>>>>> rashid
 }
