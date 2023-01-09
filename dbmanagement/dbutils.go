@@ -21,27 +21,33 @@ type User struct {
 
 type Post struct {
 	UUID     string
-	content  string
-	ownerId  string
-	likes    int
-	dislikes int
-	time     time.Time
+	Content  string
+	OwnerId  string
+	Likes    int
+	Dislikes int
+	Time     time.Time
 }
 
 type Comment struct {
 	UUID     string
-	content  string
-	postId   string
-	ownerId  string
-	likes    int
-	dislikes int
-	time     time.Time
+	Content  string
+	PostId   string
+	OwnerId  string
+	Likes    int
+	Dislikes int
+	Time     time.Time
+}
+
+type Session struct {
+	UUID      string
+	UserId    string
+	CreatedAt time.Time
 }
 
 var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
-		name TEXT,
+		name TEXT UNIQUE,
 		email TEXT,
 		password TEXT,
 		permission TEXT
@@ -107,6 +113,13 @@ var createLikedCommentsTableStatement = `
 		PRIMARY KEY (userId, commentId)
 	);`
 
+var createSessionTableStatement = `
+	CREATE TABLE Sessions (
+  uuid      TEXT NOT NULL PRIMARY KEY,
+  userId    INTEGER REFERENCES Users(uuid),
+  createdAt TIMESTAMP NOT NULL   
+);`
+
 func CreateDatabaseWithTables() {
 	forumDB := CreateDatabase("forum")
 	defer forumDB.Close()
@@ -118,6 +131,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createTaggedPostsStatement)
 	CreateTable(forumDB, createLikedPostsTableStatement)
 	CreateTable(forumDB, createLikedCommentsTableStatement)
+	CreateTable(forumDB, createSessionTableStatement)
 
 	log.Println("forum.db created successfully!")
 }
@@ -343,7 +357,7 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.content, &post.ownerId, &post.likes, &post.dislikes, &post.time)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time)
 	utils.HandleError("Query Row failed: ", err)
 
 	return post
@@ -357,7 +371,7 @@ func SelectCommentFromUUID(UUID string) Comment {
 	stm, err := db.Prepare("SELECT * FROM Comments WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.content, &comment.postId, &comment.ownerId, &comment.likes, &comment.dislikes, &comment.time)
+	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.Content, &comment.PostId, &comment.OwnerId, &comment.Likes, &comment.Dislikes, &comment.Time)
 	utils.HandleError("Query Row failed: ", err)
 
 	return comment
@@ -375,7 +389,7 @@ func SelectAllPosts() []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.content, &currentPost.ownerId, &currentPost.likes, &currentPost.dislikes, &currentPost.time)
+		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time)
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -393,7 +407,7 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.content, &currentPost.ownerId, &currentPost.likes, &currentPost.dislikes, &currentPost.time)
+		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time)
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -411,7 +425,7 @@ func SelectAllCommentsFromUser(ownerId string) []Comment {
 
 	for row.Next() {
 		var currentComment Comment
-		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
@@ -429,8 +443,32 @@ func SelectAllCommentsFromPost(postId string) []Comment {
 
 	for row.Next() {
 		var currentComment Comment
-		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
 }
+
+func (user *User) CreateSession() (session Session, err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("session error:", err)
+
+	defer stmt.Close()
+
+	UUID := GenerateUUIDString()
+	timeNow := time.Now()
+
+	err = stmt.QueryRow(UUID, user.UUID, timeNow).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
+	return
+}
+
+// func (user *User) Session() (session Session, err error) {
+// 	db, _ := sql.Open("sqlite3", "./forum.db")
+// 	session = Session{}
+// 	err = db.QueryRow("SELECT uuid, userID, createdAt FROM sessions WHERE userID = ?", user.UUID).
+// 		Scan(&session.Uuid, &session.UserId, &session.CreatedAt)
+// 	return
+// }

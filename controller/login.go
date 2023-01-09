@@ -2,7 +2,7 @@ package controller
 
 import (
 	"forum/dbmanagement"
-	"forum/helpers"
+	utils "forum/helpers"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,18 +15,19 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		log.Println(userName, password)
 
-		user := dbmanagement.SelectUniqueUser(userName)
+		user := dbmanagement.SelectUserFromName(userName)
 
 		if utils.CompareHash(user.Password, password) {
 			log.Println("Password correct!")
-			// session := user.CreateSession()
-			// cookie := http.Cookie{
-			// 	Name:     "_cookie",
-			// 	Value:    session.Uuid,
-			// 	HttpOnly: true,
-			// }
-			// http.SetCookie(w, &cookie)
-			http.Redirect(w, r, "/user", http.StatusFound)
+			session, err := user.CreateSession()
+			utils.HandleError("Cannot create user session err:", err)
+			cookie := http.Cookie{
+				Name:     "_cookie",
+				Value:    session.UUID,
+				HttpOnly: true,
+			}
+			http.SetCookie(w, &cookie)
+			http.Redirect(w, r, "/forum", http.StatusFound)
 		} else {
 			log.Println("Incorrect Password!")
 			http.Redirect(w, r, "/login", http.StatusFound)
