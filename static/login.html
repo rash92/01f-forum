@@ -1,21 +1,28 @@
 {{template "header"}}
+<div class="container">
+	<div class="input-wrapper">
+		<div>
+			<h1>LOG IN</h1>
+		</div>
 		<form action="/login" method="POST">
-			<input
-				type="text"
-				placeholder="Username"
-				name="user_name"
-				autocomplete="off"
-			/>
-			<input
-				type="password"
-				placeholder="Password"
-				name="password"
-				autocomplete="off"
-			/>
-			<button type="submit">Submit</button>
+			<div class="login-input">
+				<label for="user_name"><i class="fa-solid fa-user"></i></label>
+				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus/>
+			</div>
+			<div class="login-input">
+				<label for="passowrd"><i class="fa-solid fa-lock"></i></label>
+				<input type="password" placeholder="Password" name="password" autocomplete="off" />
+			</div>
+			<div class="login-input">
+				<button type="submit">Log In</button>
+			</div>
 		</form>
 		<p>
 			Not Registered?
 			<a href="/register">Click Here</a>
 		</p>
+	</div>
+
+</div>
+
 {{template "footer"}}
