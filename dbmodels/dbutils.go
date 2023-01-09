@@ -2,7 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
-	"forum/helpers"
+	utils "forum/helpers"
 	"log"
 	"os"
 
@@ -112,7 +112,7 @@ func SelectUniqueUser(userName string) User {
 	utils.HandleError("Statement failed: ", err)
 
 	err = stm.QueryRow(userName).Scan(&user.ID, &user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
-	utils.HandleError("Query Row failed: ", err)
+	utils.HandleError("Getting user Query Row failed: ", err)
 
 	return user
 }
