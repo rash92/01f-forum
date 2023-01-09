@@ -46,11 +46,11 @@ func main() {
 		controller.RegisterAcount(w, r, tmpl)
 	})
 
-	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		controller.UserLoggedIn(w, r, tmpl)
+	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		controller.AllPosts(w, r, tmpl)
 	})
 
-	dbmanagement.CreateDatabaseWithTables()
+	// dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
