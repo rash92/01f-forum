@@ -21,27 +21,33 @@ type User struct {
 
 type Post struct {
 	UUID     string
-	content  string
-	ownerId  string
-	likes    int
-	dislikes int
-	time     time.Time
+	Content  string
+	OwnerId  string
+	Likes    int
+	Dislikes int
+	Time     time.Time
 }
 
 type Comment struct {
 	UUID     string
-	content  string
-	postId   string
-	ownerId  string
-	likes    int
-	dislikes int
-	time     time.Time
+	Content  string
+	PostId   string
+	OwnerId  string
+	Likes    int
+	Dislikes int
+	Time     time.Time
+}
+
+type Session struct {
+	UUID      string
+	UserId    string
+	CreatedAt time.Time
 }
 
 var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
-		name TEXT,
+		name TEXT UNIQUE,
 		email TEXT,
 		password TEXT,
 		permission TEXT
@@ -98,7 +104,7 @@ var createLikedPostsTableStatement = `
 	);`
 
 var createLikedCommentsTableStatement = `
-	CREATE TABLE LikedComments (
+	CREATE TABLE LikedComments  (
 		userId TEXT NOT NULL,
 		commentId TEXT NOT NULL,
 		reaction INTEGER,
@@ -106,6 +112,13 @@ var createLikedCommentsTableStatement = `
 		FOREIGN KEY (commentId) REFERENCES Comments(uuid),
 		PRIMARY KEY (userId, commentId)
 	);`
+
+var createSessionTableStatement = `
+	CREATE TABLE Sessions (
+  uuid      TEXT NOT NULL PRIMARY KEY,
+  userId    INTEGER REFERENCES Users(uuid),
+  createdAt TIMESTAMP NOT NULL   
+);`
 
 func CreateDatabaseWithTables() {
 	forumDB := CreateDatabase("forum")
@@ -118,6 +131,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createTaggedPostsStatement)
 	CreateTable(forumDB, createLikedPostsTableStatement)
 	CreateTable(forumDB, createLikedCommentsTableStatement)
+	CreateTable(forumDB, createSessionTableStatement)
 
 	log.Println("forum.db created successfully!")
 }
@@ -140,95 +154,6 @@ func CreateTable(db *sql.DB, table string) {
 	statement, err := db.Prepare(table)
 	utils.HandleError(table, err)
 	statement.Exec()
-}
-
-func InsertUser(UUID string, name string, email string, password string, permission string) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	log.Println("Inserting user record...")
-	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?)"
-	statement, err := db.Prepare(insertUserData)
-	if err != nil {
-		log.Fatalln("User Prepare failed: ", err.Error())
-	}
-	_, err = statement.Exec(UUID, name, email, password, permission)
-	if err != nil {
-		log.Fatalln("Statement Exec failed: ", err.Error())
-	}
-}
-
-func InsertPost(text string, user int, time string, tags string) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	log.Println("Inserting post...")
-	insertPostData := "INSERT INTO Posts(comment, user, time, tags) VALUES (?, ?, ?, ?)"
-	statement, err := db.Prepare(insertPostData)
-	if err != nil {
-		log.Fatalln("Post Prepare failed: ", err.Error())
-	}
-	_, err = statement.Exec(text, user, time, tags)
-	if err != nil {
-		log.Fatalln("Statement Exec failed: ", err.Error())
-	}
-}
-
-func DisplayAllUsers() {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	row, err := db.Query("SELECT * FROM Users ORDER BY name")
-	if err != nil {
-		log.Fatalln("User query failed: ", err.Error())
-	}
-	defer row.Close()
-	for row.Next() {
-		var user_id int
-		var UUID string
-		var name string
-		var email string
-		var password string
-		var permission string
-		row.Scan(&user_id, &UUID, &name, &email, &password, &permission)
-		log.Println("User: ", user_id, " ", UUID, " ", name, " ", email, " ", password, " ", permission)
-	}
-}
-
-func DisplayAllPosts() []Post {
-	var posts []Post
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	row, err := db.Query("SELECT * FROM Posts ORDER BY time")
-	if err != nil {
-		log.Fatalln("Post query failed: ", err.Error())
-	}
-	defer row.Close()
-	for row.Next() {
-		var post_id int
-		var comment string
-		var user int
-		var likes int
-		var dislikes int
-		var time interface{}
-		var tags string
-		row.Scan(&post_id, &comment, &user, &likes, &dislikes, &time, &tags)
-		log.Println("User: ", post_id, " ", comment, " ", user, " ", likes, " ", dislikes, " ", time)
-		posts = append(posts, Post{comment, user, likes, dislikes, time})
-	}
-	return posts
-}
-
-func SelectUniqueUser(userName string) User {
-	var user User
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
-	if err != nil {
-		log.Fatalln("Statement failed: ", err.Error())
-	}
-	err = stm.QueryRow(userName).Scan(&user.ID, &user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
-	if err != nil {
-		log.Fatalln("Query Row failed: ", err.Error())
-	}
-	return user
 }
 
 // uuid version that's allowed from packages outputs something of type UUID
@@ -261,19 +186,20 @@ func InsertUser(name string, email string, password string, permission string) U
 }
 
 // there is the option to generate time internally rather than needing to pass it through (similarly for comments below) using time.Now
-func InsertPost(content string, ownerId string, likes int, dislikes int, time time.Time) Post {
+func InsertPost(content string, ownerId string, likes int, dislikes int, tag string, time time.Time) Post {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting post...")
-	insertPostData := "INSERT INTO Posts(comment, user, time, tags) VALUES (?, ?, ?, ?)"
+	log.Println("Inserting post record...")
+
+	UUID := GenerateUUIDString()
+	insertPostData := "INSERT INTO Posts(UUID, content, ownerId, likes, dislikes, time) VALUES (?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertPostData)
-	if err != nil {
-		log.Fatalln("Post Prepare failed: ", err.Error())
-	}
-	_, err = statement.Exec(text, user, time, tags)
-	if err != nil {
-		log.Fatalln("Statement Exec failed: ", err.Error())
-	}
+	utils.HandleError("User Prepare failed: ", err)
+
+	_, err = statement.Exec(UUID, content, ownerId, likes, dislikes, time)
+	utils.HandleError("Statement Exec failed: ", err)
+
+	return Post{UUID, content, ownerId, likes, dislikes, time}
 }
 
 func InsertComment(content string, postId string, ownerId string, likes int, dislikes int, time time.Time) Comment {
@@ -431,7 +357,7 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.content, &post.ownerId, &post.likes, &post.dislikes, &post.time)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time)
 	utils.HandleError("Query Row failed: ", err)
 
 	return post
@@ -445,10 +371,28 @@ func SelectCommentFromUUID(UUID string) Comment {
 	stm, err := db.Prepare("SELECT * FROM Comments WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.content, &comment.postId, &comment.ownerId, &comment.likes, &comment.dislikes, &comment.time)
+	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.Content, &comment.PostId, &comment.OwnerId, &comment.Likes, &comment.Dislikes, &comment.Time)
 	utils.HandleError("Query Row failed: ", err)
 
 	return comment
+}
+
+func SelectAllPosts() []Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Posts")
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allPosts []Post
+
+	for row.Next() {
+		var currentPost Post
+		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time)
+		allPosts = append(allPosts, currentPost)
+	}
+	return allPosts
 }
 
 func SelectAllPostsFromUser(ownerId string) []Post {
@@ -463,7 +407,7 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.content, &currentPost.ownerId, &currentPost.likes, &currentPost.dislikes, &currentPost.time)
+		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time)
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -481,10 +425,25 @@ func SelectAllCommentsFromUser(ownerId string) []Comment {
 
 	for row.Next() {
 		var currentComment Comment
-		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
+}
+
+func SelectUserFromSession(UUID string) User {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	var userID string
+	err := db.QueryRow("SELECT userId FROM Sessions WHERE uuid = ?", UUID).Scan(&userID)
+	utils.HandleError("User query failed: ", err)
+
+	var user User
+	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	utils.HandleError("User query failed: ", err)
+
+	return user
 }
 
 func SelectAllCommentsFromPost(postId string) []Comment {
@@ -499,8 +458,32 @@ func SelectAllCommentsFromPost(postId string) []Comment {
 
 	for row.Next() {
 		var currentComment Comment
-		row.Scan(&currentComment.UUID, &currentComment.content, &currentComment.postId, &currentComment.ownerId, &currentComment.likes, &currentComment.dislikes, &currentComment.time)
+		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
 }
+
+func (user *User) CreateSession() (session Session, err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("session error:", err)
+
+	defer stmt.Close()
+
+	UUID := GenerateUUIDString()
+	timeNow := time.Now()
+
+	err = stmt.QueryRow(UUID, user.UUID, timeNow).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
+	return
+}
+
+// func (user *User) Session() (session Session, err error) {
+// 	db, _ := sql.Open("sqlite3", "./forum.db")
+// 	session = Session{}
+// 	err = db.QueryRow("SELECT uuid, userID, createdAt FROM sessions WHERE userID = ?", user.UUID).
+// 		Scan(&session.Uuid, &session.UserId, &session.CreatedAt)
+// 	return
+// }

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"forum/dbmanagement"
-	"forum/helpers"
+	utils "forum/helpers"
 	"html/template"
 	"log"
 	"net/http"

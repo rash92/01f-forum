@@ -2,12 +2,10 @@ package controller
 
 import (
 	"forum/dbmanagement"
-	"forum/helpers"
+	utils "forum/helpers"
 	"html/template"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -16,10 +14,9 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		email := r.FormValue("email")
 		password := utils.HashPassword(r.FormValue("password"))
 
-		uuid := uuid.New()
 		log.Println(userName, email, password)
 
-		dbmanagement.InsertUser(uuid.String(), userName, email, password, "user")
+		dbmanagement.InsertUser(userName, email, password, "user")
 		dbmanagement.DisplayAllUsers()
 	}
 
