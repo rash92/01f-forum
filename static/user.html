@@ -7,6 +7,15 @@
 		<title>Home</title>
 	</head>
 	<body>
-		<a href="/login">Login</a>
+		<h1>you are logged in</h1>
+		{{range .ListOfData}}
+		<div>{{.}}</div>
+		{{end}}
+		<div>
+			<form action="/forum" method="post">
+				<input type="text" name="post" id="post" />
+				<input type="submit" value="Post" />
+			</form>
+		</div>
 	</body>
 </html>
