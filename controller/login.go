@@ -2,12 +2,18 @@ package controller
 
 import (
 	"forum/dbmanagement"
-	utils "forum/helpers"
+	"forum/security"
+	"forum/utils"
 	"html/template"
 	"log"
 	"net/http"
 )
 
+/*
+Displays the log in page.  If the username and password match an entry in the database then the user is redirected to the forum page, otherwise the user stays on the log in page.
+
+Session Cookie is also set here.
+*/
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
@@ -17,7 +23,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		user := dbmanagement.SelectUserFromName(userName)
 
-		if utils.CompareHash(user.Password, password) {
+		if security.CompareHash(user.Password, password) {
 			log.Println("Password correct!")
 			session, err := user.CreateSession()
 			utils.HandleError("Cannot create user session err:", err)

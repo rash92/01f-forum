@@ -2,7 +2,7 @@ package controller
 
 import (
 	"forum/dbmanagement"
-	utils "forum/helpers"
+	"forum/utils"
 	"html/template"
 	"net/http"
 	"time"
@@ -14,9 +14,13 @@ type Data struct {
 	UserInfo   dbmanagement.User
 }
 
+/*
+Executes the forum.html template that includes all posts in the database.  SessionID is used the determine which user is currently using the website.
+
+Also handles inserting a new post that updates in realtime.
+*/
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	sessionId, err := Session(w, r)
-	// log.Println("sessonID:", sessionId)
 	utils.HandleError("cant get user", err)
 	user := dbmanagement.SelectUserFromSession(sessionId)
 
@@ -24,12 +28,10 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		comment := r.FormValue("post")
 		if comment != "" {
 			dbmanagement.InsertPost(comment, dbmanagement.SelectUserFromUUID(user.UUID).Name, 0, 0, "general", time.Now())
-
 		}
 	}
 	posts := dbmanagement.SelectAllPosts()
 
-	// log.Println("user is:", user)
 	data := Data{}
 	data.Cookie = sessionId
 	data.UserInfo = user
