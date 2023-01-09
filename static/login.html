@@ -7,12 +7,13 @@
     <title>Login</title>
 </head>
 <body>
-    <form action="/forum" method="POST">
+    <form action="/login" method="POST">
         <input type="text" placeholder="Username" name="user_name" autocomplete="off">
         <input type="email" placeholder="Email" name="email" autocomplete="off">
         <input type="password" placeholder="Password" name="password" autocomplete="off">
         <button type="submit">Submit</button>
     </form>
     <p>Not Registered? <a href="http://localhost:8080/register">Click Here</a></p>
+    <div>{{.}}</div>
 </body>
 </html>
