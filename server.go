@@ -33,7 +33,7 @@ func main() {
 
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		controller.Home(w, r, tmpl)
+		controller.AllPosts(w, r, tmpl)
 	})
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
@@ -50,7 +50,6 @@ func main() {
 		controller.AllPosts(w, r, tmpl)
 	})
 
-	// dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
