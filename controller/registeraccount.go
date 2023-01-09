@@ -15,7 +15,6 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := utils.HashPassword(r.FormValue("password"))
-		// password := r.FormValue("password")
 
 		uuid := uuid.New()
 		log.Println(userName, email, password)

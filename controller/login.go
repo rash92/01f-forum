@@ -11,9 +11,7 @@ import (
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
-		// todo: ecnrypt password
-		password := utils.HashPassword(r.FormValue("password"))
-		// password := r.FormValue("password")
+		password := r.FormValue("password")
 
 		log.Println(userName, password)
 
