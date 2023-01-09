@@ -172,7 +172,7 @@ func InsertUser(name string, email string, password string, permission string) U
 }
 
 // there is the option to generate time internally rather than needing to pass it through (similarly for comments below) using time.Now
-func InsertPost(content string, ownerId string, likes int, dislikes int, time time.Time) Post {
+func InsertPost(content string, ownerId string, likes int, dislikes int, tag string, time time.Time) Post {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting post record...")
@@ -361,6 +361,24 @@ func SelectCommentFromUUID(UUID string) Comment {
 	utils.HandleError("Query Row failed: ", err)
 
 	return comment
+}
+
+func SelectAllPosts() []Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Posts")
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allPosts []Post
+
+	for row.Next() {
+		var currentPost Post
+		row.Scan(&currentPost.UUID, &currentPost.content, &currentPost.ownerId, &currentPost.likes, &currentPost.dislikes, &currentPost.time)
+		allPosts = append(allPosts, currentPost)
+	}
+	return allPosts
 }
 
 func SelectAllPostsFromUser(ownerId string) []Post {
