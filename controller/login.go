@@ -22,8 +22,13 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if utils.CompareHash(user.Password, password) {
 			log.Println("Password correct!")
 			// session := user.CreateSession()
+			// cookie := http.Cookie{
+			// 	Name:     "_cookie",
+			// 	Value:    session.Uuid,
+			// 	HttpOnly: true,
+			// }
+			// http.SetCookie(w, &cookie)
 			http.Redirect(w, r, "/user", http.StatusFound)
-			// /
 		} else {
 			log.Println("Incorrect Password!")
 			http.Redirect(w, r, "/login", http.StatusFound)
