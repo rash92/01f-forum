@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: blue;
+}
+
+/* NAVBAR */
+
+.logo {
+    font-size: 32px;
+}
+.logo:hover {
+    transform: translateY(-5px);
+    transition: 0.3s ease;
+}
+
+.menu {
+    display: flex;
+    gap: 1em;
+    font-size: 18px;
+}
+.menu li:hover {
+    transform: translateY(-5px);
+    transition: 0.3s ease;
+}
+.menu li {
+    padding: 5px 14px;
+}
