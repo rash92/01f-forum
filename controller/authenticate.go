@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"forum/dbmanagement"
 	"forum/security"
 	"forum/utils"
@@ -52,15 +51,19 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 }
 
 // Logs the user out
-func Logout(writer http.ResponseWriter, request *http.Request) {
-	cookie, err := request.Cookie("_cookie")
+func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	log.Println("logging out...")
+	cookie, err := r.Cookie("_cookie")
+	utils.HandleError("Failed to get cookie", err)
+
 	if err != http.ErrNoCookie {
-		utils.HandleError("Failed to get cookie", err)
 		session := cookie.Value
-		fmt.Println("session:", session)
-		dbmanagement.DeleteSessionByUUID(session)
+		// log.Println("session:", session)
+		err := dbmanagement.DeleteSessionByUUID(session)
+		utils.HandleError("Failed to get cookie", err)
 	}
-	http.Redirect(writer, request, "/", http.StatusMovedPermanently)
+
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 /*
@@ -73,7 +76,7 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 /*
 Registers a user with given details then redirects to log in page.  Password is hashed here.
 */
-func RegisterAcount(w http.ResponseWriter, r *http.Request) {
+func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
