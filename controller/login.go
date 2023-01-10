@@ -15,6 +15,7 @@ Displays the log in page.  If the username and password match an entry in the da
 Session Cookie is also set here.
 */
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	executed := false
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
 		password := r.FormValue("password")
@@ -40,6 +41,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		}
 
 	}
-	tmpl.ExecuteTemplate(w, "login.html", nil)
-
+	if !executed {
+		tmpl.ExecuteTemplate(w, "login.html", nil)
+	}
 }
