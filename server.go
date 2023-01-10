@@ -36,18 +36,25 @@ func main() {
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
+	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
+		controller.Authenticate(w, r, tmpl)
+	})
+	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		controller.Logout(w, r)
+	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
 
 	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
-		controller.RegisterAcount(w, r, tmpl)
+		controller.RegisterAcount(w, r)
 	})
 
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
-		controller.AllPosts(w, r, tmpl)
+		controller.UsersPosts(w, r, tmpl)
 	})
 
+	// dbmanagement.DeleteAllSessions()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

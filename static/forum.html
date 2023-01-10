@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-{{template "header"}}
-	<h1>you are logged in as {{.UserInfo.Name}}</h1>
-	{{range .ListOfData}}
-	<div>
-		<div>{{.OwnerId}}</div>
-		<div>{{.Content}}</div>
-		<div>{{.FormattedTime}}</div>
-		<div>{{.Likes}}</div>
-		<div>{{.Dislikes}}</div>
-	</div>
-	<br>
-	{{end}}
-	<div>
-		<form action="/forum" method="post">
-			<input type="text" name="post" id="post" />
-			<input type="submit" value="Post" />
-		</form>
-	</div>
+{{template "header"}} 
+{{if .UserInfo.Name }}
+<h1>You are logged in as {{.UserInfo.Name}}</h1>
+{{ else }}
+<h1>you are not logged in</h1>
+{{end}} 
+
+{{range .ListOfData}}
+<div>
+	<div>{{.OwnerId}}</div>
+	<div>{{.Content}}</div>
+	<div>{{.FormattedTime}}</div>
+	<div>{{.Likes}}</div>
+	<div>{{.Dislikes}}</div>
+</div>
+<br />
+{{end}}
+<div>
+	<form action="/forum" method="post">
+		<input type="text" name="post" id="post" />
+		<input type="submit" value="Post" />
+	</form>
+</div>
 {{template "footer"}}

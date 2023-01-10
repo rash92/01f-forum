@@ -21,6 +21,17 @@ Also handles inserting a new post that updates in realtime.
 */
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	sessionId, err := Session(w, r)
+	utils.HandleError("cant get sessionId:", err)
+	posts := dbmanagement.SelectAllPosts()
+
+	data := Data{}
+	data.Cookie = sessionId
+	data.ListOfData = append(data.ListOfData, posts...)
+	tmpl.ExecuteTemplate(w, "forum.html", data)
+}
+
+func UsersPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	sessionId, err := Session(w, r)
 	utils.HandleError("cant get user", err)
 	user := dbmanagement.SelectUserFromSession(sessionId)
 

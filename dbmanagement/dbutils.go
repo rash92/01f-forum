@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"log"
 	"os"
@@ -161,4 +162,28 @@ func (user *User) CreateSession() (session Session, err error) {
 
 	err = stmt.QueryRow(UUID, user.UUID, timeNow).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
 	return
+}
+
+func DeleteSessionByUUID(UUID string) (err error) {
+	db, _ := sql.Open("ssqlite3", "./forum.db")
+	statement := "DELETE uuid FROM Sessions where uuid = ?"
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("Failed to delete session by uuid:", err)
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(UUID)
+	return err
+}
+
+func DeleteAllSessions() (err error) {
+	db, _ := sql.Open("ssqlite3", "./forum.db")
+	res, err := db.Exec("DELETE * FROM Sessions")
+	utils.HandleError("Failed to delete all sessions:", err)
+
+	n, err := res.RowsAffected()
+	utils.HandleError("Rows affected error:", err)
+
+	fmt.Printf("The statement has affected %d rows\n", n)
+	return err
 }
