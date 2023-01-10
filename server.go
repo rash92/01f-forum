@@ -30,9 +30,12 @@ func main() {
 	fs := http.FileServer(http.Dir(path))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
+	// index handlers
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		controller.AllPosts(w, r, tmpl)
 	})
+
+	// authentication handlers
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
@@ -45,11 +48,19 @@ func main() {
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
-
 	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
 		controller.RegisterAcount(w, r, tmpl)
 	})
 
+	// google authentication handlers
+	mux.HandleFunc("/google/login", func(w http.ResponseWriter, r *http.Request) {
+		controller.GoogleLogin(w, r, tmpl)
+	})
+	mux.HandleFunc("/google/callback", func(w http.ResponseWriter, r *http.Request) {
+		controller.GoogleCallback(w, r, tmpl)
+	})
+
+	// forum handlers
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		controller.UsersPosts(w, r, tmpl)
 	})
