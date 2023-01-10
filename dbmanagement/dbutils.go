@@ -186,6 +186,7 @@ func DeleteSessionByUUID(UUID string) (err error) {
 	return
 }
 
+// Delete all session from database
 func DeleteAllSessions() (err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
