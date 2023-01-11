@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -16,6 +17,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println("got here")
 	path := "static"
 	fs := http.FileServer(http.Dir(path))
 
