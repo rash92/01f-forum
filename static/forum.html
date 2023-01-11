@@ -9,16 +9,24 @@
 </head>
 
 <body>
+	{{$UserInfo := .UserInfo}}
 	<h1>you are logged in as {{.UserInfo.Name}}</h1>
+	<a href="/login">Log in</a>
 
-	{{$Username := .UserInfo.Name}}
+	{{ if eq $UserInfo.Permission "admin"}}
+	
+	<a href="/admin">admin tools</a>
+
+	{{end}}
 
 	{{range .ListOfData}}
 	<div>
-		{{ if eq $Username .OwnerId}}
+		{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
+		<h1>{{$UserInfo.Name}}</h1>
+		<h1>{{$UserInfo.Permission}}</h1>
 		<h1>THIS IS MY OWN POST</h1>
 		<form  method="POST" >
-			<button name="delete" value={{.UUID}}>delete</button>
+			<button name="deletepost" value={{.UUID}}>delete</button>
 		</form>
 		{{end}}
 		<div>{{.OwnerId}}</div>
@@ -33,9 +41,6 @@
 
 
 	{{end}}
-
-
-
 
 
 	<div>

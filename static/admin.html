@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1>List of users</h1>
+        {{range .AllUsers}}
+        <div>
+            UUID: {{.UUID}}
+            
+            <br>
+            <b>Username: {{.Name}}</b>
+            <b>Permission: {{.Permission}}</b>
+
+            <form action="/admin" method="POST">
+                <button name="set to user" value={{.UUID}}>set to user</button>
+                <button name="set to moderator" value={{.UUID}}>Set to moderator</button>
+                <button name="set to admin" value={{.UUID}}>set to admin</button>
+                <button name="delete user" value={{.UUID}}>delete user</button>
+            </form>
+        </div>
+        <br>
+        {{end}}
+    </div>
+</body>
+
+</html>

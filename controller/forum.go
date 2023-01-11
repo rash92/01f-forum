@@ -35,10 +35,15 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			comment := r.FormValue("post")
 			fmt.Println(comment)
 			if comment != "" {
+				// post should be linked by the owners uuid and not the owners name i think?
 				dbmanagement.InsertPost(comment, dbmanagement.SelectUserFromUUID(user.UUID).Name, 0, 0, "general", time.Now())
 			}
-			idToDelete := r.FormValue("delete")
-			fmt.Println("recieved data is", idToDelete)
+			idToDelete := r.FormValue("deletepost")
+			fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
+			if idToDelete != "" {
+				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
+			}
+
 		}
 	}
 	utils.HandleError("cant get user", err)

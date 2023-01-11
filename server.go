@@ -20,6 +20,7 @@ func main() {
 	fmt.Println("got here")
 	path := "static"
 	fs := http.FileServer(http.Dir(path))
+	dbmanagement.UpdateUserPermissionFromName("moderator", "moderator")
 
 	mux := http.NewServeMux()
 
@@ -51,6 +52,10 @@ func main() {
 
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		controller.AllPosts(w, r, tmpl)
+	})
+
+	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
+		controller.Admin(w, r, tmpl)
 	})
 
 	dbmanagement.DisplayAllUsers()
