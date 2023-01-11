@@ -157,7 +157,7 @@ li {
     border: 2px solid var(--main-color);
 }
 
-.post-tags {
+.post-tags-author {
     color: var(--dim-font);
 }
 
@@ -171,6 +171,7 @@ li {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin: 10px 0;
 }
 
 .post-likes-dislikes {
@@ -188,10 +189,56 @@ li {
     color: var(--like);
     transform: translateY(-3px);
     transition: 0.3s ease;
+    cursor: pointer;
 }
 
 .post-likes-dislikes .dislike:hover {
     color: var(--dislke);
     transform: translateY(3px);
     transition: 0.3s ease;
+    cursor: pointer;
+}
+
+/* SINGLE POST */
+
+.single-post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+    width: 100vw;
+    max-width: 900px;
+    background-color: var(--highlight-color);
+    padding: 10px;
+    margin: 10px;
+}
+
+.single-post-author {
+    color: var(--dim-font);
+    margin: 10px 0;
+}
+
+.single-post-content {
+    margin: 10px 0;
+}
+/* COMMENTS */
+
+.commentor-name-time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.commentor-name-time p {
+    margin: 5px 0;
+    color: var(--dim-font);
+}
+
+.comment {
+    margin: 5px 0;
+}
+
+.textbox {
+    margin: 10px 0;
 }

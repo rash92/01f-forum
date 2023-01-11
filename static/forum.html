@@ -1,37 +1,15 @@
-<!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="stylesheets/styles.css">
-	<title>FORUM</title>
-</head>
-
-<body>
-	<nav class="navbar">
-		<!-- Logo -->
-		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
-		<!-- Menu -->
-		<div class="menu">
-			<li><a accesskey="a" href="/login">Sign in</a></li>
-			<p>|</p>
-			<li><a accesskey="a" href="/login">Sign up</a></li>
-		</div>
-	</nav>
+{{ template "header"}}
 	<div class="container-post">
 		<div class="post"> 
 			<a href="/post">
-				<div class="post-tags">
+				<div class="post-tags-author">
 					<p>#General</p>
 				</div>
 				<div class="post-title">
-					<h1>Post title</h1>
+					<h2>Look at this amazing photo of Jupiter I took!</h2>
+				</div>
+				<div class="post-tags-author">
+					<p>Author</p>
 				</div>
 				<div class="post-image">
 					<img src="https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
@@ -41,13 +19,13 @@
 					<div>
 						<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
 					</div>
+					</div>
 				</a>
 					<div class="post-likes-dislikes">
 						<p class="like"><i class="fa-solid fa-thumbs-up"></i></p>
 						<p>0</p>
 						<p class="dislike"><i class="fa-solid fa-thumbs-down"></i></p>
 					</div>
-				</div>
 			</div>
 	</div>
 	<!-- {{range .ListOfData}}
@@ -66,9 +44,4 @@
 			<input type="submit" value="Post" />
 		</form>
 	</div> -->
-	<footer>
-
-	</footer>
-</body>
-
-</html>
+{{ template "footer"}}
