@@ -1,3 +1,11 @@
+:root {
+    --main-color: #B9CDDA;
+    --highlight-color: #D7DAE5;
+    --like: #A5AA52;
+    --dislke: #D64933;
+    --dim-font: rgba(0, 0, 0, 0.5);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,8 +13,9 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-body {
-    background-color: rgba(250, 249, 246);
+html, body {
+    background: rgb(185, 205, 218);
+    background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
     background-size: cover;
 }
 
@@ -26,7 +35,7 @@ li {
     justify-content: space-between;
     position: fixed;
     width: 100vw;
-    background-color: rgba(250, 249, 246);
+    background-color: var(--highlight-color);
     height: 44px;
     border-bottom: 2px solid black;
 }
@@ -53,10 +62,14 @@ li {
 }
 
 .menu li {
-    padding: 5px 14px;
+    padding: 10px 5px;
 }
 
-/* CONTAINER */
+.menu p {
+    padding: 10px 0px;
+}
+
+/* CONTAINERS */
 .container {
     display: flex;
     flex-direction: column;
@@ -67,16 +80,25 @@ li {
     padding: 5px;
 }
 
+.container-post {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    padding: 50px;
+
+}
+
 /* LOGIN CARD */
 .input-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 2px solid black;
-    /* background: rgb(160, 195, 210);
-    background: linear-gradient(0deg, rgba(160, 195, 210, 1) 0%, rgba(224, 237, 242, 1) 100%); */
-    border-radius: 20px;
+
+    background: var(--highlight-color);
     padding: 25px;
 }
 
@@ -101,15 +123,75 @@ li {
 }
 
 .login-input button {
-    background: transparent;
+    background: var(--main-color);
     flex: auto;
     outline: none;
     padding: 10px;
     font-size: 18px;
-    border: 2px solid black;
 }
 
 .login-input button:hover {
-    transform: translateY(-5px);
+    background: var(--highlight-color);
+    transition: 0.3s ease;
+}
+
+.input-wrapper a {
+    text-decoration: underline;
+}
+
+/* POST */
+
+.post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+    width: 100%;
+    max-width: 700px;
+    background-color: var(--highlight-color);
+    padding: 10px;
+    margin: 10px;
+}
+
+.post:hover {
+    border: 2px solid var(--main-color);
+}
+
+.post-tags {
+    color: var(--dim-font);
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+}
+
+.post-comments-likes-dislikes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post-likes-dislikes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.post-likes-dislikes p {
+    margin: 0px 5px;
+    font-size: 1em;
+}
+
+.post-likes-dislikes .like:hover {
+    color: var(--like);
+    transform: translateY(-3px);
+    transition: 0.3s ease;
+}
+
+.post-likes-dislikes .dislike:hover {
+    color: var(--dislke);
+    transform: translateY(3px);
     transition: 0.3s ease;
 }

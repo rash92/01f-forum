@@ -25,7 +25,6 @@ func main() {
 			Certificates: []tls.Certificate{cert},
 		},
 	}
-
 	path := "./static"
 	fs := http.FileServer(http.Dir(path))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
