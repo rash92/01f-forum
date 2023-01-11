@@ -11,6 +11,7 @@ type AdminData struct {
 	AllUsers []dbmanagement.User
 }
 
+// username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
 func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData := AdminData{}
 	sessionId, err := Session(w, r)
