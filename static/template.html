@@ -10,14 +10,14 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
 		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="static/stylesheets/styles.css">
+	<link rel="stylesheet" href="/static/stylesheets/styles.css">
 	<title>FORUM</title>
 </head>
 
 <body>
 	<nav class="navbar">
 		<!-- Logo -->
-		<div class="logo"><a accesskey="h" href="/"></i>F<i class="fa-regular fa-comment"></i>rum</a></div>
+		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
 		<!-- Menu -->
 		<div class="menu">
 			<li><a accesskey="a" href="/login">Sign in</a></li>
@@ -25,12 +25,13 @@
 			<li><a accesskey="a" href="/login">Sign up</a></li>
 		</div>
 	</nav>
-    {{end}}
+	{{end}}
+	
+	{{ define "footer"}}
+	<footer>
 
-    {{ define "footer"}}
-    <footer>
-
-    </footer>
+	</footer>
 </body>
+
 </html>
 {{end}}

@@ -19,7 +19,7 @@ func main() {
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
 	s := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8081",
 		Handler: mux,
 		TLSConfig: &tls.Config{
 			Certificates: []tls.Certificate{cert},
@@ -46,6 +46,9 @@ func main() {
 
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		controller.AllPosts(w, r, tmpl)
+	})
+	mux.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
+		controller.Post(w, r, tmpl)
 	})
 
 	dbmanagement.DisplayAllUsers()
