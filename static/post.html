@@ -11,6 +11,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="stylesheets/styles.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+
     <title>FORUM</title>
 </head>
 
@@ -55,11 +56,11 @@
                     <p class="dislike"><i class="fa-solid fa-thumbs-down"></i></p>
                 </div>
             </div>
-            <form action="/">
-            <textarea class="textbox" name="content" id="editor">
-                &lt;p&gt;This is some sample content.&lt;/p&gt;
+            <form action="/" method="POST">
+                <textarea class="textbox" name="content" id="editor">
+                &lt;p&gt;&lt;/p&gt;
             </textarea>
-        </form>
+            </form>
         </div>
         <div class="single-post">
             <div class="commentor-name-time">
@@ -75,18 +76,15 @@
                 <p class="dislike"><i class="fa-solid fa-thumbs-down"></i></p>
             </div>
         </div>
-        </div>
     </div>
+    </div>
+    <script>ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });</script>
     <footer>
-
     </footer>
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#editor' ) )
-            .catch( error => {
-                console.error( error );
-            } );
-    </script>
 </body>
 
 </html>
