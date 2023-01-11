@@ -82,10 +82,20 @@ var createLikedCommentsTableStatement = `
 
 var createSessionTableStatement = `
 	CREATE TABLE Sessions (
-  uuid      TEXT NOT NULL PRIMARY KEY,
-  userId    INTEGER REFERENCES Users(uuid),
-  createdAt TIMESTAMP NOT NULL   
-);`
+  		uuid      TEXT NOT NULL PRIMARY KEY,
+  		userId    INTEGER REFERENCES Users(uuid),
+  		createdAt TIMESTAMP NOT NULL   
+	);`
+
+var createAdminRequestTableStatement = `
+	CREATE TABLE AdminRequests (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		requestfromid TEXT,
+		requestfromname TEXT,
+		content TEXT,
+		FOREIGN KEY (requestfromid) REFERENCES Users(uuid),
+		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
+	);`
 
 /*
 Only used to create brand new databases, wiping all previous data in the process.
@@ -103,6 +113,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createLikedPostsTableStatement)
 	CreateTable(forumDB, createLikedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
+	CreateTable(forumDB, createAdminRequestTableStatement)
 
 	log.Println("forum.db created successfully!")
 }

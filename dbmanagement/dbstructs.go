@@ -35,3 +35,10 @@ type Session struct {
 	UserId    string
 	CreatedAt time.Time
 }
+
+type AdminRequest struct {
+	UUID            string
+	RequestFromId   string
+	RequestFromName string
+	Content         string
+}

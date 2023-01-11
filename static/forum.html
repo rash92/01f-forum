@@ -10,13 +10,19 @@
 
 <body>
 	{{$UserInfo := .UserInfo}}
+
+	{{if eq $UserInfo.Name ""}}
+	<h1>You are not logged in</h1>
+	{{else}}
 	<h1>you are logged in as {{.UserInfo.Name}}</h1>
+	<a href="/user">User Page</a>
+	{{end}}
+
 	<a href="/login">Log in</a>
 
-	{{ if eq $UserInfo.Permission "admin"}}
-	
-	<a href="/admin">admin tools</a>
 
+	{{ if eq $UserInfo.Permission "admin"}}
+	<a href="/admin">admin tools</a>
 	{{end}}
 
 	{{range .ListOfData}}
@@ -25,7 +31,7 @@
 		<h1>{{$UserInfo.Name}}</h1>
 		<h1>{{$UserInfo.Permission}}</h1>
 		<h1>THIS IS MY OWN POST</h1>
-		<form  method="POST" >
+		<form method="POST">
 			<button name="deletepost" value={{.UUID}}>delete</button>
 		</form>
 		{{end}}
@@ -42,13 +48,16 @@
 
 	{{end}}
 
-
+	{{if ne $UserInfo.Name ""}}
 	<div>
 		<form action="/forum" method="post">
 			<input type="text" name="post" id="post" />
 			<input type="submit" value="submit" />
 		</form>
 	</div>
+	{{else}}
+	<h1>You Must Be Logged In to Create Posts</h1>
+	{{end}}
 </body>
 
 </html>
