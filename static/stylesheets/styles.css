@@ -195,6 +195,14 @@ li {
     margin: 20px;
 }
 
+.social {
+    cursor: pointer;;
+}
+
+.social i:hover {
+    color: var(--main-font)
+}
+
 /* POST */
 
 .post {
@@ -234,6 +242,11 @@ li {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.like, .dislike {
+    background: transparent;
+    border-style: none;
 }
 
 .post-likes-dislikes p {
@@ -292,7 +305,7 @@ li {
     padding: 10px;
 }
 
-.single-post button {
+.single-post button:not(.like, .dislike) {
     margin: 10px 0;
     width: 20%;
     background: transparent;
@@ -303,9 +316,10 @@ li {
     font-size: 1em;
 }
 
-.single-post button:hover {
+.single-post button:hover:not(.like, .dislike) {
     border: 1px solid black;
 }
+
 /* COMMENTS */
 
 .commentor-name-time {
