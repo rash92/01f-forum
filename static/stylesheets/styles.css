@@ -40,8 +40,8 @@ li {
     position: fixed;
     width: 100vw;
     background-color: var(--highlight-color);
-    height: 44px;
-    border-bottom: 2px solid black;
+    height: 54px;
+    border-bottom: 1px solid black;
 }
 
 .logo {
@@ -54,18 +54,59 @@ li {
     transition: 0.3s ease;
 }
 
+.searchbar {
+    width: 100%;
+    max-width: 600px;
+    height: 75%;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 10px;
+}
+
+.searchbar input {
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding: 10px;
+    
+}
+
+.searchbar button {
+    width: 25px;
+    border: 0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    color: var(--dim-font);
+    cursor: pointer;
+}
+.searchbar button:hover {
+    color: black;
+    transition: 0.3s ease;
+}
+
+.create {
+    padding: 10px;
+    border-left: 1px solid black;
+}
+
+.create a:hover {
+    color: var(--dim-font);
+}
+
 .menu {
     display: flex;
     gap: 0.5em;
     font-size: 18px;
 }
 
-.menu li:hover {
-    transform: translateY(-5px);
-    transition: 0.3s ease;
-}
-
 .menu li {
+    color: black;
     padding: 10px 5px;
 }
 
@@ -126,20 +167,32 @@ li {
 }
 
 .login-input button {
-    background: var(--main-color);
-    flex: auto;
-    outline: none;
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
     padding: 10px;
-    font-size: 18px;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 .login-input button:hover {
-    background: var(--highlight-color);
+    background-color: var(--main-color);
     transition: 0.3s ease;
 }
 
 .input-wrapper a {
     text-decoration: underline;
+}
+
+.alternative-sign-up {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px;
+    margin: 20px;
 }
 
 /* POST */
@@ -153,7 +206,7 @@ li {
     max-width: 700px;
     background-color: var(--highlight-color);
     padding: 10px;
-    margin: 10px;
+    margin: 20px;
 }
 
 .post:hover {
