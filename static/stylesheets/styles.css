@@ -211,9 +211,14 @@ li {
     align-items: right;
     width: 100vw;
     max-width: 900px;
+    height: fit-content;
     background-color: var(--highlight-color);
     padding: 10px;
     margin: 10px;
+}
+
+.single-post form {
+    height: fit-content;
 }
 
 .single-post-author {
@@ -223,6 +228,30 @@ li {
 
 .single-post-content {
     margin: 10px 0;
+}
+
+.single-post textarea {
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+}
+
+.single-post button {
+    margin: 10px 0;
+    width: 20%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.single-post button:hover {
+    border: 1px solid black;
 }
 /* COMMENTS */
 
