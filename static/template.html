@@ -15,8 +15,9 @@
 </head>
 
 <body>
+	{{$User := .UserInfo}}
 	<nav class="navbar">
-		<!-- Logo -->
+		<!-- LOGO -->
 		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
 		<!-- SEARCHBAR & CREATE -->
 		<form class="searchbar" action="/" method="POST">
@@ -28,15 +29,21 @@
 				<a href="/submit"><i class="fa-solid fa-plus"></i> Create</a>
 			</div>
 		</form>
-		<!-- Menu -->
+		<!-- MENU -->
+		{{if eq $User.Name ""}}
 		<div class="menu">
 			<li><a accesskey="a" href="/login">Sign in</a></li>
 			<p>|</p>
 			<li><a accesskey="a" href="/register">Sign up</a></li>
 		</div>
+		{{else}}
+		<div class="menu">
+			<li>{{$User.Name}}</li>
+		</div>
+		{{end}}
 	</nav>
 	{{end}}
-	
+
 	{{ define "footer"}}
 	<footer>
 
