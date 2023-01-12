@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/static/stylesheets/styles.css">
+	<title>FORUM</title>
+</head>
+
+<body>
+	<nav class="navbar">
+		<!-- Logo -->
+		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
+		<!-- Menu -->
+		<div class="menu">
+			<li><a accesskey="a" href="/login">Sign in</a></li>
+			<p>|</p>
+			<li><a accesskey="a" href="/login">Sign up</a></li>
+		</div>
+	</nav>
+<div class="container-post">
+    <div class="submission">
+        <h2>Create a post</h2>
+        <form action="/forum" method="POST">
+            <input type="text" name="submission-title" placeholder="Title" autocomplete="off" autofocus>
+            <textarea name="submission-content" id="" cols="30" rows="10" placeholder="Text (optional)"></textarea>
+            <input type="text" name="submission-tags" placeholder="Tags (#General etc.)">
+            <div class="submission-bottom-row">
+                <label for="file-upload" class="image-upload">
+                    <i class="fa-solid fa-image"></i> Upload Image
+                </label>
+                <input id="file-upload" name="submission-image" type="file" accept="image/jpeg, image/png, image/gif"/>
+                <button type="submit">Post</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <footer>
+
+	</footer>
+</body>
+
+</html>
