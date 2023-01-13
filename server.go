@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -17,20 +18,53 @@ func init() {
 func main() {
 	path := "static"
 	fs := http.FileServer(http.Dir(path))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		controller.Home(w, r, tmpl)
+
+	mux := http.NewServeMux()
+
+	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
+
+	s := &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+		TLSConfig: &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		},
+	}
+
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		tags := dbmanagement.SelectAllTags()
+		tagexists := false
+		var url string
+		for _, v := range tags {
+			if r.URL.Path == "/"+v.TagName {
+				url = v.TagName
+				tagexists = true
+			}
+		}
+		if !tagexists && r.URL.Path == "/" {
+			controller.AllPosts(w, r, tmpl)
+		}
+		if tagexists && r.URL.Path != "/" {
+			controller.SubForum(w, r, tmpl, url)
+		}
 	})
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})
-	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
-		controller.Forum(w, r, tmpl)
+
+	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
+		controller.RegisterAcount(w, r, tmpl)
 	})
-	//dbmanagement.CreateDatabase()
+
+	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		controller.AllPosts(w, r, tmpl)
+	})
+
+	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DisplayAllUsers()
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(s.ListenAndServeTLS("", ""))
 }

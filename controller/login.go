@@ -2,27 +2,44 @@ package controller
 
 import (
 	"forum/dbmanagement"
+	"forum/security"
+	"forum/utils"
 	"html/template"
 	"log"
 	"net/http"
 )
 
+/*
+Displays the log in page.  If the username and password match an entry in the database then the user is redirected to the forum page, otherwise the user stays on the log in page.
+
+Session Cookie is also set here.
+*/
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	executed := false
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
-		email := r.FormValue("email")
 		password := r.FormValue("password")
-		log.Println(userName, email, password)
-		user := dbmanagement.SelectUniqueUser(userName)
-		if CompareHash(user.Password, password) {
+
+		log.Println(userName, password)
+
+		user := dbmanagement.SelectUserFromName(userName)
+
+		if security.CompareHash(user.Password, password) {
 			log.Println("Password correct!")
-			http.Redirect(w, r, "http://localhost:8080/forum", http.StatusMovedPermanently)
+			session, err := user.CreateSession()
+			utils.HandleError("Cannot create user session err:", err)
+			cookie := http.Cookie{
+				Name:     "_cookie",
+				Value:    session.UUID,
+				HttpOnly: true,
+			}
+			http.SetCookie(w, &cookie)
+			http.Redirect(w, r, "/forum", http.StatusFound)
 		} else {
-			log.Println("Incorrent Password!")
-			executed = true
-			tmpl.ExecuteTemplate(w, "login.html", "Username or Password Incorrect")
+			log.Println("Incorrect Password!")
+			http.Redirect(w, r, "/login", http.StatusFound)
 		}
+
 	}
 	if !executed {
 		tmpl.ExecuteTemplate(w, "login.html", nil)

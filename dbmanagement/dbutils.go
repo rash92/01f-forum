@@ -2,159 +2,165 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"forum/utils"
 	"log"
 	"os"
+	"time"
 
+	"github.com/gofrs/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type User struct {
-	ID         int
-	UUID       string
-	Name       string
-	Email      string
-	Password   string
-	Permission string
-}
-
-type Post struct {
-	ID       int
-	PostText string
-	Userid   int
-	Likes    int
-	Dislikes int
-	Time     interface{}
-	Tags     string
-}
-
-func CreateDatabase() {
-	// os.Remove("forum.db")
-	log.Println("Creating forum.db...")
-	file, err := os.Create("forum.db")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	file.Close()
-	createUserTableDB := `
+var createUserTableStatement = `
 	CREATE TABLE Users (
-		user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		UUID TEXT NOT NULL,		
-		name TEXT,
+		uuid TEXT NOT NULL PRIMARY KEY,		
+		name TEXT UNIQUE,
 		email TEXT,
 		password TEXT,
 		permission TEXT
-	  );`
-	createPostTableDB := `
+	);`
+
+var createPostTableStatement = `
 	CREATE TABLE Posts (
-		post_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		post_text TEXT,		
-		user INTEGER,
+		uuid TEXT NOT NULL PRIMARY KEY,
+		content TEXT,		
+		ownerId TEXT,
+		likes INTEGER,
+		dislikes INTEGER,
+		tag TEXT,
+		time DATETIME,
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
+		FOREIGN KEY (tag) REFERENCES Tags(tagname)
+	);`
+
+var createCommentTableStatement = `
+	CREATE TABLE Comments (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		content TEXT,
+		postId TEXT,
+		ownerId TEXT,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
-		tags TEXT,
-		FOREIGN KEY(user) REFERENCES Users(user_id)
-	  );`
-	forumDB, _ := sql.Open("sqlite3", "./forum.db?_foreign_keys=on")
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
+	);`
+
+var createTagsTableStatement = `
+	CREATE TABLE Tags (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		tagname TEXT
+	);`
+
+var createTaggedPostsStatement = `
+CREATE TABLE TaggedPosts (
+		tagId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		FOREIGN KEY (tagId) REFERENCES Tags(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		PRIMARY KEY (tagId, postId)
+	);`
+
+// can represent like as 1, dislike as -1 and neither as 0 as a single value in the reaction field
+var createReactionPostsTableStatement = `
+	CREATE TABLE ReactedPosts (
+		userId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		reaction INTEGER,
+		FOREIGN KEY (userId) REFERENCES Users(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		PRIMARY KEY (userId, postId)
+	);`
+
+var createLikedCommentsTableStatement = `
+	CREATE TABLE LikedComments  (
+		userId TEXT NOT NULL,
+		commentId TEXT NOT NULL,
+		reaction INTEGER,
+		FOREIGN KEY (userId) REFERENCES Users(uuid),
+		FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+		PRIMARY KEY (userId, commentId)
+	);`
+
+var createSessionTableStatement = `
+	CREATE TABLE Sessions (
+  uuid      TEXT NOT NULL PRIMARY KEY,
+  userId    INTEGER REFERENCES Users(uuid),
+  createdAt TIMESTAMP NOT NULL   
+);`
+
+/*
+Only used to create brand new databases, wiping all previous data in the process.
+To be used when initially implementing database or clearing data after testing.
+*/
+func CreateDatabaseWithTables() {
+	forumDB := CreateDatabase("forum")
 	defer forumDB.Close()
-	CreateTable(forumDB, createUserTableDB)
-	CreateTable(forumDB, createPostTableDB)
-	log.Println("forum.db create successfully!")
+
+	CreateTable(forumDB, createUserTableStatement)
+	CreateTable(forumDB, createPostTableStatement)
+	CreateTable(forumDB, createCommentTableStatement)
+	CreateTable(forumDB, createTagsTableStatement)
+	CreateTable(forumDB, createTaggedPostsStatement)
+	CreateTable(forumDB, createReactionPostsTableStatement)
+	CreateTable(forumDB, createLikedCommentsTableStatement)
+	CreateTable(forumDB, createSessionTableStatement)
+
+	log.Println("forum.db created successfully!")
 }
 
+/*
+Creates a new database file to store tables.  If database already exists, it is REMOVED.  Beware of losing data.
+*/
+func CreateDatabase(name string) *sql.DB {
+	os.Remove(name + ".db")
+	log.Println("Creating " + name + ".db...")
+	file, err := os.Create(name + ".db")
+	utils.HandleError("", err)
+
+	file.Close()
+
+	forumDB, err := sql.Open("sqlite3", "./"+name+".db?_foreign_keys=on")
+	utils.HandleError("", err)
+
+	return forumDB
+}
+
+/*
+Creates a table within a specified database
+*/
 func CreateTable(db *sql.DB, table string) {
 	statement, err := db.Prepare(table)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	utils.HandleError(table, err)
 	statement.Exec()
 }
 
-func InsertUser(UUID string, name string, email string, password string, permission string) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	log.Println("Inserting user record...")
-	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?)"
-	statement, err := db.Prepare(insertUserData)
-	if err != nil {
-		log.Fatalln("User Prepare failed: ", err.Error())
-	}
-	_, err = statement.Exec(UUID, name, email, password, permission)
-	if err != nil {
-		log.Fatalln("Statement Exec failed: ", err.Error())
-	}
+/*
+Generates a new UUID and returns a string of that new number.
+*/
+func GenerateUUIDString() string {
+	UUID, err := uuid.NewV4()
+	utils.HandleError("problem generating uuid", err)
+	return UUID.String()
 }
 
-func InsertPost(text string, user int, time string, tags string) {
+/*
+Used to provide specific information for when a user logs in by cross referencing their userID.
+Creates and returns a new session when the user successfully logs in to their account.
+The sessions has its own UUID, contains the usersID (user's UUID), and the time that it was created.
+*/
+func (user *User) CreateSession() (session Session, err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	log.Println("Inserting post...")
-	insertPostData := "INSERT INTO Posts(post_text, user, likes, dislikes, time, tags) VALUES (?, ?, ?, ?, ?, ?)"
-	statement, err := db.Prepare(insertPostData)
-	if err != nil {
-		log.Fatalln("Post Prepare failed: ", err.Error())
-	}
-	_, err = statement.Exec(text, user, 0, 0, time, tags)
-	if err != nil {
-		log.Fatalln("Statement Exec failed: ", err.Error())
-	}
-}
+	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
 
-func DisplayAllUsers() {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	row, err := db.Query("SELECT * FROM Users ORDER BY name")
-	if err != nil {
-		log.Fatalln("User query failed: ", err.Error())
-	}
-	defer row.Close()
-	for row.Next() {
-		var user_id int
-		var UUID string
-		var name string
-		var email string
-		var password string
-		var permission string
-		row.Scan(&user_id, &UUID, &name, &email, &password, &permission)
-		log.Println("User: ", user_id, " ", UUID, " ", name, " ", email, " ", password, " ", permission)
-	}
-}
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("session error:", err)
 
-func DisplayAllPosts() []Post {
-	var posts []Post
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	row, err := db.Query("SELECT * FROM Posts ORDER BY time")
-	if err != nil {
-		log.Fatalln("Post query failed: ", err.Error())
-	}
-	defer row.Close()
-	for row.Next() {
-		var post_id int
-		var post_text string
-		var user int
-		var likes int
-		var dislikes int
-		var time interface{}
-		var tags string
-		row.Scan(&post_id, &post_text, &user, &likes, &dislikes, &time, &tags)
-		log.Println("Post: ", post_id, " ", post_text, " ", user, " ", likes, " ", dislikes, " ", time, " ", tags)
-		posts = append(posts, Post{post_id, post_text, user, likes, dislikes, time, tags})
-	}
-	return posts
-}
+	defer stmt.Close()
 
-func SelectUniqueUser(userName string) User {
-	var user User
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
-	if err != nil {
-		log.Fatalln("Statement failed: ", err.Error())
-	}
-	err = stm.QueryRow(userName).Scan(&user.ID, &user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
-	if err != nil {
-		//log.Fatalln("Query Row failed: ", err.Error())
-	}
-	return user
+	UUID := GenerateUUIDString()
+	timeNow := time.Now()
+
+	err = stmt.QueryRow(UUID, user.UUID, timeNow).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
+	return
 }
