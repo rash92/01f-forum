@@ -26,6 +26,15 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := GetSessionIDFromBrowser(w, r)
 	fmt.Println("session error is: ", err)
+	if sessionId == "" {
+		err := CreateUserSessionCookie(w, r, dbmanagement.User{})
+		if err != nil {
+			utils.HandleError("visitor cookie hack didn't work", err)
+		} else {
+			sessionId, _ = GetSessionIDFromBrowser(w, r)
+		}
+	}
+
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)

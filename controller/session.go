@@ -23,21 +23,6 @@ func GetSessionIDFromBrowser(w http.ResponseWriter, r *http.Request) (string, er
 /*
 Creates session that gives a sessions ID, used to determine which user is using the program.
 */
-// func CreateVisitorSessionCookie(w http.ResponseWriter, r *http.Request, user dbmanagement.User) error {
-// 	session, err := user.CreateSession()
-// 	utils.HandleError("Cannot create user session err:", err)
-// 	cookie := http.Cookie{
-// 		Name:     "_cookie",
-// 		Value:    session.UUID,
-// 		HttpOnly: true,
-// 	}
-// 	http.SetCookie(w, &cookie)
-// 	return err
-// }
-
-/*
-Creates session that gives a sessions ID, used to determine which user is using the program.
-*/
 func CreateUserSessionCookie(w http.ResponseWriter, r *http.Request, user dbmanagement.User) error {
 	session, err := user.CreateSession()
 	utils.HandleError("Cannot create user session err:", err)
