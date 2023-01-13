@@ -9,5 +9,7 @@ import (
 Displays the register page...
 */
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "register.html", nil)
+	data := Data{}
+	data.TitleName = "Sign Up"
+	tmpl.ExecuteTemplate(w, "register.html", data)
 }

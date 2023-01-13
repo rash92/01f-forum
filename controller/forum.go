@@ -4,6 +4,7 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 )
@@ -12,6 +13,7 @@ type Data struct {
 	ListOfData []dbmanagement.Post
 	Cookie     string
 	UserInfo   dbmanagement.User
+	TitleName  string
 }
 
 /*
@@ -22,7 +24,7 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := Session(w, r)
-	if err != nil {
+	if err == nil {
 		user := dbmanagement.SelectUserFromSession(sessionId)
 		data.Cookie = sessionId
 		data.UserInfo = user
@@ -36,5 +38,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	utils.HandleError("cant get user", err)
 	posts := dbmanagement.SelectAllPosts()
 	data.ListOfData = append(data.ListOfData, posts...)
+	data.TitleName = "Forum"
+	log.Println(data)
 	tmpl.ExecuteTemplate(w, "forum.html", data)
 }

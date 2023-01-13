@@ -6,5 +6,7 @@ import (
 )
 
 func Submit(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "submit.html", nil)
+	data := Data{}
+	data.TitleName = "Submit to Forum"
+	tmpl.ExecuteTemplate(w, "submit.html", data)
 }

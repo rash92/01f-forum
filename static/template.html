@@ -11,11 +11,11 @@
 		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="/static/stylesheets/styles.css">
-	<title>FORUM</title>
+	<title>{{.TitleName}}</title>
 </head>
 
 <body>
-	{{$User := .UserInfo}}
+	{{$UserInfo := .UserInfo}}
 	<nav class="navbar">
 		<!-- LOGO -->
 		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
@@ -30,7 +30,7 @@
 			</div>
 		</form>
 		<!-- MENU -->
-		{{if eq $User.Name ""}}
+		{{if eq $UserInfo.Name ""}}
 		<div class="menu">
 			<li><a accesskey="a" href="/login">Sign in</a></li>
 			<p>|</p>
@@ -38,7 +38,12 @@
 		</div>
 		{{else}}
 		<div class="menu">
-			<li>{{$User.Name}}</li>
+			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
+			
+				<div class="tooltip"><li class="signout-icon"><a href="/signout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+					<span class="signout-text"> Sign Out</span>
+				</div>
+				
 		</div>
 		{{end}}
 	</nav>

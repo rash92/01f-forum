@@ -13,7 +13,8 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-html, body {
+html,
+body {
     background: rgb(185, 205, 218);
     background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
     background-size: cover;
@@ -72,7 +73,7 @@ li {
     border: 0;
     outline: none;
     padding: 10px;
-    
+
 }
 
 .searchbar button {
@@ -85,6 +86,7 @@ li {
     color: var(--dim-font);
     cursor: pointer;
 }
+
 .searchbar button:hover {
     color: black;
     transition: 0.3s ease;
@@ -108,11 +110,43 @@ li {
 .menu li {
     color: black;
     padding: 10px 5px;
+    cursor: pointer;
 }
 
 .menu p {
     padding: 10px 0px;
 }
+
+.username {
+    font-size: 22px;
+    padding-right: 10px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.tooltip .signout-text {
+    visibility: hidden;
+    width: 100px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+    background-color: var(--dim-font);
+    color: #fff;
+    text-align: center;
+    padding: 2px 0;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .signout-text {
+    visibility: visible;
+}
+
 
 /* CONTAINERS */
 .container {
@@ -196,7 +230,8 @@ li {
 }
 
 .social {
-    cursor: pointer;;
+    cursor: pointer;
+    ;
 }
 
 .social i:hover {
@@ -244,7 +279,8 @@ li {
     align-items: center;
 }
 
-.like, .dislike {
+.like,
+.dislike {
     background: transparent;
     border-style: none;
 }
@@ -363,7 +399,7 @@ li {
     border: 1px solid var(--dim-font);
     height: 10%;
     padding: 10px;
-    
+
 }
 
 .submission textarea {
