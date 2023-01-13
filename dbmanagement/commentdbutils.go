@@ -46,7 +46,8 @@ func DisplayAllComments() {
 		var dislikes int
 		var time time.Time
 		row.Scan(&UUID, &content, &postId, &ownerId, &likes, &dislikes, &time)
-		owner := SelectUserFromUUID(ownerId)
+		owner, err := SelectUserFromUUID(ownerId)
+		utils.HandleError("Selecting user from uuid failed: ", err)
 		log.Println("Comment: ", UUID, " replying to: ", postId, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
 	}
 }

@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"log"
 )
@@ -54,6 +55,31 @@ func UpdateUserPermissionFromName(Name string, newpermission string) {
 }
 
 /*
+Generates a new user in the database.  The UUID is generated internally here and stored to the database (this can also be referred to as the userID).
+
+The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
+*/
+func DeleteUser(name string) error {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement := "DELETE FROM Users WHERE name = ?"
+	stm, err := db.Prepare(statement)
+	utils.HandleError("Failed to delete user statement:", err)
+
+	defer stm.Close()
+
+	res, err := stm.Exec(name)
+	utils.HandleError("Failed to delete user: ", err)
+
+	n, err := res.RowsAffected()
+	utils.HandleError("Rows affected error:", err)
+
+	fmt.Println("Number of rows affected: ", n)
+	return err
+}
+
+/*
 Used to display all currently registered users.  Should only be used internally as information is not relevant for the website.
 */
 func DisplayAllUsers() {
@@ -96,7 +122,7 @@ func SelectAllUsers() []User {
 /*
 Initially used for when a user is trying to log in.  Returns a User's information when searched for by name.
 */
-func SelectUserFromName(Name string) User {
+func SelectUserFromName(Name string) (User, error) {
 	var user User
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -107,13 +133,13 @@ func SelectUserFromName(Name string) User {
 	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
 	utils.HandleError("Query Row failed: ", err)
 
-	return user
+	return user, err
 }
 
 /*
 Could be used for if a user wanted to log in using their email address.  Returns a User's information when searched for by email.
 */
-func SelectUserFromEmail(Email string) User {
+func SelectUserFromEmail(Email string) (User, error) {
 	var user User
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -124,13 +150,13 @@ func SelectUserFromEmail(Email string) User {
 	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
 	utils.HandleError("Query Row failed: ", err)
 
-	return user
+	return user, err
 }
 
 /*
 Used when you have the users UUID (userID).  For example, within a session (displaying user information such as username), or when displaying post and comment details.
 */
-func SelectUserFromUUID(UUID string) User {
+func SelectUserFromUUID(UUID string) (User, error) {
 	var user User
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -141,13 +167,13 @@ func SelectUserFromUUID(UUID string) User {
 	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
 	utils.HandleError("Query Row failed: ", err)
 
-	return user
+	return user, err
 }
 
 /*
 Gets the user using the current session.  Used to assign the correct userID if a user posts, likes, dislikes, or comments.
 */
-func SelectUserFromSession(UUID string) User {
+func SelectUserFromSession(UUID string) (User, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
@@ -159,5 +185,5 @@ func SelectUserFromSession(UUID string) User {
 	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
 	utils.HandleError("User query failed: ", err)
 
-	return user
+	return user, err
 }

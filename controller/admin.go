@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"forum/dbmanagement"
+	"forum/utils"
 	"html/template"
 	"net/http"
 )
@@ -16,14 +17,15 @@ type AdminData struct {
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
 func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData := AdminData{}
-	sessionId, err := Session(w, r)
+	sessionId, err := GetSessionIDFromBrowser(w, r)
 	if err != nil {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 		fmt.Println("please log in as a user with admin permissions")
 		return
 	}
 
-	loggedInAs := dbmanagement.SelectUserFromSession(sessionId)
+	loggedInAs, err := dbmanagement.SelectUserFromSession(sessionId)
+	utils.HandleError("cant get logged in user in admin", err)
 	if loggedInAs.Permission != "admin" {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 		fmt.Println("please log in as a user with admin permissions")

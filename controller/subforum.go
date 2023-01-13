@@ -17,9 +17,9 @@ type SubData struct {
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
-	sessionId, err := Session(w, r)
+	sessionId, err := GetSessionIDFromBrowser(w, r)
 	utils.HandleError("cant get user", err)
-	user := dbmanagement.SelectUserFromSession(sessionId)
+	user, err := dbmanagement.SelectUserFromSession(sessionId)
 
 	if r.Method == "POST" {
 		comment := r.FormValue("post")
@@ -27,7 +27,9 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		dislike := r.FormValue("dislike")
 		postid := r.FormValue("postid")
 		if comment != "" {
-			dbmanagement.InsertPost(comment, dbmanagement.SelectUserFromUUID(user.UUID).Name, 0, 0, tag, time.Now())
+			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
+			utils.HandleError("cant get user with uuid in subforum", err)
+			dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
 		}
 		if like == "Like" {
 			dbmanagement.AddReactionToPost(user.UUID, postid, 1)

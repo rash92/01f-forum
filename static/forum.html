@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Home</title>
-</head>
-
+{{template "header"}} 
 <body>
 	{{$UserInfo := .UserInfo}}
 
@@ -28,9 +19,6 @@
 	{{range .ListOfData}}
 	<div>
 		{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
-		<h1>{{$UserInfo.Name}}</h1>
-		<h1>{{$UserInfo.Permission}}</h1>
-		<h1>THIS IS MY OWN POST</h1>
 		<form method="POST">
 			<button name="deletepost" value={{.UUID}}>delete</button>
 		</form>
@@ -65,4 +53,4 @@
 	{{end}}
 </body>
 
-</html>
+{{template "footer"}}

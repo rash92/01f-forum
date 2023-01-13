@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"log"
 	"os"
@@ -162,6 +163,8 @@ The sessions has its own UUID, contains the usersID (user's UUID), and the time 
 */
 func (user *User) CreateSession() (session Session, err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
 	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
 
 	stmt, err := db.Prepare(statement)
@@ -174,4 +177,58 @@ func (user *User) CreateSession() (session Session, err error) {
 
 	err = stmt.QueryRow(UUID, user.UUID, timeNow).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
 	return
+}
+
+// visitor session
+func CreateVisitorSession() (session Session, err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("Error creating visitor session in database", err)
+
+	defer stmt.Close()
+
+	UUID := GenerateUUIDString()
+	timeNow := time.Now()
+
+	err = stmt.QueryRow(UUID, "", timeNow).Scan(&session.UUID, "", &session.CreatedAt)
+	return
+}
+
+// Delete session from database
+func DeleteSessionByUUID(UUID string) (err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement := "DELETE FROM Sessions WHERE uuid = ?"
+	stm, err := db.Prepare(statement)
+	utils.HandleError("Failed to delete session by uuid:", err)
+
+	defer stm.Close()
+
+	res, err := stm.Exec(UUID)
+
+	n, err := res.RowsAffected()
+	utils.HandleError("Rows affected error:", err)
+
+	fmt.Println("Number of rows affected: ", n)
+	return
+}
+
+// Delete all session from database
+func DeleteAllSessions() (err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	res, err := db.Exec("DELETE FROM Sessions")
+	utils.HandleError("Failed to delete all sessions:", err)
+
+	n, err := res.RowsAffected()
+	utils.HandleError("Rows affected error:", err)
+
+	fmt.Printf("The statement has affected %d rows\n", n)
+	return err
 }

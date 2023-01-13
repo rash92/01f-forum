@@ -23,11 +23,11 @@ Also handles inserting a new post that updates in realtime.
 */
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
-	sessionId, err := Session(w, r)
+	sessionId, err := GetSessionIDFromBrowser(w, r)
 	fmt.Println("session error is: ", err)
 	user := dbmanagement.User{}
 	if err == nil {
-		user = dbmanagement.SelectUserFromSession(sessionId)
+		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		data.Cookie = sessionId
 
 		data.UserInfo = user
@@ -40,7 +40,9 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			dislike := r.FormValue("dislike")
 			postid := r.FormValue("postid")
 			if comment != "" {
-				dbmanagement.InsertPost(comment, dbmanagement.SelectUserFromUUID(user.UUID).Name, 0, 0, tag, time.Now())
+				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
+				utils.HandleError("cant get user with uuid in all posts", err)
+				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
 				log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)

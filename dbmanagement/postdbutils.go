@@ -45,7 +45,8 @@ func DisplayAllPosts() {
 		var tag string
 		var time time.Time
 		row.Scan(&UUID, &content, &ownerId, &likes, &dislikes, &tag, &time)
-		owner := SelectUserFromUUID(ownerId)
+		owner, err := SelectUserFromUUID(ownerId)
+		utils.HandleError("unable to get user to display post", err)
 		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " tag", tag, " time ", time)
 	}
 }

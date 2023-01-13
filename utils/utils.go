@@ -9,3 +9,8 @@ func HandleError(message string, err error) {
 		fmt.Println(message, err.Error())
 	}
 }
+
+func AssertString(val any) string {
+	v := val.(string)
+	return v
+}

@@ -16,7 +16,7 @@ type UserData struct {
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := UserData{}
-	SessionId, err := Session(w, r)
+	SessionId, err := GetSessionIDFromBrowser(w, r)
 	if err != nil {
 		utils.HandleError("couldn't find user sessions id", err)
 	}
@@ -27,7 +27,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		return
 	}
 
-	data.User = dbmanagement.SelectUserFromSession(SessionId)
+	data.User, err = dbmanagement.SelectUserFromSession(SessionId)
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.User.Name)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.User.Name)
 
