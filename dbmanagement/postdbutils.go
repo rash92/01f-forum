@@ -73,7 +73,9 @@ func DisplayAllPosts() {
 		var dislikes int
 		var time time.Time
 		row.Scan(&UUID, &content, &ownerId, &likes, &dislikes, &time)
-		owner := SelectUserFromUUID(ownerId)
+		owner, err := SelectUserFromUUID(ownerId)
+		utils.HandleError("Selecting user from uuid failed: ", err)
+
 		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
 	}
 }

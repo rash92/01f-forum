@@ -166,6 +166,25 @@ func (user *User) CreateSession() (session Session, err error) {
 	return
 }
 
+// visitor session
+func CreateVisitorSession() (session Session, err error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+
+	stmt, err := db.Prepare(statement)
+	utils.HandleError("Error creating visitor session in database", err)
+
+	defer stmt.Close()
+
+	UUID := GenerateUUIDString()
+	timeNow := time.Now()
+
+	err = stmt.QueryRow(UUID, "", timeNow).Scan(&session.UUID, "", &session.CreatedAt)
+	return
+}
+
 // Delete session from database
 func DeleteSessionByUUID(UUID string) (err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")

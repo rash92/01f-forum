@@ -57,14 +57,23 @@ func main() {
 		controller.GoogleLogin(w, r, tmpl)
 	})
 	mux.HandleFunc("/google/callback", func(w http.ResponseWriter, r *http.Request) {
-		controller.GoogleCallback(w, r, tmpl)
+		controller.LoginUserWithGoogle(w, r, tmpl)
+	})
+
+	mux.HandleFunc("/google", func(w http.ResponseWriter, r *http.Request) {
+		// sessionId, err := controller.GetSessionIDFromBrowser(w, r)
+		// utils.HandleError("Cannot get Cookie err for google authentication:", err)
+		// fmt.Println(sessionId)
+		controller.AllPosts(w, r, tmpl)
 	})
 
 	// forum handlers
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
-		controller.UsersPosts(w, r, tmpl)
+		controller.AllPosts(w, r, tmpl)
 	})
 
+	// dbmanagement.DeleteUser("rhem")
+	// dbmanagement.DeleteAllSessions()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

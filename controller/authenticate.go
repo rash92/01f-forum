@@ -18,36 +18,24 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	tmpl.ExecuteTemplate(w, "login.html", nil)
 }
 
+// authenticate user with credentials
 func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	// executed := false
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
 		password := r.FormValue("password")
 
-		log.Println(userName, password)
-
-		user := dbmanagement.SelectUserFromName(userName)
+		user, err := dbmanagement.SelectUserFromName(userName)
+		utils.HandleError("unable to get user error:", err)
 
 		if security.CompareHash(user.Password, password) {
-			// log.Println("Password correct!")
-			session, err := user.CreateSession()
-			utils.HandleError("Cannot create user session err:", err)
-			cookie := http.Cookie{
-				Name:     "_cookie",
-				Value:    session.UUID,
-				HttpOnly: true,
-			}
-			http.SetCookie(w, &cookie)
+			err := CreateUserSessionCookie(w, r, user)
+			utils.HandleError("Failed to create session in authenticate", err)
 			http.Redirect(w, r, "/forum", http.StatusMovedPermanently)
 		} else {
 			log.Println("Incorrect Password!")
 			http.Redirect(w, r, "/login", http.StatusMovedPermanently)
 		}
-
 	}
-	// if !executed {
-	// 	tmpl.ExecuteTemplate(w, "login.html", nil)
-	// }
 }
 
 // Logs the user out
@@ -58,11 +46,9 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 	if err != http.ErrNoCookie {
 		session := cookie.Value
-		// log.Println("session:", session)
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)
 	}
-
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
@@ -82,10 +68,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		email := r.FormValue("email")
 		password := security.HashPassword(r.FormValue("password"))
 
-		log.Println(userName, email, password)
-
 		dbmanagement.InsertUser(userName, email, password, "user")
-		dbmanagement.DisplayAllUsers()
 	}
 
 	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
