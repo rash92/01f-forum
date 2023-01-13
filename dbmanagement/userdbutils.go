@@ -27,6 +27,32 @@ func InsertUser(name string, email string, password string, permission string) U
 	return User{UUID, name, email, password, permission}
 }
 
+func UpdateUserPermissionFromUUID(UUID string, newpermission string) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("updating user permission to: ", newpermission)
+
+	updateUserData := "UPDATE Users SET permission = ? WHERE uuid = ?"
+	statement, err := db.Prepare(updateUserData)
+	utils.HandleError("User Update Prepare failed: ", err)
+
+	_, err = statement.Exec(newpermission, UUID)
+	utils.HandleError("Statement Exec failed: ", err)
+}
+
+func UpdateUserPermissionFromName(Name string, newpermission string) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("updating user permission to: ", newpermission)
+
+	updateUserData := "UPDATE Users SET permission = ? WHERE name = ?"
+	statement, err := db.Prepare(updateUserData)
+	utils.HandleError("User Update Prepare failed: ", err)
+
+	_, err = statement.Exec(newpermission, Name)
+	utils.HandleError("Statement Exec failed: ", err)
+}
+
 /*
 Used to display all currently registered users.  Should only be used internally as information is not relevant for the website.
 */
@@ -48,6 +74,23 @@ func DisplayAllUsers() {
 		row.Scan(&UUID, &name, &email, &password, &permission)
 		log.Println("User: ", UUID, " ", name, " ", email, " ", password, " ", permission)
 	}
+}
+
+func SelectAllUsers() []User {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Users")
+	utils.HandleError("User query failed: ", err)
+	defer row.Close()
+
+	var allUsers []User
+	for row.Next() {
+		var currentUser User
+		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission)
+		allUsers = append(allUsers, currentUser)
+	}
+	return allUsers
 }
 
 /*

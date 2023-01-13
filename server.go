@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -16,9 +17,10 @@ func init() {
 }
 
 func main() {
+	fmt.Println("got here")
 	path := "static"
 	fs := http.FileServer(http.Dir(path))
-
+	// dbmanagement.UpdateUserPermissionFromName("admin", "admin")
 	mux := http.NewServeMux()
 
 	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
@@ -64,7 +66,13 @@ func main() {
 		controller.AllPosts(w, r, tmpl)
 	})
 
-	dbmanagement.CreateDatabaseWithTables()
+	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
+		controller.Admin(w, r, tmpl)
+	})
+	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+		controller.User(w, r, tmpl)
+	})
+
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

@@ -41,3 +41,10 @@ type Tag struct {
 	UUID    string
 	TagName string
 }
+
+type AdminRequest struct {
+	UUID            string
+	RequestFromId   string
+	RequestFromName string
+	Content         string
+}

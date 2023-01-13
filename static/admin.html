@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+
+	<body>
+		<div>
+
+            <a href="/forum">back to forum</a>
+			<h1>Pending Admin Requests</h1>
+
+			{{range .AdminRequests}}
+			<div>
+				{{.RequestFromId}} {{.RequestFromName}}
+				<p>{{.Content}}</p>
+				<form action="/admin" method="POST">
+					<button name="delete request" value="{{.UUID}}">
+						delete request
+					</button>
+					<button name="set to moderator" value="{{.RequestFromId}}">
+						Set to moderator
+					</button>
+				</form>
+			</div>
+			<br />
+			{{end}}
+
+			<h1>List of users</h1>
+			{{range .AllUsers}}
+			<div>
+				UUID: {{.UUID}}
+
+				<br />
+				<b>Username: {{.Name}}</b>
+				<b>Permission: {{.Permission}}</b>
+
+				<form action="/admin" method="POST">
+					<button name="set to user" value="{{.UUID}}">set to user</button>
+					<button name="set to moderator" value="{{.UUID}}">
+						Set to moderator
+					</button>
+					<button name="set to admin" value="{{.UUID}}">set to admin</button>
+					<button name="delete user" value="{{.UUID}}">delete user</button>
+				</form>
+			</div>
+			<br />
+			{{end}}
+
+			<h1>List of all Tags</h1>
+			{{range .AllTags}}
+			<p>{{.TagName}}</p>
+			<form action="/admin" method="POST">
+				<button name="delete tag" value={{.UUID}}>delete tag</button>
+			</form>
+			{{end}}
+		</div>
+	</body>
+</html>

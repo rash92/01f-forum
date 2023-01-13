@@ -20,7 +20,7 @@
 			<input type="submit" value="Post" />
 		</form>
 	</div>
-	<form action="{{.SubName}}" method="post"></form>
+	<form action="{{.SubName}}" method="post">
 	{{range .ListOfData}}
 	<div id="{{.UUID}}">
 			<input type="checkbox" name="postid" id="postid" value="{{.UUID}}" style="visibility: hidden;" checked>
