@@ -1,46 +1,55 @@
-{{template "header" . }}
-<div class="container">
-	<div class="input-wrapper">
-		<div>
-			<h1>Log In</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div class="container">
+		<div class="input-wrapper">
+			<div>
+				<h1>Log In</h1>
+			</div>
+			<form action="/authenticate" method="POST">
+				<div class="alternative-sign-up">
+					<div class="social">
+						<h1><i class="fa-brands fa-google"></i></h1>
+					</div>
+					<div class="social">
+						<h1><i class="fa-brands fa-github"></i></h1>
+					</div>
+					<div class="social">
+						<h1><i class="fa-brands fa-facebook"></i></h1>
+					</div>
+				</div>
+				<div class="login-input">
+					<label for="user_name"><i class="fa-solid fa-user"></i></label>
+					<input
+						type="text"
+						placeholder="Username"
+						name="user_name"
+						autocomplete="off"
+						autofocus
+					/>
+				</div>
+				<div class="login-input">
+					<label for="password"><i class="fa-solid fa-lock"></i></label>
+					<input type="password" placeholder="Password" name="password" autocomplete="off" />
+				</div>
+				<div class="login-input">
+					<button type="submit">Log In</button>
+				</div>
+			</form>
+			<form action="/google/login" method="POST">
+					<button type="submit">Google Login</button>
+			</form>
+			<p>
+				Not Registered?
+				<a href="/register">Click Here</a>
+			</p>
 		</div>
-		<form action="/authenticate" method="POST">
-			<div class="alternative-sign-up">
-				<div class="social">
-					<h1><i class="fa-brands fa-google"></i></h1>
-				</div>
-				<div class="social">
-					<h1><i class="fa-brands fa-github"></i></h1>
-				</div>
-				<div class="social">
-					<h1><i class="fa-brands fa-facebook"></i></h1>
-				</div>
-			</div>
-			<div class="login-input">
-				<label for="user_name"><i class="fa-solid fa-user"></i></label>
-				<input
-					type="text"
-					placeholder="Username"
-					name="user_name"
-					autocomplete="off"
-					autofocus
-				/>
-			</div>
-			<div class="login-input">
-				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" autocomplete="off" />
-			</div>
-			<div class="login-input">
-				<button type="submit">Log In</button>
-			</div>
-		</form>
-		<form action="/google/login" method="POST">
-				<button type="submit">Google Login</button>
-		</form>
-		<p>
-			Not Registered?
-			<a href="/register">Click Here</a>
-		</p>
 	</div>
-</div>
-{{ template "footer"}}
+</body>
+</html>
