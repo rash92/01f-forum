@@ -18,7 +18,7 @@ type GoogleAccount struct {
 func GoogleLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	googleConfig := config.SetupConfig()
 	url := googleConfig.AuthCodeURL("randomstate")
-	//redirect to google login page
+	// redirect to google login page
 	http.Redirect(w, r, url, http.StatusFound)
 }
 
@@ -36,7 +36,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	// configuration
 	googleConfig := config.SetupConfig()
 
-	//exchange code for token
+	// exchange code for token
 	token, err := googleConfig.Exchange(context.Background(), code)
 	utils.HandleError("Code-taken exchange failed", err)
 
@@ -45,7 +45,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	utils.HandleError("Failed to fetch user data from google:", err)
 
 	// parse response
-	var value map[string]any
+	var value map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&value)
 	utils.HandleError("Json parsing failed", err)
 
@@ -83,6 +83,5 @@ func LoginUserWithGoogle(w http.ResponseWriter, r *http.Request, tmpl *template.
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-
 	tmpl.ExecuteTemplate(w, "redirect.html", nil)
 }

@@ -10,7 +10,7 @@ func HandleError(message string, err error) {
 	}
 }
 
-func AssertString(val any) string {
+func AssertString(val interface{}) string {
 	v := val.(string)
 	return v
 }
