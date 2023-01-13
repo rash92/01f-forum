@@ -36,6 +36,9 @@ func main() {
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		controller.Login(w, r, tmpl)
 	})
+	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		controller.Logout(w, r, tmpl)
+	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		controller.Register(w, r, tmpl)
 	})

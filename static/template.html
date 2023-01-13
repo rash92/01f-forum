@@ -1,6 +1,5 @@
 {{ define "header"}}
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -39,11 +38,11 @@
 		{{else}}
 		<div class="menu">
 			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
-			
-				<div class="tooltip"><li class="signout-icon"><a href="/signout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
-					<span class="signout-text"> Sign Out</span>
-				</div>
-				
+			<div class="tooltip">
+				<li class="signout-icon"><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+				<span class="signout-text"> Log Out</span>
+			</div>
+
 		</div>
 		{{end}}
 	</nav>
