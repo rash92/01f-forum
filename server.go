@@ -25,7 +25,6 @@ func main() {
 			Certificates: []tls.Certificate{cert},
 		},
 	}
-
 	path := "./static"
 	fs := http.FileServer(http.Dir(path))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -84,6 +83,12 @@ func main() {
 	// forum handlers
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		controller.AllPosts(w, r, tmpl)
+	})
+	mux.HandleFunc("/submit", func(w http.ResponseWriter, r *http.Request) {
+		controller.Submit(w, r, tmpl)
+	})
+	mux.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
+		controller.Post(w, r, tmpl)
 	})
 
 	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {

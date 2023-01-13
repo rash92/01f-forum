@@ -1,3 +1,11 @@
+:root {
+    --main-color: #B9CDDA;
+    --highlight-color: #D7DAE5;
+    --like: #A5AA52;
+    --dislke: #D64933;
+    --dim-font: rgba(0, 0, 0, 0.5);
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -5,9 +13,11 @@
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+html,
 body {
-	background-color: rgba(250, 249, 246);
-	background-size: cover;
+    background: rgb(185, 205, 218);
+    background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
+    background-size: cover;
 }
 
 a {
@@ -19,16 +29,20 @@ li {
 	list-style-type: none;
 }
 
+::placeholder {
+    padding: 10px 20px;
+}
+
 /* NAVBAR */
 .navbar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	/* position: fixed; */
-	width: 100vw;
-	background-color: rgba(250, 249, 246);
-	height: 44px;
-	border-bottom: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    width: 100vw;
+    background-color: var(--highlight-color);
+    height: 54px;
+    border-bottom: 1px solid black;
 }
 
 .logo {
@@ -41,22 +55,100 @@ li {
 	transition: 0.3s ease;
 }
 
+.searchbar {
+    width: 100%;
+    max-width: 600px;
+    height: 75%;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 10px;
+}
+
+.searchbar input {
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding: 10px;
+
+}
+
+.searchbar button {
+    width: 25px;
+    border: 0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    color: var(--dim-font);
+    cursor: pointer;
+}
+
+.searchbar button:hover {
+    color: black;
+    transition: 0.3s ease;
+}
+
+.create {
+    padding: 10px;
+    border-left: 1px solid black;
+}
+
+.create a:hover {
+    color: var(--dim-font);
+}
+
 .menu {
 	display: flex;
 	gap: 0.5em;
 	font-size: 18px;
 }
 
-.menu li:hover {
-	transform: translateY(-5px);
-	transition: 0.3s ease;
-}
-
 .menu li {
-	padding: 5px 14px;
+    color: black;
+    padding: 10px 5px;
+    cursor: pointer;
 }
 
-/* CONTAINER */
+.menu p {
+    padding: 10px 0px;
+}
+
+.username {
+    font-size: 22px;
+    padding-right: 10px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.tooltip .signout-text {
+    visibility: hidden;
+    width: 100px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+    background-color: var(--dim-font);
+    color: #fff;
+    text-align: center;
+    padding: 2px 0;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .signout-text {
+    visibility: visible;
+}
+
+
+/* CONTAINERS */
 .container {
 	display: flex;
 	flex-direction: column;
@@ -67,17 +159,25 @@ li {
 	padding: 5px;
 }
 
+.container-post {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    padding: 50px;
+
+}
+
 /* LOGIN CARD */
 .input-wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	border: 2px solid black;
-	/* background: rgb(160, 195, 210);
-    background: linear-gradient(0deg, rgba(160, 195, 210, 1) 0%, rgba(224, 237, 242, 1) 100%); */
-	border-radius: 20px;
-	padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--highlight-color);
+    padding: 25px;
 }
 
 .login-input {
@@ -101,15 +201,249 @@ li {
 }
 
 .login-input button {
-	background: transparent;
-	flex: auto;
-	outline: none;
-	padding: 10px;
-	font-size: 18px;
-	border: 2px solid black;
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 .login-input button:hover {
-	transform: translateY(-5px);
-	transition: 0.3s ease;
+    background-color: var(--main-color);
+    transition: 0.3s ease;
+}
+
+.input-wrapper a {
+    text-decoration: underline;
+}
+
+.alternative-sign-up {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px;
+    margin: 20px;
+}
+
+.social {
+    cursor: pointer;
+    ;
+}
+
+.social i:hover {
+    color: var(--main-font)
+}
+
+/* POST */
+
+.post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+    width: 100%;
+    max-width: 700px;
+    background-color: var(--highlight-color);
+    padding: 10px;
+    margin: 20px;
+}
+
+.post:hover {
+    border: 2px solid var(--main-color);
+}
+
+.post-tags-author {
+    color: var(--dim-font);
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+}
+
+.post-comments-likes-dislikes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.post-likes-dislikes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.like,
+.dislike {
+    background: transparent;
+    border-style: none;
+}
+
+.post-likes-dislikes p {
+    margin: 0px 5px;
+    font-size: 1em;
+}
+
+.post-likes-dislikes .like:hover {
+    color: var(--like);
+    transform: translateY(-3px);
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.post-likes-dislikes .dislike:hover {
+    color: var(--dislke);
+    transform: translateY(3px);
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+/* SINGLE POST */
+
+.single-post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+    width: 100vw;
+    max-width: 900px;
+    height: fit-content;
+    background-color: var(--highlight-color);
+    padding: 10px;
+    margin: 10px;
+}
+
+.single-post form {
+    height: fit-content;
+}
+
+.single-post-author {
+    color: var(--dim-font);
+    margin: 10px 0;
+}
+
+.single-post-content {
+    margin: 10px 0;
+}
+
+.single-post textarea {
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+}
+
+.single-post button:not(.like, .dislike) {
+    margin: 10px 0;
+    width: 20%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.single-post button:hover:not(.like, .dislike) {
+    border: 1px solid black;
+}
+
+/* COMMENTS */
+
+.commentor-name-time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.commentor-name-time p {
+    margin: 5px 0;
+    color: var(--dim-font);
+}
+
+.comment {
+    margin: 5px 0;
+}
+
+.textbox {
+    margin: 10px 0;
+}
+
+/* SUBMISSION */
+
+.submission {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: right;
+    height: fit-content;
+    background: var(--highlight-color);
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.submission input {
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    height: 10%;
+    padding: 10px;
+
+}
+
+.submission textarea {
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+}
+
+.submission-bottom-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.image-upload {
+    margin: 10px 0;
+    width: 20%;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+    cursor: pointer;
+}
+
+.image-upload:hover {
+    border: 1px solid black;
+}
+
+.submission button {
+    margin: 10px 0;
+    width: 20%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.submission button:hover {
+    border: 1px solid black;
 }

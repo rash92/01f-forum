@@ -1,38 +1,63 @@
 {{ define "header"}}
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-			integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-			crossorigin="anonymous"
-			referrerpolicy="no-referrer"
-		/>
-		<link rel="stylesheet" href="static/stylesheets/styles.css" />
-		<title>FORUM</title>
-	</head>
-	<body>
-		<nav class="navbar">
-			<!-- Logo -->
-			<div class="logo">
-				<a accesskey="h" href="/">
-					F
-					<i class="fa-regular fa-comment"></i>
-					rum
-				</a>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/static/stylesheets/styles.css">
+	<title>{{.TitleName}}</title>
+</head>
+
+<body>
+	{{$UserInfo := .UserInfo}}
+	<nav class="navbar">
+		<!-- LOGO -->
+		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
+		<!-- SEARCHBAR & CREATE -->
+		<form class="searchbar" action="/" method="POST">
+			<input type="text" placeholder="Search Forum" name="search" id="searchInput" autocomplete="off">
+			<button type="submit">
+				<i class="fa-solid fa-magnifying-glass"></i>
+			</button>
+			{{if ne $UserInfo.Name ""}}
+			<div class="create">
+				<a href="/submit"><i class="fa-solid fa-plus"></i> Create</a>
 			</div>
-			<!-- Menu -->
-			<div class="menu">
-				<li><a accesskey="a" href="/logout">Logout</a></li>
-				<li><a accesskey="a" href="/login">Login</a></li>
+			{{end}}
+		</form>
+		<!-- MENU -->
+		{{if eq $UserInfo.Name ""}}
+		<div class="menu">
+			<li><a accesskey="a" href="/login">Sign in</a></li>
+			<p>|</p>
+			<li><a accesskey="a" href="/register">Sign up</a></li>
+		</div>
+		{{else}}
+		<div class="menu">
+			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
+			<div class="tooltip">
+				<li class="signout-icon"><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+				<span class="signout-text"> Log Out</span>
 			</div>
-		</nav>
-		{{end}} {{ define "footer"}}
-		<footer></footer>
-	</body>
+			<a href="/user">User Page</a>
+			{{ if eq $UserInfo.Permission "admin"}}
+			<a href="/admin">admin tools</a>
+			{{end}}
+		</div>
+		{{end}}
+	</nav>
+	{{end}}
+
+	{{ define "footer"}}
+	<footer>
+
+	</footer>
+</body>
+
 </html>
 {{end}}

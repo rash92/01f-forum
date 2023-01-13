@@ -14,6 +14,7 @@ type Data struct {
 	ListOfData []dbmanagement.Post
 	Cookie     string
 	UserInfo   dbmanagement.User
+	TitleName  string
 }
 
 /*
