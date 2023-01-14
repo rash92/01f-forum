@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func Submit(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	data.TitleName = "Submit to Forum"
-	tmpl.ExecuteTemplate(w, "submit.html", data)
+	tmpl.ExecuteTemplate(w, "submitpost.html", data)
 }

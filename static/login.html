@@ -4,18 +4,30 @@
 		<div>
 			<h1>Log In</h1>
 		</div>
-		<form action="/authenticate" method="POST">
-			<div class="alternative-sign-up">
-				<div class="social">
-					<h1><i class="fa-brands fa-google"></i></h1>
-				</div>
-				<div class="social">
-					<h1><i class="fa-brands fa-github"></i></h1>
-				</div>
-				<div class="social">
-					<h1><i class="fa-brands fa-facebook"></i></h1>
-				</div>
+		<div class="alternative-sign-up">
+			<div class="social">
+				<form action="/google/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-google"></i>
+					</button>
+				</form>
 			</div>
+			<div class="social">
+				<form action="/github/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-github"></i>
+					</button>
+				</form>
+			</div>
+			<div class="social">
+				<form action="/facebook/login" method="POST">
+				<button class="social-button" type="submit">
+						<i class="fa-brands fa-facebook"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+		<form action="/authenticate" method="POST">
 			<div class="login-input">
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
 				<input
@@ -28,14 +40,16 @@
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" autocomplete="off" />
+				<input
+					type="password"
+					placeholder="Password"
+					name="password"
+					autocomplete="off"
+				/>
 			</div>
 			<div class="login-input">
 				<button type="submit">Log In</button>
 			</div>
-		</form>
-		<form action="/google/login" method="POST">
-				<button type="submit">Google Login</button>
 		</form>
 		<p>
 			Not Registered?

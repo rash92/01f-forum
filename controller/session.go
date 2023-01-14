@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"net/http"
@@ -30,9 +29,9 @@ func CreateUserSessionCookie(w http.ResponseWriter, r *http.Request, user dbmana
 		Name:     "_cookie",
 		Value:    session.UUID,
 		HttpOnly: true,
+		Path:     "/",
 	}
-	fmt.Println("google user cookie created here")
+	// fmt.Println("google user cookie created here")
 	http.SetCookie(w, &cookie)
-	fmt.Println("google user cookie created here in the browser")
 	return err
 }

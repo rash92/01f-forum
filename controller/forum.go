@@ -5,7 +5,6 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
 )
@@ -25,13 +24,14 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := GetSessionIDFromBrowser(w, r)
-	fmt.Println("session error is: ", err)
+	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
 		err := CreateUserSessionCookie(w, r, dbmanagement.User{})
 		if err != nil {
 			utils.HandleError("visitor cookie hack didn't work", err)
 		} else {
 			sessionId, _ = GetSessionIDFromBrowser(w, r)
+			http.Redirect(w, r, "/", http.StatusFound)
 		}
 	}
 
@@ -41,7 +41,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 
 		data.UserInfo = user
-		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
 			comment := r.FormValue("post")
@@ -49,23 +49,27 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
 			postid := r.FormValue("postid")
+
 			if comment != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
 				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
-				log.Println(tag)
+				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
 				}
 			}
+
 			if like == "Like" {
 				dbmanagement.AddReactionToPost(user.UUID, postid, 1)
 			}
+
 			if dislike == "Dislike" {
 				dbmanagement.AddReactionToPost(user.UUID, postid, -1)
 			}
+
 			idToDelete := r.FormValue("deletepost")
-			fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
+			// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 			if idToDelete != "" {
 				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 			}
@@ -81,9 +85,17 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 		data.UserInfo = user
 		data.ListOfData = append(data.ListOfData, posts...)
-		log.Println("Forum: ", data)
-		tmpl.ExecuteTemplate(w, "forum.html", data)
+		fmt.Println()
+		fmt.Println()
+		// fmt.Println("Forum data: ", data)
 		fmt.Println("user info is: ", data.UserInfo)
+		fmt.Println("user cookie is: ", data.Cookie)
+		fmt.Println()
+		tmpl.ExecuteTemplate(w, "forum.html", data)
+		fmt.Println()
+		fmt.Println("user cookie is: ", data.Cookie)
+		fmt.Println("user info is: ", data.UserInfo)
+		fmt.Println()
 	}
 }
 

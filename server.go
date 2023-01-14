@@ -73,19 +73,19 @@ func main() {
 		controller.LoginUserWithGoogle(w, r, tmpl)
 	})
 
-	mux.HandleFunc("/google", func(w http.ResponseWriter, r *http.Request) {
-		// sessionId, err := controller.GetSessionIDFromBrowser(w, r)
-		// utils.HandleError("Cannot get Cookie err for google authentication:", err)
-		// fmt.Println(sessionId)
-		controller.AllPosts(w, r, tmpl)
-	})
+	// mux.HandleFunc("/google", func(w http.ResponseWriter, r *http.Request) {
+	// 	// sessionId, err := controller.GetSessionIDFromBrowser(w, r)
+	// 	// utils.HandleError("Cannot get Cookie err for google authentication:", err)
+	// 	// fmt.Println(sessionId)
+	// 	controller.AllPosts(w, r, tmpl)
+	// })
 
 	// forum handlers
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		controller.AllPosts(w, r, tmpl)
 	})
-	mux.HandleFunc("/submit", func(w http.ResponseWriter, r *http.Request) {
-		controller.Submit(w, r, tmpl)
+	mux.HandleFunc("/submitpost", func(w http.ResponseWriter, r *http.Request) {
+		controller.SubmitPost(w, r, tmpl)
 	})
 	mux.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
 		controller.Post(w, r, tmpl)
@@ -100,6 +100,6 @@ func main() {
 
 	// dbmanagement.DeleteUser("rhem")
 	// dbmanagement.DeleteAllSessions()
-	dbmanagement.DisplayAllUsers()
+	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

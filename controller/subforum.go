@@ -4,7 +4,6 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
 )
@@ -20,6 +19,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 	sessionId, err := GetSessionIDFromBrowser(w, r)
 	utils.HandleError("cant get user", err)
 	user, err := dbmanagement.SelectUserFromSession(sessionId)
+	utils.HandleError("could not get user session in subforum", err)
 
 	if r.Method == "POST" {
 		comment := r.FormValue("post")
@@ -48,6 +48,6 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 	data.Cookie = sessionId
 	data.UserInfo = user
 	data.ListOfData = append(data.ListOfData, posts...)
-	log.Println("SubForum: ", data)
+	// log.Println("SubForum: ", data)
 	tmpl.ExecuteTemplate(w, "subforum.html", data)
 }

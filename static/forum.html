@@ -1,16 +1,22 @@
-{{ template "header" . }}
-{{$UserInfo := .UserInfo}}
-{{range .ListOfData}}
-	<div class="container-post">
-		<div class="post"> 
-			{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
-		<form method="POST">
-			<button name="deletepost" value={{.UUID}}>delete</button>
-		</form>
-		{{end}}
-			<a href="/post">
-				<form action="/forum" method="post" target="_self">
-					<input type="checkbox" name="postid" id="postid" value="{{.UUID}}" style="visibility: hidden;" checked>
+{{ template "header" . }} {{$UserInfo := .UserInfo}} {{range .ListOfData}}
+<div class="container-post">
+	<div class="post">
+		<a href="/post">
+			{{ if or (eq $UserInfo.Name .OwnerId ) (eq
+			$UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
+			<form method="POST">
+				<button name="deletepost" value="{{.UUID}}">delete</button>
+			</form>
+			{{end}}
+			<form action="/forum" method="post" target="_self">
+				<input
+					type="checkbox"
+					name="postid"
+					id="postid"
+					value="{{.UUID}}"
+					style="visibility: hidden"
+					checked
+				/>
 				<div class="post-tags-author">
 					<a href="/{{.Tag}}">{{.Tag}}</a>
 				</div>
@@ -26,27 +32,28 @@
 				</div>
 				<div class="post-comments-likes-dislikes">
 					<div>
-						<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
+						<p>
+							<i class="fa-regular fa-comment"></i>
+							3 Comments
+						</p>
 					</div>
-					</div>
-				</a>
-					<div class="post-likes-dislikes">
-						<div>{{.Likes}}</div> <input type="submit" name="like" id="like" value="Like">
-						<button class="like"><i class="fa-solid fa-thumbs-up"></i></button>
-						<p>0</p>
-						<div>{{.Dislikes}}</div> <input type="submit" name="dislike" id="dislike" value="Dislike">
-						<button class="dislike"><i class="fa-solid fa-thumbs-down"></i></button>
-						<p>0</p>
-					</div>
-				</form>
-			</div>
-	</div>	
+				</div>
+				<div class="post-likes-dislikes">
+					<div>{{.Likes}}</div>
+					<input type="submit" name="like" id="like" value="Like" />
+					<button class="like"><i class="fa-solid fa-thumbs-up"></i></button>
+					<p>0</p>
+					<div>{{.Dislikes}}</div>
+					<input type="submit" name="dislike" id="dislike" value="Dislike" />
+					<button class="dislike">
+						<i class="fa-solid fa-thumbs-down"></i>
+					</button>
+					<p>0</p>
+				</div>
+			</form>
+		</a>
 	</div>
-	<br>
+</div>
+<br />
 
-
-
-	{{end}}
-</body>
-
-{{template "footer"}}
+{{end}} {{template "footer"}}

@@ -64,24 +64,12 @@ func LoginUserWithGoogle(w http.ResponseWriter, r *http.Request, tmpl *template.
 	if err == nil {
 		// create session cookie for user
 		CreateUserSessionCookie(w, r, user)
-		// sessiionid, err := GetSessionIDFromBrowser(w, r)
-		// fmt.Println("within log in with google after cookie creation", sessiionid, err)
-		// cookie, err := r.Cookie("_cookie")
-		// utils.HandleError("Cannot get Cookie Err:", err)
-		// fmt.Println("within log in with google after cookie creation with cookie manually", cookie, err)
-		AllPosts(w, r, tmpl)
 	} else {
 		// create user
 		dbmanagement.InsertUser(account.Name, account.Email, "", "user")
 		// create session cookie for user
-		// CreateUserSessionCookie(w, r, user)
+		CreateUserSessionCookie(w, r, user)
 		// utils.HandleError("Failed to create session in google authenticate", err)
-		// RedirectPage(w, r, tmpl)
 	}
-	// http.Redirect(w, r, "/forum", http.StatusFound)
-	// fmt.Println("account info", account)
-}
-
-func RedirectPage(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "redirect.html", nil)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

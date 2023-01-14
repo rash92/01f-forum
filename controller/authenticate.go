@@ -49,6 +49,13 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)
 	}
+	clearcookie := http.Cookie{
+		Name:     "_cookie",
+		Value:    "",
+		HttpOnly: true,
+		Path:     "/",
+	}
+	http.SetCookie(w, &clearcookie)
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
