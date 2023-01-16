@@ -11,19 +11,19 @@ import (
 	"net/http"
 )
 
-type OauthAccount struct {
-	Name, Email string
+type OAuthAccessResponse struct {
+	AccessToken string `json:"access_token"`
 }
 
-func GoogleLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	googleConfig := config.GoogleSetupConfig()
-	url := googleConfig.AuthCodeURL("randomstate")
-	// redirect to google login page
+func GithubLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	githubConfig := config.GithubSetupConfig()
+	url := githubConfig.AuthCodeURL("randomstate")
+	// redirect to github login page
 	http.Redirect(w, r, url, http.StatusFound)
 }
 
-func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) OauthAccount {
-	// state
+func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) OauthAccount {
+	//state
 	state := r.URL.Query()["state"][0]
 	if state != "randomstate" {
 		fmt.Fprintln(w, "Google auth state error")
@@ -31,34 +31,39 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	}
 
 	// code
-	code := r.URL.Query()["code"][0]
+	// code := r.URL.Query()["code"][0]
+	code := r.FormValue("code")
+	fmt.Println("code is:", code)
 
 	// configuration
-	googleConfig := config.GoogleSetupConfig()
+	githubConfig := config.GithubSetupConfig()
 
 	// exchange code for token
-	token, err := googleConfig.Exchange(context.Background(), code)
+	token, err := githubConfig.Exchange(context.Background(), code)
 	utils.HandleError("Code-taken exchange failed", err)
 
-	// use google api to get user info
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
-	utils.HandleError("Failed to fetch user data from google:", err)
+	client := githubConfig.Client(context.Background(), token)
+
+	res, err := client.Get("https://api.github.com/user")
+	utils.HandleError("Failed to fetch user data from github:", err)
+
+	defer res.Body.Close()
 
 	// parse response
 	var value map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&value)
+	err = json.NewDecoder(res.Body).Decode(&value)
 	utils.HandleError("Json parsing failed", err)
 
 	account := OauthAccount{
-		Name:  utils.AssertString(value["given_name"]),
+		Name:  utils.AssertString(value["name"]),
 		Email: utils.AssertString(value["email"]),
 	}
 
 	return account
 }
 
-func LoginUserWithGoogle(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	account := GoogleCallback(w, r, tmpl)
+func LoginUserWithGithub(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	account := GithubCallback(w, r, tmpl)
 
 	user, err := dbmanagement.SelectUserFromEmail(account.Email)
 	if err == nil {

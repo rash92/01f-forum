@@ -73,12 +73,14 @@ func main() {
 		controller.LoginUserWithGoogle(w, r, tmpl)
 	})
 
-	// mux.HandleFunc("/google", func(w http.ResponseWriter, r *http.Request) {
-	// 	// sessionId, err := controller.GetSessionIDFromBrowser(w, r)
-	// 	// utils.HandleError("Cannot get Cookie err for google authentication:", err)
-	// 	// fmt.Println(sessionId)
-	// 	controller.AllPosts(w, r, tmpl)
-	// })
+	// github authentication handlers
+	mux.HandleFunc("/github/login", func(w http.ResponseWriter, r *http.Request) {
+		controller.GithubLogin(w, r, tmpl)
+	})
+
+	mux.HandleFunc("/github/callback", func(w http.ResponseWriter, r *http.Request) {
+		controller.LoginUserWithGithub(w, r, tmpl)
+	})
 
 	// forum handlers
 	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
@@ -98,8 +100,8 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 
-	// dbmanagement.DeleteUser("rhem")
+	dbmanagement.DeleteUser("rhemtro")
 	// dbmanagement.DeleteAllSessions()
-	// dbmanagement.DisplayAllUsers()
+	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
