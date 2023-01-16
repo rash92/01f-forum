@@ -19,7 +19,6 @@ func GithubLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template
 func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	//state
 	state := r.FormValue("state")
-	fmt.Println(state)
 	if state != "randomstate" {
 		fmt.Fprintln(w, "Google auth state error")
 		return
@@ -27,6 +26,7 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	// code
 	code := r.FormValue("code")
+	fmt.Println("code is:", code)
 
 	// configuration
 	githubConfig := GithubSetupConfig()
@@ -43,6 +43,12 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	defer resp.Body.Close()
 
 	// parse response
-	account := ParseOauthResponse(resp)
+	value := ParseOauthResponse(resp)
+
+	account := OauthAccount{
+		Name:  utils.AssertString(value["name"]),
+		Email: utils.AssertString(value["email"]),
+	}
+
 	LoginUserWithOauth(w, r, tmpl, account)
 }

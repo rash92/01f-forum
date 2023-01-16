@@ -16,16 +16,9 @@ func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
 }
 
-// func HandleRoute(route string, wr func(w http.ResponseWriter, r *http.Request, tmpl *template.Template)) {
-// 	mux := http.NewServeMux()
-// 	mux.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
-// 		wr(w, r, tmpl)
-// 	})
-// }
-
 func main() {
 	mux := http.NewServeMux()
-	cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
+	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
 		Addr:    ":8080",
 		Handler: mux,
@@ -108,8 +101,8 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 
-	// dbmanagement.DeleteUser("rhemtro")
+	// dbmanagement.DeleteUser("rhem")
 	// dbmanagement.DeleteAllSessions()
-	dbmanagement.DisplayAllUsers()
+	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

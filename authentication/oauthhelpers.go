@@ -9,16 +9,12 @@ import (
 )
 
 // Helper to parse oauth response
-func ParseOauthResponse(resp *http.Response) OauthAccount {
+func ParseOauthResponse(resp *http.Response) map[string]interface{} {
 	var value map[string]interface{}
 	err := json.NewDecoder(resp.Body).Decode(&value)
 	utils.HandleError("Json parsing failed", err)
 
-	account := OauthAccount{
-		Name:  utils.AssertString(value["given_name"]),
-		Email: utils.AssertString(value["email"]),
-	}
-	return account
+	return value
 }
 
 // Gets account details from Oauth response and creates if they don't exist, if they do it creates a session and logs them in

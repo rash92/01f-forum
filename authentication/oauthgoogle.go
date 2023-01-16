@@ -39,7 +39,12 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	utils.HandleError("Failed to fetch user data from google:", err)
 
 	// parse response
-	account := ParseOauthResponse(resp)
+	value := ParseOauthResponse(resp)
+
+	account := OauthAccount{
+		Name:  utils.AssertString(value["given_name"]),
+		Email: utils.AssertString(value["email"]),
+	}
 	// login and create session for user
 	LoginUserWithOauth(w, r, tmpl, account)
 }
