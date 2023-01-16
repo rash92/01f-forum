@@ -45,7 +45,6 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
 	cookie, err := r.Cookie("session")
 	utils.HandleError("Failed to get cookie", err)
-
 	if err != http.ErrNoCookie {
 		session := cookie.Value
 		err := dbmanagement.DeleteSessionByUUID(session)
@@ -72,9 +71,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
-
 		dbmanagement.InsertUser(userName, email, password, "user")
 	}
-
 	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
 }
