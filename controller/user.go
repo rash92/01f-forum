@@ -13,6 +13,8 @@ type UserData struct {
 	UserPosts    []dbmanagement.Post
 	UserComments []dbmanagement.Comment
 	User         dbmanagement.User
+	TitleName    string
+	Cookie       string
 }
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
