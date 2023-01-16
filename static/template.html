@@ -24,14 +24,21 @@
 			<button type="submit">
 				<i class="fa-solid fa-magnifying-glass"></i>
 			</button>
-			{{if ne $UserInfo.Name ""}}
+			{{if not .}}
+			{{else if ne $UserInfo.Name ""}}
 			<div class="create">
 				<a href="/submitpost"><i class="fa-solid fa-plus"></i> Create</a>
 			</div>
 			{{end}}
 		</form>
 		<!-- MENU -->
-		{{if eq $UserInfo.Name ""}}
+		{{if not .}}
+		<div class="menu">
+			<li><a accesskey="a" href="/login">Sign in</a></li>
+			<p>|</p>
+			<li><a accesskey="a" href="/register">Sign up</a></li>
+		</div>
+		{{else if eq $UserInfo.Name "" }}
 		<div class="menu">
 			<li><a accesskey="a" href="/login">Sign in</a></li>
 			<p>|</p>
