@@ -12,7 +12,7 @@ import (
 type UserData struct {
 	UserPosts    []dbmanagement.Post
 	UserComments []dbmanagement.Comment
-	User         dbmanagement.User
+	UserInfo     dbmanagement.User
 	TitleName    string
 	Cookie       string
 }
@@ -30,10 +30,11 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		return
 	}
 
-	data.User, err = dbmanagement.SelectUserFromSession(SessionId)
+	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
 	utils.HandleError("Could not get user session in user", err)
-	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.User.Name)
-	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.User.Name)
+	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
+	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)
+	data.TitleName = "Welcome"
 
 	if r.Method == "POST" {
 		postIdToDelete := r.FormValue("deletepost")
@@ -49,7 +50,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		userIdToRequestModerator := r.FormValue("request to become moderator")
 		// fmt.Println("requesting user id: ", userIdToRequestModerator, "to become moderator")
 		if userIdToRequestModerator != "" {
-			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.User.Name, "this user is asking to become a moderator")
+			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "this user is asking to become a moderator")
 			fmt.Println("new request content is: ", newrequest.Content)
 		}
 	}
