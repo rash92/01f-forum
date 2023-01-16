@@ -102,6 +102,5 @@ func main() {
 	})
 
 	dbmanagement.DeleteAllSessions()
-	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
