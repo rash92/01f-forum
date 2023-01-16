@@ -1,52 +1,49 @@
 {{ template "header" . }}
 {{$UserInfo := .UserInfo}}
 {{range .ListOfData}}
-	<div class="container-post">
-		<div class="post"> 
-			{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
+<div class="container-post">
+	<div class="post">
+		{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
 		<form method="POST">
 			<button name="deletepost" value={{.UUID}}>delete</button>
 		</form>
 		{{end}}
-			<a href="/post">
-				<form action="/forum" method="post" target="_self">
-					<input type="checkbox" name="postid" id="postid" value="{{.UUID}}" style="visibility: hidden;" checked>
-				<div class="post-tags-author">
-					<a href="/{{.Tag}}">{{.Tag}}</a>
-				</div>
-				<div class="post-title">
-					<p>{{.FormattedTime}}</p>
-					<h2>Look at this amazing photo of Jupiter I took!</h2>
-				</div>
-				<div class="post-tags-author">
-					<p>{{.OwnerId}}</p>
-				</div>
-				<div class="post-image">
-					<div>{{.Content}}</div>
-				</div>
-				<div class="post-comments-likes-dislikes">
-					<div>
-						<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
-					</div>
-					</div>
-				</a>
-					<div class="post-likes-dislikes">
-						<div>{{.Likes}}</div> <input type="submit" name="like" id="like" value="Like">
-						<button class="like"><i class="fa-solid fa-thumbs-up"></i></button>
-						<p>0</p>
-						<div>{{.Dislikes}}</div> <input type="submit" name="dislike" id="dislike" value="Dislike">
-						<button class="dislike"><i class="fa-solid fa-thumbs-down"></i></button>
-						<p>0</p>
-					</div>
-				</form>
+		<a href="/posts/{{.UUID}}">Post</a>
+		<form action="/forum" method="post" target="_self">
+			<div class="post-tags-author">
+				<a href="/categories/{{.Tag}}">{{.Tag}}</a>
 			</div>
-	</div>	
+			<div class="post-title">
+				<p>{{.FormattedTime}}</p>
+				<h2>Look at this amazing photo of Jupiter I took!</h2>
+			</div>
+			<div class="post-tags-author">
+				<p>{{.OwnerId}}</p>
+			</div>
+			<div class="post-image">
+				<div>{{.Content}}</div>
+			</div>
+			<div class="post-comments-likes-dislikes">
+				<div>
+					<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
+				</div>
+			</div>
+			<div class="post-likes-dislikes">
+				<button class="like" name="like" value="{{.UUID}}"><i class="fa-solid fa-thumbs-up"></i></button>
+				<p>{{.Likes}}</p>
+				<button class="dislike" name="dislike" value="{{.UUID}}"><i
+						class="fa-solid fa-thumbs-down"></i></button>
+				<p>{{.Dislikes}}</p>
+			</div>
+		</form>
 	</div>
-	<br>
+</div>
+</div>
+<br>
 
 
 
-	{{end}}
+{{end}}
 </body>
 
 {{template "footer"}}

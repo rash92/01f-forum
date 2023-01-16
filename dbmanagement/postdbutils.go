@@ -62,7 +62,8 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time, &post.Tag, &post.FormattedTime)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Tag, &post.Time)
+	post.FormattedTime = strings.TrimSuffix(post.Time.Format(time.RFC822), "UTC")
 	utils.HandleError("Query Row failed: ", err)
 
 	return post

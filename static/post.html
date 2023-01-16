@@ -1,56 +1,59 @@
 {{ template "header" . }}
-    <div class="container-post">
-        <div class="single-post">
-            <div class="single-post-title">
-                <h2>POST TITLE</h2>
-            </div>
-            <div class="single-post-author">
-                <p>Posted by AUTHOR at TIME</p>
-            </div>
-            <div class="post-image">
-                <img src="https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
-                    alt="Picture of Juptier">
-            </div>
-            <div class="single-post-content">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae lectus eu enim fringilla euismod
-                    id ut odio. Pellentesque ac dolor ut dolor faucibus mollis nec sed ante. Praesent commodo, quam sed
-                    tempor egestas, libero mi interdum velit, vel vestibulum ante metus ultricies turpis. Donec erat
-                    tellus, consectetur eu efficitur nec, venenatis in orci. Donec dictum erat a dui dignissim sodales.
-                    Vivamus quis nisi ligula. Nulla efficitur est id ullamcorper consequat. Proin viverra est eu purus
-                    semper molestie.</p>
-            </div>
-            <div class="post-comments-likes-dislikes">
-                <div>
-                    <p><i class="fa-regular fa-comment"></i> 3 Comments</p>
-                </div>
-                <div class="post-likes-dislikes">
-                    <button type="submit" class="like"><i class="fa-solid fa-thumbs-up"></i></button>
-                    <p>0</p>
-                    <button type="submit" class="dislike"><i class="fa-solid fa-thumbs-down"></i></button>
-                    <p>0</p>
-                </div>
-            </div>
-            <form action="/" method="POST">
-                <textarea name="comment" id="" cols="30" rows="5" placeholder="Comment" autofocus></textarea>
-            </textarea>
-            <button type="submit">Comment</button>
-            </form>
+{{$PostInfo := .Post}}
+<div class="container-post">
+    <div class="single-post">
+        <div class="single-post-title">
+            <h2>POST TITLE</h2>
         </div>
-        <div class="single-post">
-            <div class="commentor-name-time">
-                <p>Author</p>
-                <p>12:00</p>
-            </div>
-            <div class="comment">
-                <p>This is a comment</p>
+        <div class="single-post-author">
+            <p>Posted by {{$PostInfo.OwnerId}} at {{$PostInfo.FormattedTime}}</p>
+        </div>
+        <div class="post-image">
+            <img src="https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
+                alt="Picture of Juptier">
+        </div>
+        <div class="single-post-content">
+            <p>{{$PostInfo.Content}}</p>
+        </div>
+        <div class="post-comments-likes-dislikes">
+            <div>
+                <p><i class="fa-regular fa-comment"></i>{{.NumOfComments}}</p>
             </div>
             <div class="post-likes-dislikes">
-                <button type="submit" class="like"><i class="fa-solid fa-thumbs-up"></i></button>
-                <p>0</p>
-                <button type="submit" class="dislike"><i class="fa-solid fa-thumbs-down"></i></button>
-                <p>0</p>
+                <form action="/posts/{{$PostInfo.UUID}}" method="post">
+                <button class="like" name="like" value="{{$PostInfo.UUID}}"><i
+                        class="fa-solid fa-thumbs-up"></i></button>
+                <p>{{$PostInfo.Likes}}</p>
+                <button class="dislike" name="dislike" value="{{$PostInfo.UUID}}"><i
+                        class="fa-solid fa-thumbs-down"></i></button>
+                <p>{{$PostInfo.Dislikes}}</p>
+            </form>
             </div>
         </div>
+        <form action="/posts/{{$PostInfo.UUID}}" method="POST">
+            <textarea name="comment" id="" cols="30" rows="5" placeholder="Comment" autofocus></textarea>
+            </textarea>
+            <button type="submit">Comment</button>
+        </form>
     </div>
+    {{range .Comments}}
+    <div class="single-post">
+        <div class="commentor-name-time">
+            <p>{{.OwnerId}}</p>
+            <p>{{.Time}}</p>
+        </div>
+        <div class="comment">
+            <p>{{.Content}}</p>
+        </div>
+        <div class="post-likes-dislikes">
+            <form action="/posts/{{$PostInfo.UUID}}" method="post">
+            <button class="like" name="commentlike" value="{{.UUID}}"><i class="fa-solid fa-thumbs-up"></i></button>
+            <p>{{.Likes}}</p>
+            <button class="dislike" name="commentdislike" value="{{.UUID}}"><i class="fa-solid fa-thumbs-down"></i></button>
+            <p>{{.Dislikes}}</p>
+        </form>
+        </div>
     </div>
+    {{end}}
+</div>
 {{template "footer"}}
