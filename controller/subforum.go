@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -14,41 +15,70 @@ type SubData struct {
 	ListOfData []dbmanagement.Post
 	Cookie     string
 	UserInfo   dbmanagement.User
+	TitleName  string
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
+	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	utils.HandleError("cant get user", err)
-	user, err := dbmanagement.SelectUserFromSession(sessionId)
-	utils.HandleError("could not get user session in subforum", err)
-
-	if r.Method == "POST" {
-		comment := r.FormValue("post")
-		like := r.FormValue("like")
-		dislike := r.FormValue("dislike")
-		postid := r.FormValue("postid")
-		if comment != "" {
-			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-			utils.HandleError("cant get user with uuid in subforum", err)
-			dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
-		}
-		if like == "Like" {
-			dbmanagement.AddReactionToPost(user.UUID, postid, 1)
-		}
-		if dislike == "Dislike" {
-			dbmanagement.AddReactionToPost(user.UUID, postid, -1)
+	// fmt.Println("session error is: ", err)
+	if sessionId == "" {
+		err := auth.CreateUserSession(w, r, dbmanagement.User{})
+		if err != nil {
+			utils.HandleError("unable to create visitor session", err)
+		} else {
+			sessionId, _ = auth.GetSessionFromBrowser(w, r)
+			http.Redirect(w, r, "/", http.StatusFound)
 		}
 	}
-	posts := dbmanagement.SelectAllPostsFromTag(tag)
-	for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
-		posts[i], posts[j] = posts[j], posts[i]
-	}
 
-	data := SubData{}
-	data.SubName = "/" + tag
-	data.Cookie = sessionId
-	data.UserInfo = user
-	data.ListOfData = append(data.ListOfData, posts...)
-	// log.Println("SubForum: ", data)
-	tmpl.ExecuteTemplate(w, "subforum.html", data)
+	user := dbmanagement.User{}
+	if err == nil {
+		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		data.Cookie = sessionId
+
+		data.UserInfo = user
+		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+
+		if r.Method == "POST" {
+			comment := r.FormValue("post")
+			like := r.FormValue("like")
+			dislike := r.FormValue("dislike")
+			if comment != "" {
+				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
+				utils.HandleError("cant get user with uuid in all posts", err)
+				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
+				// log.Println(tag)
+				if !ExistingTag(tag) {
+					dbmanagement.InsertTag(tag)
+				}
+			}
+			if like != "" {
+				dbmanagement.AddReactionToPost(user.UUID, like, 1)
+			}
+			if dislike != "" {
+				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+			}
+
+			idToDelete := r.FormValue("deletepost")
+			// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
+			if idToDelete != "" {
+				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
+			}
+		}
+
+		utils.HandleError("cant get user", err)
+		posts := dbmanagement.SelectAllPostsFromTag(tag)
+		for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
+			posts[i], posts[j] = posts[j], posts[i]
+		}
+
+		data := SubData{}
+		data.SubName = tag
+		data.Cookie = sessionId
+		data.UserInfo = user
+		data.ListOfData = append(data.ListOfData, posts...)
+		fmt.Println("Forum data: ", data)
+		tmpl.ExecuteTemplate(w, "subforum.html", data)
+	}
 }

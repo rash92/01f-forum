@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="/forum">Forum</a>
-
-    {{$User := .User}}
-    <h1>Request to Become a moderator</h1>
+{{template "header" .}}
+    {{$User := .UserInfo}}
+    <div class="container-post">
+        <h1>Request to Become a moderator</h1>
     <form action="/user" method="POST">
         <button name="request to become moderator" value={{$User.UUID}}>request</button>
     </form>
@@ -44,6 +33,5 @@
     </div>
     <br>
     {{end}}
-</body>
-
-</html>
+    </div>
+{{template "footer"}}
