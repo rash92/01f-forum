@@ -73,8 +73,8 @@ var createReactionPostsTableStatement = `
 		PRIMARY KEY (userId, postId)
 	);`
 
-var createLikedCommentsTableStatement = `
-	CREATE TABLE LikedComments  (
+var createReactedCommentsTableStatement = `
+	CREATE TABLE ReactedComments  (
 		userId TEXT NOT NULL,
 		commentId TEXT NOT NULL,
 		reaction INTEGER,
@@ -114,7 +114,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createTagsTableStatement)
 	CreateTable(forumDB, createTaggedPostsStatement)
 	CreateTable(forumDB, createReactionPostsTableStatement)
-	CreateTable(forumDB, createLikedCommentsTableStatement)
+	CreateTable(forumDB, createReactedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
 

@@ -48,8 +48,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			tag := r.FormValue("tag")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
-			postid := r.FormValue("postid")
-
 			if comment != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
@@ -59,13 +57,11 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 					dbmanagement.InsertTag(tag)
 				}
 			}
-
-			if like == "Like" {
-				dbmanagement.AddReactionToPost(user.UUID, postid, 1)
+			if like != "" {
+				dbmanagement.AddReactionToPost(user.UUID, like, 1)
 			}
-
-			if dislike == "Dislike" {
-				dbmanagement.AddReactionToPost(user.UUID, postid, -1)
+			if dislike != "" {
+				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
 			}
 
 			idToDelete := r.FormValue("deletepost")

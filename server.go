@@ -32,20 +32,42 @@ func main() {
 
 	// index handlers
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		controller.AllPosts(w, r, tmpl)
+	})
+
+	mux.HandleFunc("/categories/", func(w http.ResponseWriter, r *http.Request) {
 		tags := dbmanagement.SelectAllTags()
 		tagexists := false
 		var url string
 		for _, v := range tags {
-			if r.URL.Path == "/"+v.TagName {
+			if r.URL.Path == "/categories/"+v.TagName {
 				url = v.TagName
 				tagexists = true
 			}
 		}
 		if !tagexists && r.URL.Path == "/" {
-			controller.AllPosts(w, r, tmpl)
+			//controller.AllPosts(w, r, tmpl)
 		}
 		if tagexists && r.URL.Path != "/" {
 			controller.SubForum(w, r, tmpl, url)
+		}
+	})
+
+	mux.HandleFunc("/posts/", func(w http.ResponseWriter, r *http.Request) {
+		posts := dbmanagement.SelectAllPosts()
+		postexists := false
+		var url string
+		for _, v := range posts {
+			if r.URL.Path == "/posts/"+v.UUID {
+				url = v.UUID
+				postexists = true
+			}
+		}
+		if !postexists && r.URL.Path == "/" {
+			//controller.AllPosts(w, r, tmpl)
+		}
+		if postexists && r.URL.Path != "/" {
+			controller.Post(w, r, tmpl, url)
 		}
 	})
 
@@ -90,9 +112,6 @@ func main() {
 	mux.HandleFunc("/submitpost", func(w http.ResponseWriter, r *http.Request) {
 		controller.SubmitPost(w, r, tmpl)
 	})
-	mux.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
-		controller.Post(w, r, tmpl)
-	})
 
 	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
 		controller.Admin(w, r, tmpl)
@@ -100,7 +119,6 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
-
 	dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
