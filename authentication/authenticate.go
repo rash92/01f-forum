@@ -2,7 +2,6 @@ package auth
 
 import (
 	"forum/dbmanagement"
-	"forum/security"
 	"forum/utils"
 	"html/template"
 	"log"
@@ -30,7 +29,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		user, err := dbmanagement.SelectUserFromName(userName)
 		utils.HandleError("unable to get user error:", err)
 
-		if security.CompareHash(user.Password, password) {
+		if CompareHash(user.Password, password) {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
 			http.Redirect(w, r, "/forum", http.StatusMovedPermanently)
@@ -72,7 +71,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
-		password := security.HashPassword(r.FormValue("password"))
+		password := HashPassword(r.FormValue("password"))
 
 		dbmanagement.InsertUser(userName, email, password, "user")
 	}

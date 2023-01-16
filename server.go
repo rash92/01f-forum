@@ -101,8 +101,7 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 
-	// dbmanagement.DeleteUser("rhem")
-	// dbmanagement.DeleteAllSessions()
+	dbmanagement.DeleteAllSessions()
 	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
