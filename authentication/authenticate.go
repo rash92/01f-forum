@@ -32,10 +32,10 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		if CompareHash(user.Password, password) {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
-			http.Redirect(w, r, "/forum", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
 			log.Println("Incorrect Password!")
-			http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
 	}
 }
@@ -57,7 +57,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		Path:     "/",
 	}
 	http.SetCookie(w, &clearcookie)
-	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // Displays the register page
@@ -73,5 +73,5 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		password := HashPassword(r.FormValue("password"))
 		dbmanagement.InsertUser(userName, email, password, "user")
 	}
-	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
