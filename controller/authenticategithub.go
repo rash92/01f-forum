@@ -68,12 +68,12 @@ func LoginUserWithGithub(w http.ResponseWriter, r *http.Request, tmpl *template.
 	user, err := dbmanagement.SelectUserFromEmail(account.Email)
 	if err == nil {
 		// create session cookie for user
-		CreateUserSessionCookie(w, r, user)
+		CreateUserSession(w, r, user)
 	} else {
 		// create user
 		user := dbmanagement.InsertUser(account.Name, account.Email, "", "user")
 		// create session cookie for user
-		CreateUserSessionCookie(w, r, user)
+		CreateUserSession(w, r, user)
 		// utils.HandleError("Failed to create session in google authenticate", err)
 	}
 	http.Redirect(w, r, "/", http.StatusFound)

@@ -28,7 +28,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		utils.HandleError("unable to get user error:", err)
 
 		if security.CompareHash(user.Password, password) {
-			err := CreateUserSessionCookie(w, r, user)
+			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
 			http.Redirect(w, r, "/forum", http.StatusMovedPermanently)
 		} else {

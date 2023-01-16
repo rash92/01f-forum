@@ -16,7 +16,7 @@ type UserData struct {
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := UserData{}
-	SessionId, err := GetSessionIDFromBrowser(w, r)
+	SessionId, err := GetSessionFromBrowser(w, r)
 	if err != nil {
 		utils.HandleError("couldn't find user sessions id", err)
 	}

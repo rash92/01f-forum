@@ -4,30 +4,37 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"net/http"
+	"time"
 )
 
 /*
 Returns the cookie value of the current session that gives a sessions ID.  Used to determine which user is using the program.
 */
-func GetSessionIDFromBrowser(w http.ResponseWriter, r *http.Request) (string, error) {
-	cookie, err := r.Cookie("_cookie")
-	utils.HandleError("Cannot get Cookie Err:", err)
+
+const timeout = 30 * time.Minute
+
+func GetSessionFromBrowser(w http.ResponseWriter, r *http.Request) (string, error) {
+	session, err := r.Cookie("session")
+	utils.HandleError("cannot get session from browser Err:", err)
+
 	if err != nil {
 		return "", err
 	}
-	value := cookie.Value
+
+	value := session.Value
 	return value, err
 }
 
 /*
 Creates session that gives a sessions ID, used to determine which user is using the program.
 */
-func CreateUserSessionCookie(w http.ResponseWriter, r *http.Request, user dbmanagement.User) error {
+func CreateUserSession(w http.ResponseWriter, r *http.Request, user dbmanagement.User) error {
 	session, err := user.CreateSession()
 	utils.HandleError("Cannot create user session err:", err)
 	cookie := http.Cookie{
-		Name:     "_cookie",
+		Name:     "session",
 		Value:    session.UUID,
+		Expires:  time.Now().Add(timeout),
 		HttpOnly: true,
 		Path:     "/",
 	}
