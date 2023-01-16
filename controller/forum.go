@@ -1,6 +1,7 @@
 package controller
 
 import (
+	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -22,14 +23,14 @@ Also handles inserting a new post that updates in realtime.
 */
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
-	sessionId, err := GetSessionFromBrowser(w, r)
+	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
-		err := CreateUserSession(w, r, dbmanagement.User{})
+		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
 			utils.HandleError("unable to create visitor session", err)
 		} else {
-			sessionId, _ = GetSessionFromBrowser(w, r)
+			sessionId, _ = auth.GetSessionFromBrowser(w, r)
 			http.Redirect(w, r, "/", http.StatusFound)
 		}
 	}

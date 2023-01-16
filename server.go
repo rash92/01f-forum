@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	auth "forum/authentication"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -14,6 +15,13 @@ var tmpl *template.Template
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
 }
+
+// func HandleRoute(route string, wr func(w http.ResponseWriter, r *http.Request, tmpl *template.Template)) {
+// 	mux := http.NewServeMux()
+// 	mux.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
+// 		wr(w, r, tmpl)
+// 	})
+// }
 
 func main() {
 	mux := http.NewServeMux()
@@ -50,36 +58,36 @@ func main() {
 
 	// authentication handlers
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		controller.Login(w, r, tmpl)
+		auth.Login(w, r, tmpl)
 	})
 	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
-		controller.Authenticate(w, r, tmpl)
+		auth.Authenticate(w, r, tmpl)
 	})
 	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		controller.Logout(w, r, tmpl)
+		auth.Logout(w, r, tmpl)
 	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		controller.Register(w, r, tmpl)
+		auth.Register(w, r, tmpl)
 	})
 	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
-		controller.RegisterAcount(w, r, tmpl)
+		auth.RegisterAcount(w, r, tmpl)
 	})
 
-	// google authentication handlers
+	// oauth handlers
 	mux.HandleFunc("/google/login", func(w http.ResponseWriter, r *http.Request) {
-		controller.GoogleLogin(w, r, tmpl)
+		auth.GoogleLogin(w, r, tmpl)
 	})
 	mux.HandleFunc("/google/callback", func(w http.ResponseWriter, r *http.Request) {
-		controller.LoginUserWithGoogle(w, r, tmpl)
+		auth.GoogleCallback(w, r, tmpl)
 	})
 
 	// github authentication handlers
 	mux.HandleFunc("/github/login", func(w http.ResponseWriter, r *http.Request) {
-		controller.GithubLogin(w, r, tmpl)
+		auth.GithubLogin(w, r, tmpl)
 	})
 
 	mux.HandleFunc("/github/callback", func(w http.ResponseWriter, r *http.Request) {
-		controller.LoginUserWithGithub(w, r, tmpl)
+		auth.GithubCallback(w, r, tmpl)
 	})
 
 	// forum handlers

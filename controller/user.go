@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -16,7 +17,7 @@ type UserData struct {
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := UserData{}
-	SessionId, err := GetSessionFromBrowser(w, r)
+	SessionId, err := auth.GetSessionFromBrowser(w, r)
 	if err != nil {
 		utils.HandleError("couldn't find user sessions id", err)
 	}

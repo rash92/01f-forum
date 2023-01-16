@@ -1,4 +1,4 @@
-package controller
+package auth
 
 import (
 	"forum/dbmanagement"
@@ -9,16 +9,19 @@ import (
 	"net/http"
 )
 
-/*
-Displays the log in page.  If the username and password match an entry in the database then the user is redirected to the forum page, otherwise the user stays on the log in page.
+type OauthAccount struct {
+	Name, Email string
+}
 
-Session Cookie is also set here.
-*/
+// Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	tmpl.ExecuteTemplate(w, "login.html", nil)
 }
 
-// authenticate user with credentials
+/*
+Authenticate user with credentials - If the username and password match an entry in the database then the user is redirected to the forum page,
+otherwise the user stays on the log in page. Session Cookie is also set here.
+*/
 func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")
@@ -38,10 +41,10 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	}
 }
 
-// Logs the user out
+// Logs user out
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
-	cookie, err := r.Cookie("_cookie")
+	cookie, err := r.Cookie("session")
 	utils.HandleError("Failed to get cookie", err)
 
 	if err != http.ErrNoCookie {
@@ -50,7 +53,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		utils.HandleError("Failed to get cookie", err)
 	}
 	clearcookie := http.Cookie{
-		Name:     "_cookie",
+		Name:     "session",
 		Value:    "",
 		HttpOnly: true,
 		Path:     "/",
@@ -59,16 +62,12 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
-/*
-Displays the register page...
-*/
+// Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	tmpl.ExecuteTemplate(w, "register.html", nil)
 }
 
-/*
-Registers a user with given details then redirects to log in page.  Password is hashed here.
-*/
+// Registers a user with given details then redirects to log in page.  Password is hashed here.
 func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		userName := r.FormValue("user_name")

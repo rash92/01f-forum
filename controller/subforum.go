@@ -1,6 +1,7 @@
 package controller
 
 import (
+	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -16,7 +17,7 @@ type SubData struct {
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
-	sessionId, err := GetSessionFromBrowser(w, r)
+	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	utils.HandleError("cant get user", err)
 	user, err := dbmanagement.SelectUserFromSession(sessionId)
 	utils.HandleError("could not get user session in subforum", err)
