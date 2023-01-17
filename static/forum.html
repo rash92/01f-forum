@@ -10,9 +10,11 @@
 		</form>
 		{{end}}
 		<a href="/posts/{{.UUID}}">Post</a>
+		{{range .Tags}}
 		<div class="post-tags-author">
-			<a href="/categories/{{.Tag}}">{{.Tag}}</a>
+			<a href="/categories/{{.TagName}}">{{.TagName}}</a>
 		</div>
+		{{end}}
 		<div class="post-title">
 			<p>{{.FormattedTime}}</p>
 			<h2>Look at this amazing photo of Jupiter I took!</h2>

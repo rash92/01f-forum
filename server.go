@@ -17,6 +17,7 @@ func init() {
 }
 
 func main() {
+	// dbmanagement.CreateDatabaseWithTables()
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -46,7 +47,7 @@ func main() {
 			}
 		}
 		if !tagexists && r.URL.Path == "/" {
-			//controller.AllPosts(w, r, tmpl)
+			// controller.AllPosts(w, r, tmpl)
 		}
 		if tagexists && r.URL.Path != "/" {
 			controller.SubForum(w, r, tmpl, url)
@@ -64,7 +65,7 @@ func main() {
 			}
 		}
 		if !postexists && r.URL.Path == "/" {
-			//controller.AllPosts(w, r, tmpl)
+			// controller.AllPosts(w, r, tmpl)
 		}
 		if postexists && r.URL.Path != "/" {
 			controller.Post(w, r, tmpl, url)

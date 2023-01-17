@@ -55,6 +55,7 @@
 			<p>{{.TagName}}</p>
 			<form action="/admin" method="POST">
 				<button name="delete tag" value={{.UUID}}>delete tag</button>
+				<button name="delete all posts with tag" value={{.TagName}}>delete all posts with this tag</button>
 			</form>
 			{{end}}
 		</div>

@@ -6,6 +6,7 @@ import (
 	"forum/utils"
 	"html/template"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -45,18 +46,28 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		if r.Method == "POST" {
 			comment := r.FormValue("post")
-			tag := r.FormValue("tag")
+			tags := r.FormValue("tag")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
 			if comment != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
+				post := dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, time.Now())
 				// log.Println(tag)
-				if !ExistingTag(tag) {
-					dbmanagement.InsertTag(tag)
+
+				if tags != "" {
+					tagslice := strings.Fields(tags)
+					for _, tagname := range tagslice {
+						if !ExistingTag(tagname) {
+							dbmanagement.InsertTag(tagname)
+						}
+						tag, err := dbmanagement.SelectTagFromName(tagname)
+						utils.HandleError("unable to retrieve tag id", err)
+						dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
+					}
 				}
 			}
+
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
 			}

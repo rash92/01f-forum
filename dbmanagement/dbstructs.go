@@ -16,7 +16,7 @@ type Post struct {
 	OwnerId       string
 	Likes         int
 	Dislikes      int
-	Tag           string
+	Tags          []Tag
 	Time          time.Time
 	FormattedTime string
 }

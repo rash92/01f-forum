@@ -16,7 +16,7 @@ type SubData struct {
 	UserInfo   dbmanagement.User
 }
 
-func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
+func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tagname string) {
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	utils.HandleError("cant get user", err)
 	user, err := dbmanagement.SelectUserFromSession(sessionId)
@@ -30,7 +30,11 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		if comment != "" {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in subforum", err)
-			dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
+			post := dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, time.Now())
+			tag, err := dbmanagement.SelectTagFromName(tagname)
+			utils.HandleError("couldn't retrieve tag in subforum", err)
+			dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
+
 		}
 		if like == "Like" {
 			dbmanagement.AddReactionToPost(user.UUID, postid, 1)
@@ -39,13 +43,13 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			dbmanagement.AddReactionToPost(user.UUID, postid, -1)
 		}
 	}
-	posts := dbmanagement.SelectAllPostsFromTag(tag)
+	posts := dbmanagement.SelectAllPostsFromTag(tagname)
 	for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
 		posts[i], posts[j] = posts[j], posts[i]
 	}
 
 	data := SubData{}
-	data.SubName = "/" + tag
+	data.SubName = "/" + tagname
 	data.Cookie = sessionId
 	data.UserInfo = user
 	data.ListOfData = append(data.ListOfData, posts...)

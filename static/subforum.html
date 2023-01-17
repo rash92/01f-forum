@@ -29,7 +29,9 @@
 			<div>{{.FormattedTime}}</div>
 			<div>{{.Likes}}</div> <input type="submit" name="like" id="like" value="Like">
 			<div>{{.Dislikes}}</div> <input type="submit" name="dislike" id="dislike" value="Dislike">
-			<div>{{.Tag}}</div>
+			{{range .Tags}}
+			<div>{{.TagName}}</div>
+			{{end}}
 		</form>
 	</div>
 	<br>

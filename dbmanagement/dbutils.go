@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofrs/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var createUserTableStatement = `
@@ -28,10 +29,8 @@ var createPostTableStatement = `
 		ownerId TEXT,
 		likes INTEGER,
 		dislikes INTEGER,
-		tag TEXT,
 		time DATETIME,
-		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
-		FOREIGN KEY (tag) REFERENCES Tags(tagname)
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid) ON DELETE SET NULL
 	);`
 
 var createCommentTableStatement = `
@@ -50,15 +49,15 @@ var createCommentTableStatement = `
 var createTagsTableStatement = `
 	CREATE TABLE Tags (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		tagname TEXT
+		tagname TEXT NOT NULL UNIQUE
 	);`
 
 var createTaggedPostsStatement = `
 CREATE TABLE TaggedPosts (
 		tagId TEXT NOT NULL,
 		postId TEXT NOT NULL,
-		FOREIGN KEY (tagId) REFERENCES Tags(uuid),
-		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (tagId) REFERENCES Tags(uuid) ON DELETE CASCADE,
+		FOREIGN KEY (postId) REFERENCES Posts(uuid) ON DELETE CASCADE,
 		PRIMARY KEY (tagId, postId)
 	);`
 
@@ -103,6 +102,7 @@ var createAdminRequestTableStatement = `
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
+Also inserts a user with admin permissions by default, with both username and password being 'admin'
 */
 func CreateDatabaseWithTables() {
 	forumDB := CreateDatabase("forum")
@@ -117,6 +117,11 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createReactedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
+
+	// had to manually reimplement hashing as get 'import cycle error' if you import auth package
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+	utils.HandleError("password hashing error for default admin on database creation", err)
+	InsertUser("admin", "a@a", string(hashedPassword), "admin")
 
 	log.Println("forum.db created successfully!")
 }

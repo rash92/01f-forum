@@ -54,6 +54,10 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if tagToChange != "" {
 			dbmanagement.DeleteFromTableWithUUID("Tags", tagToChange)
 		}
+		tagToDeletePostsLinkedTo := r.FormValue("delete all posts with tag")
+		if tagToDeletePostsLinkedTo != "" {
+			dbmanagement.DeleteAllPostsWithTag(tagToDeletePostsLinkedTo)
+		}
 		adminRequestToDelete := r.FormValue("delete request")
 		if adminRequestToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("AdminRequests", adminRequestToDelete)
