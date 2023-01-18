@@ -51,8 +51,7 @@
     {{range .Comments}}
     <div class="single-post">
         <div class="commentor-name-time">
-            <p>{{.OwnerId}}</p>
-            <p>{{.Time}}</p>
+            <p>{{.OwnerName}} - {{.FormattedTime}}</p>
         </div>
         <div class="comment">
             <p>{{.Content}}</p>

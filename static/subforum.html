@@ -1,5 +1,15 @@
 {{ template "header" . }}
 {{$UserInfo := .UserInfo}}
+<h1 style="text-align: center;">Category: {{.SubName}}</h1>
+<div>
+	<form action="/categories/{{.SubName}}" method="post">
+	<select name="filter" id="filter">
+		<option value="newest">Newest</option>
+		<option value="oldest">Oldest</option>
+	</select>
+	<input type="submit" value="Filter">
+</form>
+</div>
 {{range .ListOfData}}
 <div class="container-post">
 	<div class="post">
@@ -24,10 +34,10 @@
 		</div>
 		<div class="post-comments-likes-dislikes">
 			<div>
-				<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
+				<p><i class="fa-regular fa-comment"></i>{{.NumOfComments}}</p>
 			</div>
 		</div>
-		<form action="/forum" method="post" target="_self">
+		<form action="/categories/{{.Tag}}" method="post" target="_self">
 			<div class="post-likes-dislikes">
 				{{if ne $UserInfo.Name "" }}
 				<button class="like" name="like" value="{{.UUID}}"><i class="fa-solid fa-thumbs-up"></i></button>
