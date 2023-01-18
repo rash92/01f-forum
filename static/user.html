@@ -1,37 +1,34 @@
 {{template "header" .}}
-    {{$User := .UserInfo}}
-    <div class="container-post">
-        <h1>Request to Become a moderator</h1>
-    <form action="/user" method="POST">
-        <button name="request to become moderator" value={{$User.UUID}}>request</button>
-    </form>
-
-    <h1>Your Posts</h1>
-    {{range .UserPosts}}
-    <div>
-        <form action="/user" method="POST">
-            <button name="deletepost" value={{.UUID}}>delete</button>
-        </form>
-        <div>{{.OwnerId}}</div>
-        <div>{{.Content}}</div>
-        <div>{{.FormattedTime}}</div>
-        <div>{{.Likes}}</div>
-        <div>{{.Dislikes}}</div>
+{{$User := .UserInfo}}
+<h1>Your Posts</h1>
+{{range .UserPosts}}
+<div class="container-post">
+    <div class="post">
+        <div>
+            <form method="POST">
+                <button class="delete-btn" name="deletepost" value={{.UUID}}>Delete</button>
+            </form>
+            <div>{{.OwnerId}}</div>
+            <div>{{.Content}}</div>
+            <div>{{.FormattedTime}}</div>
+            <div>{{.Likes}}</div>
+            <div>{{.Dislikes}}</div>
+        </div>
     </div>
-    <br>
-    {{end}}
-
-    <h1>Your Comments</h1>
-    {{range .UserComments}}
-    <div>
-        <form action="/user" method="POST">
-            <button name="deletecomment" value={{.UUID}}>delete</button>
+</div>
+{{end}}
+<h1>Your Comments</h1>
+{{range .UserComments}}
+<div class="container-post">
+    <div class="post">
+        <form method="POST">
+            <button class="delete-btn" name="deletepost" value={{.UUID}}>Delete</button>
         </form>
         <div>{{.OwnerId}}</div>
         <div>{{.Content}}</div>
         <div>replying to : {{.PostId}}</div>
     </div>
-    <br>
-    {{end}}
-    </div>
+</div>
+{{end}}
+
 {{template "footer"}}

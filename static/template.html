@@ -57,7 +57,7 @@
 					</div>
 					<div class="dropdown-content-links">
 						<form action="/user" method="POST">
-							<button name="request to become moderator">Become a moderator?</button>
+							<button name="request to become moderator" value={{$UserInfo.UUID}}>Become a moderator?</button>
 						</form>
 					</div>
 					{{ if eq $UserInfo.Permission "admin"}}
