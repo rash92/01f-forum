@@ -180,7 +180,7 @@ h3 {
     position: absolute;
     height: fit-content;
     right: 0;
-    background-color: white;
+    background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
     z-index: 1;
 }
 
