@@ -7,6 +7,8 @@ import (
 	"forum/utils"
 	"html/template"
 	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -43,6 +45,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		utils.HandleError("cant get user", err)
 		data.Cookie = sessionId
 
 		data.UserInfo = user
@@ -50,45 +53,9 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		if r.Method == "POST" {
 			SubmissionHandler(w, r, user)
-			// comment := r.FormValue("post")
-			// tags := r.FormValue("tag")
-			// like := r.FormValue("like")
-			// dislike := r.FormValue("dislike")
-
-			// if comment != "" {
-			// 	userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-			// 	utils.HandleError("cant get user with uuid in all posts", err)
-			// 	post := dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, time.Now())
-			// 	// log.Println(tag)
-
-			// 	if tags != "" {
-			// 		tagslice := strings.Fields(tags)
-			// 		for _, tagname := range tagslice {
-			// 			if !ExistingTag(tagname) {
-			// 				dbmanagement.InsertTag(tagname)
-			// 			}
-			// 			tag, err := dbmanagement.SelectTagFromName(tagname)
-			// 			utils.HandleError("unable to retrieve tag id", err)
-			// 			dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
-			// 		}
-			// 	}
-			// }
-
-			// if like != "" {
-			// 	dbmanagement.AddReactionToPost(user.UUID, like, 1)
-			// }
-			// if dislike != "" {
-			// 	dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-			// }
-
-			// idToDelete := r.FormValue("deletepost")
-			// // fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
-			// if idToDelete != "" {
-			// 	dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
-			// }
+			log.Println("post submitted successfully")
 		}
 
-		utils.HandleError("cant get user", err)
 		posts := dbmanagement.SelectAllPosts()
 		for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
 			posts[i], posts[j] = posts[j], posts[i]
@@ -113,35 +80,15 @@ func ExistingTag(tag string) bool {
 	return false
 }
 
-// followed this: https://freshman.tech/file-upload-golang/
-func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User) {
-	// 20 megabytes
-	maxSize := 20 * 1024 * 1024
-
-	r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))
-	err := r.ParseMultipartForm(int64(maxSize))
-	if err != nil {
-		utils.HandleError("error parsing form for image, likely too big", err)
-		http.Error(w, "max filesize is 20Mb, please upload a smaller image", http.StatusBadRequest)
-		return
-	}
-
-	file, fileHeader, err := r.FormFile("submission-image")
-	if err != nil {
-		utils.HandleError("error retrieving file from form", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	defer file.Close()
-
-	err = os.MkdirAll("./uploads", os.ModePerm)
+func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader *multipart.FileHeader) {
+	err := os.MkdirAll("./uploads", os.ModePerm)
 	if err != nil {
 		utils.HandleError("error creating file directory for uploads", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	destinationFile, err := os.Create(fmt.Sprint("./uploads/%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename)))
+	destinationFile, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename)))
 	if err != nil {
 		utils.HandleError("error creating file for image", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -158,12 +105,53 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		return
 	}
 
-	fmt.Fprintf(w, "file upload successful")
+	log.Println("file uploaded successfully")
+}
+
+// followed this: https://freshman.tech/file-upload-golang/
+func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User) {
+	// 20 megabytes
+
+	idToDelete := r.FormValue("deletepost")
+	// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
+	if idToDelete != "" {
+		dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
+	}
+	like := r.FormValue("like")
+	dislike := r.FormValue("dislike")
+
+	if like != "" {
+		dbmanagement.AddReactionToPost(user.UUID, like, 1)
+	}
+	if dislike != "" {
+		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+	}
+
+	maxSize := 20 * 1024 * 1024
+
+	r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))
+	err := r.ParseMultipartForm(int64(maxSize))
+	if err != nil {
+		// only actual post submissions have multipart enabled, deleting, likes, dislikes aren't mulipart but that's already handled above so can end function
+		if err.Error() == "request Content-Type isn't multipart/form-data" {
+			return
+		}
+		utils.HandleError("error parsing form for image, likely too big", err)
+		return
+	}
+
+	file, fileHeader, err := r.FormFile("submission-image")
+	if err != nil {
+		// if you were trying to make a post without an image it will log this 'error' but still submit the text and tags
+		utils.HandleError("error retrieving file from form", err)
+	} else {
+		fmt.Println("trying to retrieve file...")
+		defer file.Close()
+		UploadHandler(w, r, file, fileHeader)
+	}
 
 	comment := r.FormValue("post")
 	tags := r.FormValue("tag")
-	like := r.FormValue("like")
-	dislike := r.FormValue("dislike")
 
 	if comment != "" {
 		userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
@@ -182,18 +170,5 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 				dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
 			}
 		}
-	}
-
-	if like != "" {
-		dbmanagement.AddReactionToPost(user.UUID, like, 1)
-	}
-	if dislike != "" {
-		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-	}
-
-	idToDelete := r.FormValue("deletepost")
-	// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
-	if idToDelete != "" {
-		dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 	}
 }
