@@ -1,14 +1,15 @@
 {{ template "header" . }}
 {{$UserInfo := .UserInfo}}
-<div>
-	<form action="/forum" method="post">
-	<select name="filter" id="filter">
-		<option value="newest">Newest</option>
-		<option value="oldest">Oldest</option>
-	</select>
-	<input type="submit" value="Filter">
-</form>
+<form action="/forum" method="post">
+<div class="container-filter">
+	<div class="filter">
+		<button name="filter" value="newest"><i class="fa-brands fa-hotjar"></i> Hot</button>
+	</div>
+	<div class="filter">
+		<button name="filter" value="oldest"><i class="fa-solid fa-clock"></i> Oldest</button>
+	</div>
 </div>
+</form>
 {{range .ListOfData}}
 <div class="container-post">
 	<div class="post">

@@ -7,10 +7,10 @@
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 html,
@@ -23,12 +23,12 @@ body {
 }
 
 a {
-	text-decoration: none;
-	color: black;
+    text-decoration: none;
+    color: black;
 }
 
 li {
-	list-style-type: none;
+    list-style-type: none;
 }
 
 h3 {
@@ -55,13 +55,13 @@ h3 {
 }
 
 .logo {
-	font-size: 22px;
-	padding-left: 10px;
+    font-size: 22px;
+    padding-left: 10px;
 }
 
 .logo:hover {
-	transform: translateY(-5px);
-	transition: 0.3s ease;
+    transform: translateY(-5px);
+    transition: 0.3s ease;
 }
 
 .searchbar {
@@ -111,12 +111,12 @@ h3 {
 }
 
 .menu {
-	display: flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-	gap: 0.5em;
-	font-size: 18px;
+    gap: 0.5em;
+    font-size: 18px;
     padding: 20px;
 }
 
@@ -216,13 +216,23 @@ h3 {
 
 /* CONTAINERS */
 .container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	width: 100%;
-	padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    padding: 5px;
+}
+
+.container-filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    padding-bottom: 10px;
 }
 
 .container-post {
@@ -233,6 +243,19 @@ h3 {
     height: fit-content;
     width: 100%;
     margin-bottom: 32px;
+}
+
+/* FILTER */
+
+.filter {
+    margin: 10px 22px;
+}
+
+.filter button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 /* LOGIN CARD */
@@ -254,28 +277,29 @@ h3 {
     height: 50px;
 }
 
-.input-header h1, h3 {
+.input-header h1,
+h3 {
     margin: 5px 0;
 }
 
 .login-input {
-	width: 100%;
-	max-width: 700px;
-	display: flex;
-	align-items: center;
-	margin-top: 25px;
-	padding: 10px 20px;
-	background: transparent;
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: transparent;
 }
 
 .login-input input {
-	background: transparent;
-	flex: 1;
-	border: 0;
-	outline: none;
-	padding: 24px 20px;
-	font-size: 18px;
-	border-bottom: 2px solid black;
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding: 24px 20px;
+    font-size: 18px;
+    border-bottom: 2px solid black;
 }
 
 .login-input button {
@@ -313,8 +337,8 @@ h3 {
 }
 
 .social-button {
-    background:none;
-    border:none;
+    background: none;
+    border: none;
     cursor: pointer;
     font-size: 40px;
 }
@@ -324,6 +348,13 @@ h3 {
 }
 
 /* POST */
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
 
 .post {
     display: flex;
@@ -341,14 +372,14 @@ h3 {
 }
 
 .delete-btn {
-        margin: 10px 0;
-        width: 20%;
-        background: transparent;
-        border-style: none;
-        border: 1px solid var(--dim-font);
-        padding: 5px;
-        cursor: pointer;
-        font-size: 1em;
+    margin: 10px 0;
+    width: 20%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 .post-info {
@@ -380,7 +411,10 @@ h3 {
     max-width: 75ch;
 }
 
-.post-title, .post-tags, .post-image, .post-content {
+.post-title,
+.post-tags,
+.post-image,
+.post-content {
     margin: 5px 0;
 }
 
@@ -573,5 +607,3 @@ input[type="file"] {
 }
 
 /* USER-PAGE */
-
-
