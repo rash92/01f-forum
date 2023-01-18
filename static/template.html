@@ -47,14 +47,29 @@
 		{{else}}
 		<div class="menu">
 			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
-			<div class="tooltip">
-				<li class="signout-icon"><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
-				<span class="signout-text"> Log Out</span>
+			<div class="dropdown">
+				<button class="dropbtn">
+					<i class="fa-solid fa-circle-chevron-down"></i>
+				</button>
+				<div class="dropdown-content">
+					<div class="dropdown-content-links">
+						<a href="/user">Profile</a>
+					</div>
+					<div class="dropdown-content-links">
+						<form action="/user" method="POST">
+							<button name="request to become moderator">Become a moderator?</button>
+						</form>
+					</div>
+					{{ if eq $UserInfo.Permission "admin"}}
+					<div class="dropdown-content-links">
+						<a href="/admin">admin tools</a>
+					</div>
+					{{end}}
+					<div class="dropdown-content-links">
+						<a href="/logout">Sign out <i class="fa-solid fa-right-from-bracket"></i></a>
+					</div>
+				</div>
 			</div>
-			<a href="/user">User Page</a>
-			{{ if eq $UserInfo.Permission "admin"}}
-			<a href="/admin">admin tools</a>
-			{{end}}
 		</div>
 		{{end}}
 	</nav>

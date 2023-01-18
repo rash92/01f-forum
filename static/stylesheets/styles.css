@@ -31,6 +31,11 @@ li {
 	list-style-type: none;
 }
 
+h3 {
+    color: var(--dim-font);
+    font-size: 1em;
+}
+
 ::placeholder {
     padding: 10px 20px;
 }
@@ -106,8 +111,12 @@ li {
 
 .menu {
 	display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 	gap: 0.5em;
 	font-size: 18px;
+    padding: 20px;
 }
 
 .menu li {
@@ -150,6 +159,59 @@ li {
     visibility: visible;
 }
 
+.dropdown {
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    border: none;
+    outline: none;
+    color: black;
+    font-size: 1em;
+    background-color: inherit;
+}
+
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: fit-content;
+    right: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.dropdown-content-links {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+.dropdown-content-links button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.dropdown-content-links a {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.dropdown-content-links:hover {
+    background-color: var(--highlight-color);
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
+
 
 /* CONTAINERS */
 .container {
@@ -179,6 +241,19 @@ li {
     align-items: center;
     background: var(--highlight-color);
     padding: 25px;
+}
+
+.input-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    height: 50px;
+}
+
+.input-header h1, h3 {
+    margin: 5px 0;
 }
 
 .login-input {
@@ -483,3 +558,7 @@ input[type="file"] {
 .submission button:hover {
     border: 1px solid black;
 }
+
+/* USER-PAGE */
+
+
