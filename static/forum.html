@@ -1,5 +1,4 @@
 {{ template "header" . }}
-
 {{$UserInfo := .UserInfo}}
 {{range .ListOfData}}
 <div class="container-post">
@@ -9,24 +8,29 @@
 			<button name="deletepost" value={{.UUID}}>delete</button>
 		</form>
 		{{end}}
-		<a href="/posts/{{.UUID}}">Post</a>
-		<div class="post-tags-author">
-			<a href="/categories/{{.Tag}}">{{.Tag}}</a>
+		<div class="post-tags">
+			<a class="tag-link" href="/categories/{{.Tag}}">{{.Tag}}</a>
 		</div>
-		<div class="post-title">
-			<p>{{.FormattedTime}}</p>
-			<h2>Look at this amazing photo of Jupiter I took!</h2>
-		</div>
-		<div class="post-tags-author">
-			<p>{{.OwnerId}}</p>
-		</div>
-		<div class="post-image">
-			<div>{{.Content}}</div>
-		</div>
-		<div class="post-comments-likes-dislikes">
-			<div>
-				<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
-			</div>
+		<div class="post-info">
+			<a href="/posts/{{.UUID}}">
+				<div class="post-author-time">
+					<p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+				</div>
+				<div class="post-title">
+					<h2>Look at this amazing photo of Jupiter I took!</h2>
+				</div>
+				<div class="post-image">
+					<div>IMG</div>
+				</div>
+				<div class="post-content">
+					<div class="post-content-text">{{.Content}}</div>
+				</div>
+				<div class="post-comments-likes-dislikes">
+					<div>
+						<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
+					</div>
+				</div>
+			</a>
 		</div>
 		<form action="/forum" method="post" target="_self">
 			<div class="post-likes-dislikes">

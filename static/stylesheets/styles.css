@@ -18,6 +18,8 @@ body {
     background: rgb(185, 205, 218);
     background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
     background-size: cover;
+    height: 100vh;
+    padding-top: 32px;
 }
 
 a {
@@ -39,6 +41,7 @@ li {
     align-items: center;
     justify-content: space-between;
     position: fixed;
+    top: 0;
     width: 100vw;
     background-color: var(--highlight-color);
     height: 54px;
@@ -166,8 +169,6 @@ li {
     align-items: center;
     height: fit-content;
     width: 100%;
-    padding: 50px;
-
 }
 
 /* LOGIN CARD */
@@ -256,15 +257,43 @@ li {
     max-width: 700px;
     background-color: var(--highlight-color);
     padding: 10px;
-    margin: 20px;
 }
 
 .post:hover {
     border: 2px solid var(--main-color);
 }
 
-.post-tags-author {
+.post-info {
+    width: 100%;
+    cursor: pointer;
+}
+
+.tag-link {
     color: var(--dim-font);
+}
+
+.tag-link:hover {
+    color: black;
+}
+
+.post-author-time {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    font-size: 12px;
+}
+
+.post-content-text {
+    color: var(--dim-font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75ch;
+}
+
+.post-title, .post-tags, .post-image, .post-content {
+    margin: 5px 0;
 }
 
 .post-image img {
@@ -319,7 +348,7 @@ li {
     justify-content: center;
     align-items: right;
     width: 100vw;
-    max-width: 900px;
+    max-width: 700px;
     height: fit-content;
     background-color: var(--highlight-color);
     padding: 10px;
