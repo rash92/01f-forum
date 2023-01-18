@@ -6,6 +6,7 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -34,6 +35,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	utils.HandleError("Could not get user session in user", err)
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)
+	log.Println(data.UserComments)
 	data.TitleName = "Welcome"
 
 	if r.Method == "POST" {
