@@ -2,7 +2,7 @@
 <div class="container-post">
     <div class="submission">
         <h2>Create a post</h2>
-        <form action="/forum" method="POST">
+        <form action="/forum" method="POST" enctype="multipart/form-data">
             <input type="text" name="submission-title" placeholder="Title" autocomplete="off" autofocus>
             <textarea name="post" id="" cols="30" rows="10" placeholder="Text (optional)"></textarea>
             <input type="text" name="tag" placeholder="Tags (#General etc.)">
