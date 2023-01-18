@@ -64,6 +64,7 @@ func SelectPostFromUUID(UUID string) Post {
 
 	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Tag, &post.Time)
 	post.FormattedTime = strings.TrimSuffix(post.Time.Format(time.RFC822), "UTC")
+	post.NumOfComments = len(SelectAllCommentsFromPost(post.UUID))
 	utils.HandleError("Query Row failed: ", err)
 
 	return post
@@ -85,6 +86,7 @@ func SelectAllPosts() []Post {
 		var currentPost Post
 		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
+		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -107,6 +109,7 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 		var currentPost Post
 		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
+		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -129,6 +132,7 @@ func SelectAllPostsFromTag(tag string) []Post {
 		var currentPost Post
 		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
+		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts

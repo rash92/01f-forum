@@ -1,6 +1,15 @@
 {{ template "header" . }}
 
 {{$UserInfo := .UserInfo}}
+<div>
+	<form action="/forum" method="post">
+	<select name="filter" id="filter">
+		<option value="newest">Newest</option>
+		<option value="oldest">Oldest</option>
+	</select>
+	<input type="submit" value="Filter">
+</form>
+</div>
 {{range .ListOfData}}
 <div class="container-post">
 	<div class="post">
@@ -25,7 +34,7 @@
 		</div>
 		<div class="post-comments-likes-dislikes">
 			<div>
-				<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
+				<p><i class="fa-regular fa-comment"></i>{{.NumOfComments}}</p>
 			</div>
 		</div>
 		<form action="/forum" method="post" target="_self">

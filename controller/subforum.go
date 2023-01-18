@@ -36,7 +36,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		data.Cookie = sessionId
-
+		filterOrder := false
 		data.UserInfo = user
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
@@ -44,6 +44,10 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			comment := r.FormValue("post")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
+			filter := r.FormValue("filter")
+			if filter == "oldest" {
+				filterOrder = true
+			}
 			if comment != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
@@ -69,8 +73,10 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 
 		utils.HandleError("cant get user", err)
 		posts := dbmanagement.SelectAllPostsFromTag(tag)
-		for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
-			posts[i], posts[j] = posts[j], posts[i]
+		if !filterOrder {
+			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
+				posts[i], posts[j] = posts[j], posts[i]
+			}
 		}
 
 		data := SubData{}
