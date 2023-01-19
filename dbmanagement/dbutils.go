@@ -21,9 +21,11 @@ var createUserTableStatement = `
 		permission TEXT
 	);`
 
+// ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
 var createPostTableStatement = `
 	CREATE TABLE Posts (
 		uuid TEXT NOT NULL PRIMARY KEY,
+		title TEXT,
 		content TEXT,		
 		ownerId TEXT,
 		likes INTEGER,
@@ -100,6 +102,21 @@ var createAdminRequestTableStatement = `
 		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
 	);`
 
+var createNotificationsTableStatement = `
+		CREATE TABLE Notifications (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			receivingUserId TEXT,
+			postId TEXT,
+			commentId TEXT,
+			sendingUserId TEXT,
+			reaction INT,
+			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
+			FOREIGN KEY (postId) REFERENCES Posts(uuid),
+			FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+			FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
+		)
+	`
+
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
@@ -117,6 +134,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createReactedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
+	CreateTable(forumDB, createNotificationsTableStatement)
 
 	log.Println("forum.db created successfully!")
 }

@@ -41,17 +41,17 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
-			comment := r.FormValue("post")
+			content := r.FormValue("post")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
 			filter := r.FormValue("filter")
 			if filter == "oldest" {
 				filterOrder = true
 			}
-			if comment != "" {
+			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
+				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, tag, time.Now())
 				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)

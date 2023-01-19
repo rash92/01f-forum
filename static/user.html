@@ -1,49 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="/forum">Forum</a>
-
-    {{$User := .User}}
-    <h1>Request to Become a moderator</h1>
-    <form action="/user" method="POST">
-        <button name="request to become moderator" value={{$User.UUID}}>request</button>
-    </form>
-
-    <h1>Your Posts</h1>
-    {{range .UserPosts}}
-    <div>
-        <form action="/user" method="POST">
-            <button name="deletepost" value={{.UUID}}>delete</button>
-        </form>
-        <div>{{.OwnerId}}</div>
-        <div>{{.Content}}</div>
-        <div>{{.FormattedTime}}</div>
-        <div>{{.Likes}}</div>
-        <div>{{.Dislikes}}</div>
+{{template "header" .}}
+{{$UserInfo := .UserInfo}}
+<div class="container-filter">
+    <div class="filter">
+        <button onclick="hideShow()"><i class="fa-solid fa-signs-post"></i> Your posts</button>
     </div>
-    <br>
+    <div class="filter">
+        <button onclick="hideShow()"><i class="fa-solid fa-message"></i> Your comments</button>
+    </div>
+</div>
+<div id="user-posts" style="display: block;">
+    {{range .UserPosts}}
+    <div class="container-post">
+        <div class="post">
+            {{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission
+            "moderator")}}
+            <form method="POST">
+                <button class="delete-btn" name="deletepost" value={{.UUID}}>Delete</button>
+            </form>
+            {{end}}
+            <div class="post-tags">
+                <a class="tag-link" href="/categories/{{.Tag}}">{{.Tag}}</a>
+            </div>
+            <div class="post-info">
+                <a href="/posts/{{.UUID}}">
+                    <div class="post-author-time">
+                        <p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+                    </div>
+                    <div class="post-title">
+                        <h2>{{.Title}}</h2>
+                    </div>
+                    <div class="post-image">
+                        <div>IMG</div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-content-text">{{.Content}}</div>
+                    </div>
+                    <div class="post-comments-likes-dislikes">
+                        <div>
+                            <p><i class="fa-regular fa-comment"></i> {{.NumOfComments}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <form action="/forum" method="post" target="_self">
+                <div class="post-likes-dislikes">
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="like" name="like" value="{{.UUID}}"><i class="fa-solid fa-thumbs-up"></i></button>
+                    {{ else }}
+                    <p><i class="fa-solid fa-thumbs-up"></i></p>
+                    {{end}}
+                    <p>{{.Likes}}</p>
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="dislike" name="dislike" value="{{.UUID}}"><i
+                            class="fa-solid fa-thumbs-down"></i></button>
+                    {{else}}
+                    <p><i class="fa-solid fa-thumbs-down"></i></p>
+                    {{end}}
+                    <p>{{.Dislikes}}</p>
+                </div>
+            </form>
+        </div>
+    </div>
     {{end}}
+</div>
 
+<div id="user-comments" style="display: none;">
     <h1>Your Comments</h1>
     {{range .UserComments}}
-    <div>
-        <form action="/user" method="POST">
-            <button name="deletecomment" value={{.UUID}}>delete</button>
-        </form>
-        <div>{{.OwnerId}}</div>
-        <div>{{.Content}}</div>
-        <div>replying to : {{.PostId}}</div>
+    <div class="container-post">
+        <div class="post">
+            <h1>does this show?</h1>
+            <form method="POST">
+                <button class="delete-btn" name="deletepost" value={{.UUID}}>Delete</button>
+            </form>
+            <div>{{.OwnerId}}</div>
+            <div>{{.Content}}</div>
+            <div>replying to : {{.PostId}}</div>
+        </div>
     </div>
-    <br>
     {{end}}
-</body>
+</div>
+<script src="static/js/hideshow.js"></script>
 
-</html>
+{{template "footer"}}

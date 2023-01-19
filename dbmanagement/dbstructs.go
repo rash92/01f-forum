@@ -12,6 +12,7 @@ type User struct {
 
 type Post struct {
 	UUID          string
+	Title         string
 	Content       string
 	OwnerId       string
 	Likes         int
@@ -50,4 +51,13 @@ type AdminRequest struct {
 	RequestFromId   string
 	RequestFromName string
 	Content         string
+}
+
+type Notification struct {
+	UUID      string
+	Receiver  string
+	PostId    string
+	CommentId string
+	Sender    string
+	Reaction  int
 }

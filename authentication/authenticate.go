@@ -8,13 +8,24 @@ import (
 	"net/http"
 )
 
+type Data struct {
+	ListOfData []dbmanagement.Post
+	Cookie     string
+	UserInfo   dbmanagement.User
+	TitleName  string
+	IsCorrect  bool
+}
+
 type OauthAccount struct {
 	Name, Email string
 }
 
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "login.html", nil)
+	data := Data{}
+	data.TitleName = "Login"
+	data.IsCorrect = true
+	tmpl.ExecuteTemplate(w, "login.html", data)
 }
 
 /*
@@ -35,7 +46,11 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
 			log.Println("Incorrect Password!")
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			data := Data{}
+			data.TitleName = "Login"
+			data.IsCorrect = false
+			tmpl.ExecuteTemplate(w, "login.html", data)
+			// http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
 	}
 }
@@ -44,6 +59,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
 	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
 	if err != http.ErrNoCookie {
 		session := cookie.Value

@@ -11,17 +11,17 @@ import (
 /*
 Inserts post into database with the relevant data, likes and dislikes should be set to 0 for most cases.  Each post has it's own UUID.
 */
-func InsertPost(content string, ownerId string, likes int, dislikes int, tag string, inputtime time.Time) {
+func InsertPost(title string, content string, ownerId string, likes int, dislikes int, tag string, inputtime time.Time) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting post record...")
 
 	UUID := GenerateUUIDString()
-	insertPostData := "INSERT INTO Posts(UUID, content, ownerId, likes, dislikes, tag, time) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	insertPostData := "INSERT INTO Posts(UUID, title, content, ownerId, likes, dislikes, tag, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertPostData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, content, ownerId, likes, dislikes, tag, inputtime)
+	_, err = statement.Exec(UUID, title, content, ownerId, likes, dislikes, tag, inputtime)
 	utils.HandleError("Statement Exec failed: ", err)
 }
 
@@ -38,13 +38,14 @@ func DisplayAllPosts() {
 
 	for row.Next() {
 		var UUID string
+		var title string
 		var content string
 		var ownerId string
 		var likes int
 		var dislikes int
 		var tag string
 		var time time.Time
-		row.Scan(&UUID, &content, &ownerId, &likes, &dislikes, &tag, &time)
+		row.Scan(&UUID, &title, &content, &ownerId, &likes, &dislikes, &tag, &time)
 		owner, err := SelectUserFromUUID(ownerId)
 		utils.HandleError("unable to get user to display post", err)
 		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " tag", tag, " time ", time)
@@ -62,7 +63,7 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Tag, &post.Time)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Title, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Tag, &post.Time)
 	post.FormattedTime = strings.TrimSuffix(post.Time.Format(time.RFC822), "UTC")
 	post.NumOfComments = len(SelectAllCommentsFromPost(post.UUID))
 	utils.HandleError("Query Row failed: ", err)
@@ -84,7 +85,7 @@ func SelectAllPosts() []Post {
 	var allPosts []Post
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)
@@ -107,7 +108,7 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)
@@ -130,7 +131,7 @@ func SelectAllPostsFromTag(tag string) []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
 		allPosts = append(allPosts, currentPost)

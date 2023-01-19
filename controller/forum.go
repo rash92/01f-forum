@@ -5,6 +5,7 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 )
@@ -14,6 +15,7 @@ type Data struct {
 	Cookie     string
 	UserInfo   dbmanagement.User
 	TitleName  string
+	IsCorrect  bool
 }
 
 /*
@@ -44,7 +46,8 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
-			comment := r.FormValue("post")
+			title := r.FormValue("submission-title")
+			content := r.FormValue("post")
 			tag := r.FormValue("tag")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
@@ -52,10 +55,10 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			if filter == "oldest" {
 				filterOrder = true
 			}
-			if comment != "" {
+			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, tag, time.Now())
+				dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, tag, time.Now())
 				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
@@ -86,6 +89,8 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data := Data{}
 		data.Cookie = sessionId
 		data.UserInfo = user
+		log.Println("SESSION ID: ", data.Cookie)
+		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
 		// fmt.Println("Forum data: ", data)
 		tmpl.ExecuteTemplate(w, "forum.html", data)
