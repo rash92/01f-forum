@@ -124,6 +124,6 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 	// dbmanagement.DeleteAllSessions()
-	dbmanagement.UpdateUserPermissionFromName("admin", "admin")
+	// dbmanagement.UpdateUserPermissionFromName("admin", "admin")
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
