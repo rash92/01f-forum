@@ -50,14 +50,21 @@
 			<div class="dropdown">
 				<button class="dropbtn">
 					<i class="fa-solid fa-bell"></i>
+					{{if $UserInfo.Notifications}}
 					<span class="badge"><i class="fa-solid fa-circle"></i></span>
+					{{end}}
 				</button>
 				<div class="dropdown-content">
-					<a class="dropdown-content-links" href="/post">
-						<div>
-							<p>CONTENT</p>
-						</div>
-					</a>
+					{{range $UserInfo.Notifications}}
+					<form action="/posts/{{.PostId}}" method="POST">
+						<button class="dropdown-content-links" name="notification"
+							value={{.UUID}}>
+							<div>
+								<p>{{.Sender}} {{.Statement}}</p>
+							</div>
+						</button>
+					</form>
+					{{end}}
 				</div>
 			</div>
 

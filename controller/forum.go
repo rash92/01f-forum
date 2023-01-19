@@ -66,9 +66,16 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
+				post := dbmanagement.SelectPostFromUUID(like)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+				post := dbmanagement.SelectPostFromUUID(dislike)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
+
 			}
 
 			idToDelete := r.FormValue("deletepost")
@@ -88,6 +95,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		data := Data{}
 		data.Cookie = sessionId
+		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
 		log.Println("SESSION ID: ", data.Cookie)
 		log.Println("CURRENT USER: ", data.UserInfo.Name)
