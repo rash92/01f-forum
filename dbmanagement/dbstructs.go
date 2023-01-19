@@ -9,6 +9,7 @@ type User struct {
 	Password      string
 	Permission    string
 	Notifications []Notification
+	LimitTokens   int
 }
 
 type Post struct {

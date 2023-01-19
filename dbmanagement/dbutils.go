@@ -198,22 +198,16 @@ func (user *User) CreateSession() (session Session, err error) {
 	return
 }
 
-// visitor session
-func CreateVisitorSession() (session Session, err error) {
+func (user *User) ReturnSession(userId string) (session Session, err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
-	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+	stm, err := db.Prepare("SELECT * FROM Sessions WHERE userId = ?")
+	utils.HandleError("Statement failed: ", err)
 
-	stmt, err := db.Prepare(statement)
-	utils.HandleError("Error creating visitor session in database", err)
+	err = stm.QueryRow(userId).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
+	utils.HandleError("Query Row failed: ", err)
 
-	defer stmt.Close()
-
-	UUID := GenerateUUIDString()
-	timeNow := time.Now()
-
-	err = stmt.QueryRow(UUID, "", timeNow).Scan(&session.UUID, "", &session.CreatedAt)
 	return
 }
 
