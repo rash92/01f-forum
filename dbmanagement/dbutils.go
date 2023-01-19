@@ -110,6 +110,7 @@ var createNotificationsTableStatement = `
 			commentId TEXT,
 			sendingUserId TEXT,
 			reaction INT,
+			notificationStatement TEXT,
 			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
 			FOREIGN KEY (postId) REFERENCES Posts(uuid),
 			FOREIGN KEY (commentId) REFERENCES Comments(uuid),

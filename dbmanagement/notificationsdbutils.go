@@ -12,12 +12,33 @@ func AddNotification(receivingUserId, postId, commentId, sendingUserId string, r
 	log.Println("Inserting notification record...")
 
 	UUID := GenerateUUIDString()
-	insertNotificationData := "INSERT INTO Notifications(UUID, receivingUserId, postId, commentId, sendingUserId, reaction) VALUES (?, ?, ?, ?, ?, ?)"
-	statement, err := db.Prepare(insertNotificationData)
-	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, receivingUserId, postId, commentId, sendingUserId, reaction)
-	utils.HandleError("Statement Exec failed: ", err)
+	receiverName, _ := SelectUserFromUUID(receivingUserId)
+	senderName, _ := SelectUserFromUUID(sendingUserId)
+
+	notificationStatement := ""
+	if postId != "" && reaction != 0 {
+		if reaction == 1 {
+			notificationStatement = "liked your post"
+		} else {
+			notificationStatement = "disliked your post"
+		}
+	} else if postId != "" && commentId != "" {
+		notificationStatement = "commented on your post"
+	} else if commentId != "" && reaction != 0 {
+		if reaction == 1 {
+			notificationStatement = "liked your comment"
+		} else {
+			notificationStatement = "disliked your comment"
+		}
+	}
+
+	insertNotificationData := "INSERT INTO Notifications(UUID, receivingUserId, postId, commentId, sendingUserId, reaction, notificationStatement) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	statement, err := db.Prepare(insertNotificationData)
+	utils.HandleError("Notification Prepare failed: ", err)
+
+	_, err = statement.Exec(UUID, receiverName.UUID, postId, commentId, senderName.Name, reaction, notificationStatement)
+	utils.HandleError("Notification Statement Exec failed: ", err)
 }
 
 func SelectAllNotificationsFromUser(receiver string) []Notification {
@@ -25,14 +46,14 @@ func SelectAllNotificationsFromUser(receiver string) []Notification {
 	defer db.Close()
 
 	row, err := db.Query("SELECT * FROM Notifications WHERE receivingUserId = ?", receiver)
-	utils.HandleError("Post from User query failed: ", err)
+	utils.HandleError("Notification from User query failed: ", err)
 	defer row.Close()
 
 	var allNotifications []Notification
 
 	for row.Next() {
 		var currentNotification Notification
-		row.Scan(&currentNotification.UUID, &currentNotification.Receiver, &currentNotification.PostId, &currentNotification.CommentId, &currentNotification.Sender, &currentNotification.Reaction)
+		row.Scan(&currentNotification.UUID, &currentNotification.Receiver, &currentNotification.PostId, &currentNotification.CommentId, &currentNotification.Sender, &currentNotification.Reaction, &currentNotification.Statement)
 		allNotifications = append(allNotifications, currentNotification)
 	}
 	return allNotifications

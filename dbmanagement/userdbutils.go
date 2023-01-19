@@ -25,7 +25,7 @@ func InsertUser(name string, email string, password string, permission string) U
 	_, err = statement.Exec(UUID, name, email, password, permission)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return User{UUID, name, email, password, permission}
+	return User{UUID, name, email, password, permission, []Notification{}}
 }
 
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {

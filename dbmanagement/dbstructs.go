@@ -3,11 +3,12 @@ package dbmanagement
 import "time"
 
 type User struct {
-	UUID       string
-	Name       string
-	Email      string
-	Password   string
-	Permission string
+	UUID          string
+	Name          string
+	Email         string
+	Password      string
+	Permission    string
+	Notifications []Notification
 }
 
 type Post struct {
@@ -60,4 +61,5 @@ type Notification struct {
 	CommentId string
 	Sender    string
 	Reaction  int
+	Statement string
 }
