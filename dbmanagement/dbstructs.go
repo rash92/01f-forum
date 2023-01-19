@@ -12,6 +12,7 @@ type User struct {
 
 type Post struct {
 	UUID          string
+	Title         string
 	Content       string
 	OwnerId       string
 	Likes         int

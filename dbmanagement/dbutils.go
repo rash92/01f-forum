@@ -21,9 +21,11 @@ var createUserTableStatement = `
 		permission TEXT
 	);`
 
+// ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
 var createPostTableStatement = `
 	CREATE TABLE Posts (
 		uuid TEXT NOT NULL PRIMARY KEY,
+		title TEXT,
 		content TEXT,		
 		ownerId TEXT,
 		likes INTEGER,
