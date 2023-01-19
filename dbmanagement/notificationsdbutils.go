@@ -7,14 +7,18 @@ import (
 )
 
 func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int) {
+	receiverName, _ := SelectUserFromUUID(receivingUserId)
+	senderName, _ := SelectUserFromUUID(sendingUserId)
+
+	if receiverName.UUID == senderName.UUID {
+		return
+	}
+
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting notification record...")
 
 	UUID := GenerateUUIDString()
-
-	receiverName, _ := SelectUserFromUUID(receivingUserId)
-	senderName, _ := SelectUserFromUUID(sendingUserId)
 
 	notificationStatement := ""
 	if postId != "" && reaction != 0 {
