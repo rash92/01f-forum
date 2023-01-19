@@ -5,6 +5,7 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 )
@@ -87,6 +88,8 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data := Data{}
 		data.Cookie = sessionId
 		data.UserInfo = user
+		log.Println("SESSION ID: ", data.Cookie)
+		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
 		// fmt.Println("Forum data: ", data)
 		tmpl.ExecuteTemplate(w, "forum.html", data)

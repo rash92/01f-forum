@@ -44,6 +44,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
 	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
 	if err != http.ErrNoCookie {
 		session := cookie.Value

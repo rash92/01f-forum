@@ -53,20 +53,20 @@
 				</button>
 				<div class="dropdown-content">
 					<div class="dropdown-content-links">
-						<a href="/user">Profile</a>
+						<a href="/user"><i class="fa-solid fa-user"></i> Profile</a>
 					</div>
 					<div class="dropdown-content-links">
 						<form action="/user" method="POST">
-							<button name="request to become moderator" value={{$UserInfo.UUID}}>Become a moderator?</button>
+							<button name="request to become moderator" value={{$UserInfo.UUID}}><i class="fa-solid fa-gavel"></i> Become a moderator?</button>
 						</form>
 					</div>
 					{{ if eq $UserInfo.Permission "admin"}}
 					<div class="dropdown-content-links">
-						<a href="/admin">admin tools</a>
+						<a href="/admin"><i class="fa-solid fa-gear"></i> admin tools</a>
 					</div>
 					{{end}}
 					<div class="dropdown-content-links">
-						<a href="/logout">Sign out <i class="fa-solid fa-right-from-bracket"></i></a>
+						<a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
 					</div>
 				</div>
 			</div>
