@@ -49,25 +49,50 @@
 			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
 			<div class="dropdown">
 				<button class="dropbtn">
+					<i class="fa-solid fa-bell"></i>
+				</button>
+				<div class="dropdown-content">
+					<a class="dropdown-content-links" href="/post">
+						<div>
+							<p>CONTENT</p>
+						</div>
+					</a>
+					<a class="dropdown-content-links" href="/post">
+						<div>
+							<p>CONTENT</p>
+						</div>
+					</a>
+				</div>
+			</div>
+
+			<div class="dropdown">
+				<button class="dropbtn">
 					<i class="fa-solid fa-chevron-down"></i>
 				</button>
 				<div class="dropdown-content">
-					<div class="dropdown-content-links">
-						<a href="/user"><i class="fa-solid fa-user"></i> Profile</a>
-					</div>
-					<div class="dropdown-content-links">
-						<form action="/user" method="POST">
-							<button name="request to become moderator" value={{$UserInfo.UUID}}><i class="fa-solid fa-gavel"></i> Become a moderator?</button>
-						</form>
-					</div>
+					<a class="dropdown-content-links" href="/user">
+						<div>
+							<i class="fa-solid fa-user"></i> Profile
+						</div>
+					</a>
+					<form action="/user" method="POST">
+						<button class="dropdown-content-links" name="request to become moderator"
+							value={{$UserInfo.UUID}}>
+							<div>
+								<i class="fa-solid fa-gavel"></i> Become a moderator?
+							</div>
+						</button>
+					</form>
 					{{ if eq $UserInfo.Permission "admin"}}
 					<div class="dropdown-content-links">
 						<a href="/admin"><i class="fa-solid fa-gear"></i> admin tools</a>
 					</div>
 					{{end}}
-					<div class="dropdown-content-links">
-						<a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
-					</div>
+					<a class="dropdown-content-links" href="/logout">
+						<div>
+							<i class="fa-solid fa-right-from-bracket"></i> Sign out
+						</div>
+					</a>
 				</div>
 			</div>
 		</div>
