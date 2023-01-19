@@ -322,6 +322,17 @@ h3 {
     transition: 0.3s ease;
 }
 
+.login-input-incorrect {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-incorrect-password {
+    color: red;
+}
+
 .input-wrapper a {
     text-decoration: underline;
 }

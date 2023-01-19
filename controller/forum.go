@@ -15,6 +15,7 @@ type Data struct {
 	Cookie     string
 	UserInfo   dbmanagement.User
 	TitleName  string
+	IsCorrect  bool
 }
 
 /*

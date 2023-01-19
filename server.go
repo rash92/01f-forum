@@ -32,7 +32,11 @@ func main() {
 
 	// index handlers
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		controller.AllPosts(w, r, tmpl)
+		if r.URL.Path != "/" {
+			controller.PageErrors(w, r, tmpl, "404")
+		} else {
+			controller.AllPosts(w, r, tmpl)
+		}
 	})
 
 	mux.HandleFunc("/categories/", func(w http.ResponseWriter, r *http.Request) {

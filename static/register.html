@@ -4,6 +4,9 @@
 		<div>
 			<h1>Register</h1>
 		</div>
+		<div>
+			<h3>Sign in with</h3>
+		</div>
 		<form action="/register_account" method="POST">
 			<div class="alternative-sign-up">
 				<div class="social">
@@ -26,7 +29,7 @@
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" autocomplete="off" />
+				<input type="password" placeholder="Password" name="password" maxlength="20" autocomplete="off" />
 			</div>
 			<div class="login-input">
 				<button type="submit">Sign Up</button>
