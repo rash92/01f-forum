@@ -95,14 +95,17 @@ func main() {
 	mux.HandleFunc("/google/callback", func(w http.ResponseWriter, r *http.Request) {
 		auth.GoogleCallback(w, r, tmpl)
 	})
-
-	// github authentication handlers
 	mux.HandleFunc("/github/login", func(w http.ResponseWriter, r *http.Request) {
 		auth.GithubLogin(w, r, tmpl)
 	})
-
 	mux.HandleFunc("/github/callback", func(w http.ResponseWriter, r *http.Request) {
 		auth.GithubCallback(w, r, tmpl)
+	})
+	mux.HandleFunc("/facebook/login", func(w http.ResponseWriter, r *http.Request) {
+		auth.FacebookLogin(w, r, tmpl)
+	})
+	mux.HandleFunc("/facebook/callback", func(w http.ResponseWriter, r *http.Request) {
+		auth.FacebookCallback(w, r, tmpl)
 	})
 
 	// forum handlers
@@ -119,6 +122,6 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
-	dbmanagement.DeleteAllSessions()
+	// dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
