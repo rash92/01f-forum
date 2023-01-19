@@ -124,7 +124,7 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
-	dbmanagement.CreateDatabaseWithTables()
+	// dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

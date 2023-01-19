@@ -184,7 +184,7 @@ h3 {
 .dropdown-content {
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     position: absolute;
     height: fit-content;
@@ -205,15 +205,19 @@ h3 {
     border: none;
     background-color: transparent;
     cursor: pointer;
-    height: 100%;
-    padding: 25px 20px;
+    padding: 10px 10px;
     font-size: 1em;
 }
 
-.dropdown-content-links a {
+.dropdown form {
+    width: 100%;
+}
+
+.dropdown-content-links a, p {
     font-size: 1rem;
     cursor: pointer;
 }
+
 
 .dropdown-content-links:hover {
     background-color: #e6e8ef;
