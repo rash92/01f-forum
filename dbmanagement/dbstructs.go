@@ -12,6 +12,7 @@ type User struct {
 
 type Post struct {
 	UUID          string
+	Title         string
 	Content       string
 	OwnerId       string
 	Likes         int
@@ -19,16 +20,19 @@ type Post struct {
 	Tag           string
 	Time          time.Time
 	FormattedTime string
+	NumOfComments int
 }
 
 type Comment struct {
-	UUID     string
-	Content  string
-	PostId   string
-	OwnerId  string
-	Likes    int
-	Dislikes int
-	Time     time.Time
+	UUID          string
+	Content       string
+	PostId        string
+	OwnerId       string
+	OwnerName     string
+	Likes         int
+	Dislikes      int
+	Time          time.Time
+	FormattedTime string
 }
 
 type Session struct {

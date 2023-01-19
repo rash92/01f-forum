@@ -47,10 +47,22 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	}
 }
 
+// func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+// 	sessionId, err := GetSessionFromBrowser(w, r)
+// 	utils.HandleError("Unable to get session id from browser in login:", err)
+// 	_, err = dbmanagement.SelectUserFromSession(sessionId)
+// 	if err == nil {
+// 		http.Redirect(w, r, "/", http.StatusFound)
+// 	} else {
+// 		tmpl.ExecuteTemplate(w, "logout.html", nil)
+// 	}
+// }
+
 // Logs user out
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
 	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
 	if err != http.ErrNoCookie {
 		session := cookie.Value
@@ -64,7 +76,8 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		Path:     "/",
 	}
 	http.SetCookie(w, &clearcookie)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// tmpl.ExecuteTemplate(w, "logout.html", nil)
+	http.Redirect(w, r, "/logout", http.StatusSeeOther)
 }
 
 // Displays the register page

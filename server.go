@@ -79,6 +79,7 @@ func main() {
 		auth.Authenticate(w, r, tmpl)
 	})
 	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("I made it here!")
 		auth.Logout(w, r, tmpl)
 	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
@@ -123,5 +124,6 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 	// dbmanagement.DeleteAllSessions()
+	dbmanagement.UpdateUserPermissionFromName("admin", "admin")
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

@@ -7,27 +7,35 @@
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 html,
 body {
-    background: rgb(185, 205, 218);
+    overflow: auto;
     background: linear-gradient(45deg, rgba(185, 205, 218, 1) 0%, rgba(199, 211, 223, 1) 50%, rgba(215, 218, 229, 1) 100%);
     background-size: cover;
+    height: 100vh;
+    padding-top: 32px;
 }
 
 a {
-	text-decoration: none;
-	color: black;
+    text-decoration: none;
+    color: black;
 }
 
 li {
-	list-style-type: none;
+    list-style-type: none;
 }
+
+h3 {
+    color: var(--dim-font);
+    font-size: 1em;
+}
+
 
 ::placeholder {
     padding: 10px 20px;
@@ -38,7 +46,8 @@ li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* position: fixed; */
+    position: fixed;
+    top: 0;
     width: 100vw;
     background-color: var(--highlight-color);
     height: 54px;
@@ -46,13 +55,13 @@ li {
 }
 
 .logo {
-	font-size: 22px;
-	padding-left: 10px;
+    font-size: 22px;
+    padding-left: 10px;
 }
 
 .logo:hover {
-	transform: translateY(-5px);
-	transition: 0.3s ease;
+    transform: translateY(-5px);
+    transition: 0.3s ease;
 }
 
 .searchbar {
@@ -102,9 +111,13 @@ li {
 }
 
 .menu {
-	display: flex;
-	gap: 0.5em;
-	font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 18px;
+    padding: 20px;
 }
 
 .menu li {
@@ -147,16 +160,83 @@ li {
     visibility: visible;
 }
 
+.dropdown {
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    border: none;
+    outline: none;
+    color: black;
+    font-size: 1em;
+    background-color: inherit;
+}
+
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: fit-content;
+    width: 250px;
+    right: 0;
+    border-radius: 20px;
+    background-color: white;
+    z-index: 1;
+}
+
+.dropdown-content-links {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    padding: 25px 20px;
+    font-size: 1em;
+}
+
+.dropdown-content-links button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.dropdown-content-links a {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.dropdown-content-links:hover {
+    background-color: #e6e8ef;
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
+
 
 /* CONTAINERS */
 .container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	width: 100%;
-	padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    padding: 5px;
+}
+
+.container-filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    padding-bottom: 10px;
 }
 
 .container-post {
@@ -166,8 +246,20 @@ li {
     align-items: center;
     height: fit-content;
     width: 100%;
-    padding: 50px;
+    margin-bottom: 32px;
+}
 
+/* FILTER */
+
+.filter {
+    margin: 10px 22px;
+}
+
+.filter button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 /* LOGIN CARD */
@@ -180,24 +272,38 @@ li {
     padding: 25px;
 }
 
+.input-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    height: 50px;
+}
+
+.input-header h1,
+h3 {
+    margin: 5px 0;
+}
+
 .login-input {
-	width: 100%;
-	max-width: 700px;
-	display: flex;
-	align-items: center;
-	margin-top: 25px;
-	padding: 10px 20px;
-	background: transparent;
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: transparent;
 }
 
 .login-input input {
-	background: transparent;
-	flex: 1;
-	border: 0;
-	outline: none;
-	padding: 24px 20px;
-	font-size: 18px;
-	border-bottom: 2px solid black;
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding: 24px 20px;
+    font-size: 18px;
+    border-bottom: 2px solid black;
 }
 
 .login-input button {
@@ -235,8 +341,8 @@ li {
 }
 
 .social-button {
-    background:none;
-    border:none;
+    background: none;
+    border: none;
     cursor: pointer;
     font-size: 40px;
 }
@@ -247,6 +353,13 @@ li {
 
 /* POST */
 
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .post {
     display: flex;
     flex-direction: column;
@@ -256,15 +369,57 @@ li {
     max-width: 700px;
     background-color: var(--highlight-color);
     padding: 10px;
-    margin: 20px;
 }
 
 .post:hover {
     border: 2px solid var(--main-color);
 }
 
-.post-tags-author {
+.delete-btn {
+    margin: 10px 0;
+    width: 20%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.post-info {
+    width: 100%;
+    cursor: pointer;
+}
+
+.tag-link {
     color: var(--dim-font);
+}
+
+.tag-link:hover {
+    color: black;
+}
+
+.post-author-time {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    font-size: 12px;
+}
+
+.post-content-text {
+    color: var(--dim-font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75ch;
+}
+
+.post-title,
+.post-tags,
+.post-image,
+.post-content {
+    margin: 5px 0;
 }
 
 .post-image img {
@@ -319,7 +474,7 @@ li {
     justify-content: center;
     align-items: right;
     width: 100vw;
-    max-width: 900px;
+    max-width: 700px;
     height: fit-content;
     background-color: var(--highlight-color);
     padding: 10px;
