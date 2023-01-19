@@ -165,11 +165,20 @@ h3 {
 }
 
 .dropdown .dropbtn {
+    position: relative;
     border: none;
     outline: none;
     color: black;
     font-size: 1em;
     background-color: inherit;
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.5rem;
+    color: red;
 }
 
 .dropdown-content {
