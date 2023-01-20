@@ -9,11 +9,12 @@ import (
 )
 
 type Data struct {
-	ListOfData []dbmanagement.Post
-	Cookie     string
-	UserInfo   dbmanagement.User
-	TitleName  string
-	IsCorrect  bool
+	ListOfData   []dbmanagement.Post
+	Cookie       string
+	UserInfo     dbmanagement.User
+	TitleName    string
+	IsCorrect    bool
+	UserNameTake bool
 }
 
 type OauthAccount struct {
@@ -87,7 +88,12 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
-		dbmanagement.InsertUser(userName, email, password, "user")
+		_, err := dbmanagement.InsertUser(userName, email, password, "user")
+		if err != nil {
+			data := Data{}
+			data.UserNameTake = true
+			tmpl.ExecuteTemplate(w, "register.html", data)
+		}
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }

@@ -12,7 +12,7 @@ Generates a new user in the database.  The UUID is generated internally here and
 
 The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
 */
-func InsertUser(name string, email string, password string, permission string) User {
+func InsertUser(name string, email string, password string, permission string) (User, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting user record...")
@@ -25,7 +25,7 @@ func InsertUser(name string, email string, password string, permission string) U
 	_, err = statement.Exec(UUID, name, email, password, permission)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return User{UUID, name, email, password, permission, []Notification{}}
+	return User{UUID, name, email, password, permission, []Notification{}}, err
 }
 
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {

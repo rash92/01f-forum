@@ -23,6 +23,11 @@
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
 				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus/>
 			</div>
+			{{if .UserNameTake}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">Sorry, that username is already taken. Please choose another.</p>
+			</div>
+			{{end}}
 			<div class="login-input">
 				<label for="email"><i class="fa-solid fa-envelope"></i></label>
 				<input type="email" placeholder="Email" name="email" autocomplete="off" />
