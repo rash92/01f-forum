@@ -21,7 +21,7 @@
 			</div>
 			<div class="login-input">
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
-				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus/>
+				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus required/>
 			</div>
 			{{if .UserNameTake}}
 			<div class="login-input-incorrect">
@@ -30,11 +30,11 @@
 			{{end}}
 			<div class="login-input">
 				<label for="email"><i class="fa-solid fa-envelope"></i></label>
-				<input type="email" placeholder="Email" name="email" autocomplete="off" />
+				<input type="email" placeholder="Email" name="email" autocomplete="off" required/>
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" maxlength="20" autocomplete="off" />
+				<input type="password" placeholder="Password" name="password" maxlength="20" autocomplete="off" required/>
 			</div>
 			<div class="login-input">
 				<button type="submit">Sign Up</button>

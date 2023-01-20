@@ -36,11 +36,11 @@
 			<div class="login-input">
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
 				<input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20"
-					autofocus />
+					autofocus required/>
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" autocomplete="off" />
+				<input type="password" placeholder="Password" name="password" autocomplete="off" required/>
 			</div>
 			{{if not .IsCorrect}}
 			<div class="login-input-incorrect">
