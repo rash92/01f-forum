@@ -1,12 +1,21 @@
 package auth
 
 import (
+	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
 	"log"
 	"net/http"
 )
+
+type Data struct {
+	ListOfData []dbmanagement.Post
+	Cookie     string
+	UserInfo   dbmanagement.User
+	TitleName  string
+	IsCorrect  bool
+}
 
 type OauthAccount struct {
 	Name, Email string
@@ -20,7 +29,10 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
-		tmpl.ExecuteTemplate(w, "login.html", nil)
+		data := Data{}
+		data.TitleName = "Login"
+		data.IsCorrect = true
+		tmpl.ExecuteTemplate(w, "login.html", data)
 	}
 }
 
@@ -39,10 +51,16 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		if CompareHash(user.Password, password) {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
+			user.LimitTokens = 10
+			fmt.Println("users limit token is", user.LimitTokens)
 			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
 			log.Println("Incorrect Password!")
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			data := Data{}
+			data.TitleName = "Login"
+			data.IsCorrect = false
+			tmpl.ExecuteTemplate(w, "login.html", data)
+			// http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
 	}
 }

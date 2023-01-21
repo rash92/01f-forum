@@ -32,7 +32,7 @@ var createPostTableStatement = `
 		dislikes INTEGER,
 		tag TEXT,
 		time DATETIME,
-		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid),
 		FOREIGN KEY (tag) REFERENCES Tags(tagname)
 	);`
 
@@ -102,6 +102,22 @@ var createAdminRequestTableStatement = `
 		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
 	);`
 
+var createNotificationsTableStatement = `
+		CREATE TABLE Notifications (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			receivingUserId TEXT,
+			postId TEXT,
+			commentId TEXT,
+			sendingUserId TEXT,
+			reaction INT,
+			notificationStatement TEXT,
+			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
+			FOREIGN KEY (postId) REFERENCES Posts(uuid),
+			FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+			FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
+		)
+	`
+
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
@@ -119,6 +135,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createReactedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
+	CreateTable(forumDB, createNotificationsTableStatement)
 
 	log.Println("forum.db created successfully!")
 }
@@ -181,22 +198,16 @@ func (user *User) CreateSession() (session Session, err error) {
 	return
 }
 
-// visitor session
-func CreateVisitorSession() (session Session, err error) {
+func (user *User) ReturnSession(userId string) (session Session, err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
-	statement := `INSERT INTO Sessions (uuid, userID, createdAt) values (?, ?, ?) returning uuid, userID, createdAt`
+	stm, err := db.Prepare("SELECT * FROM Sessions WHERE userId = ?")
+	utils.HandleError("Statement failed: ", err)
 
-	stmt, err := db.Prepare(statement)
-	utils.HandleError("Error creating visitor session in database", err)
+	err = stm.QueryRow(userId).Scan(&session.UUID, &session.UserId, &session.CreatedAt)
+	utils.HandleError("Query Row failed: ", err)
 
-	defer stmt.Close()
-
-	UUID := GenerateUUIDString()
-	timeNow := time.Now()
-
-	err = stmt.QueryRow(UUID, "", timeNow).Scan(&session.UUID, "", &session.CreatedAt)
 	return
 }
 

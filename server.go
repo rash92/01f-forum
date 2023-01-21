@@ -32,7 +32,11 @@ func main() {
 
 	// index handlers
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		controller.AllPosts(w, r, tmpl)
+		if r.URL.Path != "/" {
+			controller.PageErrors(w, r, tmpl, "404")
+		} else {
+			controller.AllPosts(w, r, tmpl)
+		}
 	})
 
 	mux.HandleFunc("/categories/", func(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +83,6 @@ func main() {
 		auth.Authenticate(w, r, tmpl)
 	})
 	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("I made it here!")
 		auth.Logout(w, r, tmpl)
 	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +126,8 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
+
+	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
-	// dbmanagement.UpdateUserPermissionFromName("admin", "admin")
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

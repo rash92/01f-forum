@@ -59,9 +59,15 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
+				post := dbmanagement.SelectPostFromUUID(like)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+				post := dbmanagement.SelectPostFromUUID(dislike)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
 			}
 
 			idToDelete := r.FormValue("deletepost")
@@ -82,6 +88,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		data := SubData{}
 		data.SubName = tag
 		data.Cookie = sessionId
+		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
 		data.ListOfData = append(data.ListOfData, posts...)
 		fmt.Println("Forum data: ", data)

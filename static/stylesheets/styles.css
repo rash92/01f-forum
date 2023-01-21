@@ -115,7 +115,7 @@ h3 {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 0.5em;
+    gap: 1.5em;
     font-size: 18px;
     padding: 20px;
 }
@@ -165,11 +165,20 @@ h3 {
 }
 
 .dropdown .dropbtn {
+    position: relative;
     border: none;
     outline: none;
     color: black;
     font-size: 1em;
     background-color: inherit;
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.5rem;
+    color: red;
 }
 
 .dropdown-content {
@@ -192,16 +201,13 @@ h3 {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
     height: 100%;
     padding: 25px 20px;
     font-size: 1em;
-}
-
-.dropdown-content-links button {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    cursor: pointer;
 }
 
 .dropdown-content-links a {
@@ -247,6 +253,17 @@ h3 {
     height: fit-content;
     width: 100%;
     margin-bottom: 32px;
+}
+
+.container-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    padding: 5px;
 }
 
 /* FILTER */
@@ -320,6 +337,17 @@ h3 {
 .login-input button:hover {
     background-color: var(--main-color);
     transition: 0.3s ease;
+}
+
+.login-input-incorrect {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-incorrect-password {
+    color: red;
 }
 
 .input-wrapper a {
@@ -608,4 +636,56 @@ input[type="file"] {
 
 .submission button:hover {
     border: 1px solid black;
+}
+
+/* ERROR-PAGES */
+
+.error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.error div {
+    margin: 10px;
+}
+
+.error h1 {
+    font-size: 66px;
+}
+
+.error p {
+    font-size: 23px;
+}
+
+.error button {
+    outline: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 33px;
+}
+
+/* SCROLLBAR */
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

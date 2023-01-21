@@ -32,6 +32,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
+	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
 	utils.HandleError("Could not get user session in user", err)
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)

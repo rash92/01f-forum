@@ -26,7 +26,7 @@
 			</div>
 			<!-- <div class="social">
 				<form action="/facebook/login" method="POST">
-				<button class="social-button" type="submit">
+					<button class="social-button" type="submit">
 						<i class="fa-brands fa-facebook"></i>
 					</button>
 				</form>
@@ -35,23 +35,18 @@
 		<form action="/authenticate" method="POST">
 			<div class="login-input">
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
-				<input
-					type="text"
-					placeholder="Username"
-					name="user_name"
-					autocomplete="off"
-					autofocus
-				/>
+				<input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20"
+					autofocus />
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input
-					type="password"
-					placeholder="Password"
-					name="password"
-					autocomplete="off"
-				/>
+				<input type="password" placeholder="Password" name="password" autocomplete="off" />
 			</div>
+			{{if not .IsCorrect}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">Incorrect Password or Username! Try Again.</p>
+			</div>
+			{{end}}
 			<div class="login-input">
 				<button type="submit">Log In</button>
 			</div>
@@ -61,5 +56,6 @@
 			<a href="/register">Click Here</a>
 		</p>
 	</div>
-</body>
-</html>
+	</body>
+
+	</html>
