@@ -21,5 +21,4 @@ func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.Use
 	}
 
 	return user
-
 }

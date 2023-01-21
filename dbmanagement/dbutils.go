@@ -32,7 +32,7 @@ var createPostTableStatement = `
 		dislikes INTEGER,
 		tag TEXT,
 		time DATETIME,
-		FOREIGN KEY (ownerId) REFERENCES Users(uuid)
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid),
 		FOREIGN KEY (tag) REFERENCES Tags(tagname)
 	);`
 

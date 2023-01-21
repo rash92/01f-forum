@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -43,6 +44,8 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		if CompareHash(user.Password, password) {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
+			user.LimitTokens = 10
+			fmt.Println("users limit token is", user.LimitTokens)
 			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
 			log.Println("Incorrect Password!")
