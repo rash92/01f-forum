@@ -81,14 +81,14 @@ func ExistingTag(tag string) bool {
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader *multipart.FileHeader) {
-	err := os.MkdirAll("./uploads", os.ModePerm)
+	err := os.MkdirAll("./static/uploads", os.ModePerm)
 	if err != nil {
 		utils.HandleError("error creating file directory for uploads", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	destinationFile, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename)))
+	destinationFile, err := os.Create(fmt.Sprintf("./static/uploads/%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename)))
 	if err != nil {
 		utils.HandleError("error creating file for image", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
