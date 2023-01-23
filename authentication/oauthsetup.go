@@ -41,12 +41,13 @@ func GithubSetupConfig() *oauth2.Config {
 func FacebookSetupConfig() *oauth2.Config {
 	// Oauth configuration for github
 	conf := &oauth2.Config{
-		ClientID:     "481977910781218",
-		ClientSecret: "a23ef81bcd37b0c232c8eeb964d1402d",
+		ClientID:     "1481843748971935",
+		ClientSecret: "43dbe0fc14822f0b89eab4262a6e6978",
 		Endpoint:     facebook.Endpoint,
 		RedirectURL:  "https://localhost:8080/facebook/callback",
 		Scopes: []string{
-			"user",
+			"email",
+			"public_profile",
 		},
 	}
 	return conf

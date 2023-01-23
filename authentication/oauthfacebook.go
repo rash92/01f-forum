@@ -27,7 +27,6 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	// code
 	code := r.FormValue("code")
 
-	fmt.Println("code is:", code)
 	// configuration
 	facebookConfig := FacebookSetupConfig()
 
@@ -36,20 +35,17 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	utils.HandleError("Code-taken exchange failed", err)
 
 	// use google api to get user info
-	resp, err := http.Get(facebookConfig.Endpoint.AuthURL + token.AccessToken)
-	utils.HandleError("Failed to fetch user data from google:", err)
+	resp, err := http.Get("https://graph.facebook.com/v13.0/me?fields=id,name,email,picture&access_token&access_token=" + token.AccessToken)
+	utils.HandleError("Failed to fetch user data from facebook:", err)
 
-	fmt.Println("response:", resp)
-
+	defer resp.Body.Close()
 	// parse response
-	// value := ParseOauthResponse(resp)
+	value := ParseOauthResponse(resp)
 
-	// fmt.Println("response:", value)
-
-	// account := OauthAccount{
-	// 	Name:  utils.AssertString(value["given_name"]),
-	// 	Email: utils.AssertString(value["email"]),
-	// }
+	account := OauthAccount{
+		Name:  utils.AssertString(value["name"]),
+		Email: utils.AssertString(value["email"]),
+	}
 	// login and create session for user
-	// LoginUserWithOauth(w, r, tmpl, account)
+	LoginUserWithOauth(w, r, tmpl, account)
 }

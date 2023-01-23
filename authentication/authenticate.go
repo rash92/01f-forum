@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -41,28 +40,29 @@ Authenticate user with credentials - If the username and password match an entry
 otherwise the user stays on the log in page. Session Cookie is also set here.
 */
 func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	if r.Method == "POST" {
-		userName := r.FormValue("user_name")
-		password := r.FormValue("password")
-
-		user, err := dbmanagement.SelectUserFromName(userName)
-		utils.HandleError("unable to get user error:", err)
-
-		if CompareHash(user.Password, password) {
-			err := CreateUserSession(w, r, user)
-			utils.HandleError("Failed to create session in authenticate", err)
-			user.LimitTokens = 10
-			fmt.Println("users limit token is", user.LimitTokens)
-			http.Redirect(w, r, "/forum", http.StatusSeeOther)
-		} else {
-			log.Println("Incorrect Password!")
-			data := Data{}
-			data.TitleName = "Login"
-			data.IsCorrect = false
-			tmpl.ExecuteTemplate(w, "login.html", data)
-			// http.Redirect(w, r, "/login", http.StatusSeeOther)
-		}
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
+
+	userName := r.FormValue("user_name")
+	password := r.FormValue("password")
+
+	user, err := dbmanagement.SelectUserFromName(userName)
+	utils.HandleError("unable to get user error:", err)
+
+	if !CompareHash(user.Password, password) {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		data := Data{}
+		data.TitleName = "Login"
+		data.IsCorrect = false
+		tmpl.ExecuteTemplate(w, "login.html", data)
+	}
+
+	err = CreateUserSession(w, r, user)
+	utils.HandleError("Failed to create session in authenticate", err)
+	// user.LimitTokens = 10
+	// fmt.Println("users limit token is", user.LimitTokens)
+	http.Redirect(w, r, "/forum", http.StatusSeeOther)
 }
 
 // Logs user out
