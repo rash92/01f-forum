@@ -7,6 +7,7 @@ import (
 	"forum/utils"
 	"html/template"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -19,6 +20,11 @@ type PostData struct {
 	TitleName        string
 	HasNotifications bool
 	Notifications    []dbmanagement.Notification
+}
+
+func CheckInputs(str string) bool {
+	spl := strings.Fields(str)
+	return len(spl) > 0
 }
 
 func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, postid string) {
@@ -43,7 +49,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			if notfication != "" {
 				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
 			}
-			if comment != "" {
+			if comment != "" || CheckInputs(comment) {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
 				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())

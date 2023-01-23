@@ -1,6 +1,6 @@
 {{ template "header" . }}
 {{$UserInfo := .UserInfo}}
-<form action="/forum" method="post">
+<form action="/categories/{{.SubName}}" method="post">
 	<div class="container-filter">
 		<div class="filter">
 			<p><i class="fa-solid fa-angles-right"></i> {{.SubName}}</p>
@@ -45,7 +45,7 @@
 					</div>
 				</a>
 			</div>
-			<form action="/forum" method="post" target="_self">
+			<form action="/categories/{{.SubName}}" method="post" target="_self">
 				<div class="post-likes-dislikes">
 					{{if ne $UserInfo.Name "" }}
 					<button class="like" name="like" value="{{.UUID}}"><i class="fa-solid fa-thumbs-up"></i></button>
