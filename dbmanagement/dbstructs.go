@@ -8,6 +8,7 @@ type User struct {
 	Email         string
 	Password      string
 	Permission    string
+	IsLoggedIn    int
 	Notifications []Notification
 }
 

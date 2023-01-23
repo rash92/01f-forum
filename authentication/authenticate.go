@@ -14,6 +14,7 @@ type Data struct {
 	UserInfo     dbmanagement.User
 	TitleName    string
 	IsCorrect    bool
+	IsLoggedIn   bool
 	UserNameTake bool
 }
 
@@ -41,17 +42,27 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		user, err := dbmanagement.SelectUserFromName(userName)
 		utils.HandleError("unable to get user error:", err)
 
-		if CompareHash(user.Password, password) {
+		if CompareHash(user.Password, password) && user.IsLoggedIn == 0 {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
+			dbmanagement.UpdateUserLoggedInStatus(user.UUID, 1)
+			log.Println(user.IsLoggedIn)
 			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
-			log.Println("Incorrect Password!")
-			data := Data{}
-			data.TitleName = "Login"
-			data.IsCorrect = false
-			tmpl.ExecuteTemplate(w, "login.html", data)
-			// http.Redirect(w, r, "/login", http.StatusSeeOther)
+			if user.IsLoggedIn != 0 {
+				log.Println("Already Logged In!")
+				data := Data{}
+				data.TitleName = "Login"
+				data.IsCorrect = true
+				data.IsLoggedIn = true
+				tmpl.ExecuteTemplate(w, "login.html", data)
+			} else {
+				log.Println("Incorrect Password!")
+				data := Data{}
+				data.TitleName = "Login"
+				data.IsCorrect = false
+				tmpl.ExecuteTemplate(w, "login.html", data)
+			}
 		}
 	}
 }
@@ -62,8 +73,11 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	cookie, err := r.Cookie("session")
 	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
+	session := cookie.Value
+	user, _ := dbmanagement.SelectUserFromSession(session)
+	dbmanagement.UpdateUserLoggedInStatus(user.UUID, 0)
+	log.Println(user.IsLoggedIn)
 	if err != http.ErrNoCookie {
-		session := cookie.Value
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)
 	}
@@ -73,6 +87,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		HttpOnly: true,
 		Path:     "/",
 	}
+
 	http.SetCookie(w, &clearcookie)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -88,7 +103,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
-		_, err := dbmanagement.InsertUser(userName, email, password, "user")
+		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
 		if err != nil {
 			data := Data{}
 			data.UserNameTake = true

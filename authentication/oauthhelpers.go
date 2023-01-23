@@ -25,7 +25,7 @@ func LoginUserWithOauth(w http.ResponseWriter, r *http.Request, tmpl *template.T
 		CreateUserSession(w, r, user)
 	} else {
 		// create user
-		user, _ := dbmanagement.InsertUser(account.Name, account.Email, "", "user")
+		user, _ := dbmanagement.InsertUser(account.Name, account.Email, "", "user", 0)
 		// create session cookie for user
 		CreateUserSession(w, r, user)
 		// utils.HandleError("Failed to create session in google authenticate", err)

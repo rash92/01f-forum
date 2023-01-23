@@ -12,20 +12,31 @@ Generates a new user in the database.  The UUID is generated internally here and
 
 The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
 */
-func InsertUser(name string, email string, password string, permission string) (User, error) {
+func InsertUser(name string, email string, password string, permission string, IsLoggedIn int) (User, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	log.Println("Inserting user record...")
 
 	UUID := GenerateUUIDString()
-	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?)"
+	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission, IsLoggedIn) VALUES (?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertUserData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, name, email, password, permission)
+	_, err = statement.Exec(UUID, name, email, password, permission, IsLoggedIn)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return User{UUID, name, email, password, permission, []Notification{}}, err
+	return User{UUID, name, email, password, permission, IsLoggedIn, []Notification{}}, err
+}
+
+func UpdateUserLoggedInStatus(UUUID string, isLoggedIn int) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("updating user login status to: ", isLoggedIn)
+	updateUserData := "UPDATE Users SET IsLoggedIn = ? WHERE uuid = ?"
+	statement, err := db.Prepare(updateUserData)
+	utils.HandleError("User Update Prepare failed: ", err)
+	_, err = statement.Exec(isLoggedIn, UUUID)
+	utils.HandleError("Statement Exec failed: ", err)
 }
 
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {
@@ -97,8 +108,9 @@ func DisplayAllUsers() {
 		var email string
 		var password string
 		var permission string
+		var isLoggedIn string
 		row.Scan(&UUID, &name, &email, &password, &permission)
-		log.Println("User: ", UUID, " ", name, " ", email, " ", password, " ", permission)
+		log.Println("User: ", UUID, " ", name, " ", email, " ", password, " ", permission, " ", isLoggedIn)
 	}
 }
 
@@ -113,7 +125,7 @@ func SelectAllUsers() []User {
 	var allUsers []User
 	for row.Next() {
 		var currentUser User
-		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission)
+		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission, &currentUser.IsLoggedIn)
 		allUsers = append(allUsers, currentUser)
 	}
 	return allUsers
@@ -130,7 +142,7 @@ func SelectUserFromName(Name string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -147,7 +159,7 @@ func SelectUserFromEmail(Email string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE email = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -164,7 +176,7 @@ func SelectUserFromUUID(UUID string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -182,7 +194,7 @@ func SelectUserFromSession(UUID string) (User, error) {
 	utils.HandleError("User from session query failed: ", err)
 
 	var user User
-	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn)
 	utils.HandleError("User query failed: ", err)
 
 	return user, err

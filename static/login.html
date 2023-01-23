@@ -38,6 +38,11 @@
 				<input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20"
 					autofocus required/>
 			</div>
+			{{if .IsLoggedIn}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">You are already logged in!</p>
+			</div>
+			{{end}}
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
 				<input type="password" placeholder="Password" name="password" autocomplete="off" required/>
