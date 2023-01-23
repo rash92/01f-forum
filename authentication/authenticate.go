@@ -8,13 +8,26 @@ import (
 	"net/http"
 )
 
+type Data struct {
+	ListOfData   []dbmanagement.Post
+	Cookie       string
+	UserInfo     dbmanagement.User
+	TitleName    string
+	IsCorrect    bool
+	IsLoggedIn   bool
+	UserNameTake bool
+}
+
 type OauthAccount struct {
 	Name, Email string
 }
 
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "login.html", nil)
+	data := Data{}
+	data.TitleName = "Login"
+	data.IsCorrect = true
+	tmpl.ExecuteTemplate(w, "login.html", data)
 }
 
 /*
@@ -29,13 +42,27 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		user, err := dbmanagement.SelectUserFromName(userName)
 		utils.HandleError("unable to get user error:", err)
 
-		if CompareHash(user.Password, password) {
+		if CompareHash(user.Password, password) && user.IsLoggedIn == 0 {
 			err := CreateUserSession(w, r, user)
 			utils.HandleError("Failed to create session in authenticate", err)
-			http.Redirect(w, r, "/forum", http.StatusMovedPermanently)
+			dbmanagement.UpdateUserLoggedInStatus(user.UUID, 1)
+			log.Println(user.IsLoggedIn)
+			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		} else {
-			log.Println("Incorrect Password!")
-			http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+			if user.IsLoggedIn != 0 {
+				log.Println("Already Logged In!")
+				data := Data{}
+				data.TitleName = "Login"
+				data.IsCorrect = true
+				data.IsLoggedIn = true
+				tmpl.ExecuteTemplate(w, "login.html", data)
+			} else {
+				log.Println("Incorrect Password!")
+				data := Data{}
+				data.TitleName = "Login"
+				data.IsCorrect = false
+				tmpl.ExecuteTemplate(w, "login.html", data)
+			}
 		}
 	}
 }
@@ -44,9 +71,13 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	log.Println("logging out...")
 	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
+	session := cookie.Value
+	user, _ := dbmanagement.SelectUserFromSession(session)
+	dbmanagement.UpdateUserLoggedInStatus(user.UUID, 0)
+	log.Println(user.IsLoggedIn)
 	if err != http.ErrNoCookie {
-		session := cookie.Value
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)
 	}
@@ -56,8 +87,9 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		HttpOnly: true,
 		Path:     "/",
 	}
+
 	http.SetCookie(w, &clearcookie)
-	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // Displays the register page
@@ -71,7 +103,12 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
-		dbmanagement.InsertUser(userName, email, password, "user")
+		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
+		if err != nil {
+			data := Data{}
+			data.UserNameTake = true
+			tmpl.ExecuteTemplate(w, "register.html", data)
+		}
 	}
-	http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }

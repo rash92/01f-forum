@@ -4,6 +4,7 @@ import (
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
+
 	"forum/utils"
 	"html/template"
 	"io"
@@ -21,6 +22,7 @@ type Data struct {
 	Cookie     string
 	UserInfo   dbmanagement.User
 	TitleName  string
+	IsCorrect  bool
 }
 
 /*
@@ -47,23 +49,33 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		utils.HandleError("cant get user", err)
 		data.Cookie = sessionId
-
+		filterOrder := false
 		data.UserInfo = user
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
+
+			filter := r.FormValue("filter")
+			if filter == "oldest" {
+				filterOrder = true
+			}
+
 			SubmissionHandler(w, r, user)
-			log.Println("post submitted successfully")
 		}
 
 		posts := dbmanagement.SelectAllPosts()
-		for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
-			posts[i], posts[j] = posts[j], posts[i]
+		if !filterOrder {
+			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
+				posts[i], posts[j] = posts[j], posts[i]
+			}
 		}
 
 		data := Data{}
 		data.Cookie = sessionId
+		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
+		log.Println("SESSION ID: ", data.Cookie)
+		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
 		// fmt.Println("Forum data: ", data)
 		tmpl.ExecuteTemplate(w, "forum.html", data)
@@ -150,13 +162,14 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		UploadHandler(w, r, file, fileHeader)
 	}
 
-	comment := r.FormValue("post")
+	title := r.FormValue("submission-title")
+	content := r.FormValue("post")
 	tags := r.FormValue("tag")
 
-	if comment != "" {
+	if content != "" {
 		userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 		utils.HandleError("cant get user with uuid in all posts", err)
-		post := dbmanagement.InsertPost(comment, userFromUUID.Name, 0, 0, time.Now())
+		post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now())
 		// log.Println(tag)
 
 		if tags != "" {

@@ -3,15 +3,18 @@ package dbmanagement
 import "time"
 
 type User struct {
-	UUID       string
-	Name       string
-	Email      string
-	Password   string
-	Permission string
+	UUID          string
+	Name          string
+	Email         string
+	Password      string
+	Permission    string
+	IsLoggedIn    int
+	Notifications []Notification
 }
 
 type Post struct {
 	UUID          string
+	Title         string
 	Content       string
 	OwnerId       string
 	Likes         int
@@ -19,16 +22,19 @@ type Post struct {
 	Tags          []Tag
 	Time          time.Time
 	FormattedTime string
+	NumOfComments int
 }
 
 type Comment struct {
-	UUID     string
-	Content  string
-	PostId   string
-	OwnerId  string
-	Likes    int
-	Dislikes int
-	Time     time.Time
+	UUID          string
+	Content       string
+	PostId        string
+	OwnerId       string
+	OwnerName     string
+	Likes         int
+	Dislikes      int
+	Time          time.Time
+	FormattedTime string
 }
 
 type Session struct {
@@ -47,4 +53,14 @@ type AdminRequest struct {
 	RequestFromId   string
 	RequestFromName string
 	Content         string
+}
+
+type Notification struct {
+	UUID      string
+	Receiver  string
+	PostId    string
+	CommentId string
+	Sender    string
+	Reaction  int
+	Statement string
 }

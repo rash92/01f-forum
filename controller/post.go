@@ -7,16 +7,24 @@ import (
 	"forum/utils"
 	"html/template"
 	"net/http"
+	"strings"
 	"time"
 )
 
 type PostData struct {
-	Post          dbmanagement.Post
-	Comments      []dbmanagement.Comment
-	NumOfComments int
-	Cookie        string
-	UserInfo      dbmanagement.User
-	TitleName     string
+	Post             dbmanagement.Post
+	Comments         []dbmanagement.Comment
+	NumOfComments    int
+	Cookie           string
+	UserInfo         dbmanagement.User
+	TitleName        string
+	HasNotifications bool
+	Notifications    []dbmanagement.Notification
+}
+
+func CheckInputs(str string) bool {
+	spl := strings.Fields(str)
+	return len(spl) > 0
 }
 
 func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, postid string) {
@@ -32,27 +40,46 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
+			notfication := r.FormValue("notification")
 			comment := r.FormValue("comment")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
 			commentlike := r.FormValue("commentlike")
 			commentdislike := r.FormValue("commentdislike")
-			if comment != "" {
+			if notfication != "" {
+				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
+			}
+			if comment != "" || CheckInputs(comment) {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
+				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
+				post := dbmanagement.SelectPostFromUUID(postid)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, postid, thisComment.UUID, user.UUID, 0)
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
+				post := dbmanagement.SelectPostFromUUID(like)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+				post := dbmanagement.SelectPostFromUUID(dislike)
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
 			}
 			if commentlike != "" {
 				dbmanagement.AddReactionToComment(user.UUID, commentlike, 1)
+				comment := dbmanagement.SelectCommentFromUUID(commentlike)
+				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, "", commentlike, user.UUID, 1)
 			}
 			if commentdislike != "" {
 				dbmanagement.AddReactionToComment(user.UUID, commentdislike, -1)
+				comment := dbmanagement.SelectCommentFromUUID(commentdislike)
+				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1)
 			}
 			idToDelete := r.FormValue("deletepost")
 			fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
@@ -70,6 +97,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 
 		data := PostData{}
 		data.Cookie = sessionId
+		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
 		data.Post = post
 		data.Comments = append(data.Comments, comments...)

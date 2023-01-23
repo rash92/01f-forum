@@ -19,12 +19,15 @@ var createUserTableStatement = `
 		name TEXT UNIQUE,
 		email TEXT,
 		password TEXT,
-		permission TEXT
+		permission TEXT,
+		IsLoggedIn INTEGER
 	);`
 
+// ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
 var createPostTableStatement = `
 	CREATE TABLE Posts (
 		uuid TEXT NOT NULL PRIMARY KEY,
+		title TEXT,
 		content TEXT,		
 		ownerId TEXT,
 		likes INTEGER,
@@ -99,6 +102,22 @@ var createAdminRequestTableStatement = `
 		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
 	);`
 
+var createNotificationsTableStatement = `
+		CREATE TABLE Notifications (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			receivingUserId TEXT,
+			postId TEXT,
+			commentId TEXT,
+			sendingUserId TEXT,
+			reaction INT,
+			notificationStatement TEXT,
+			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
+			FOREIGN KEY (postId) REFERENCES Posts(uuid),
+			FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+			FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
+		)
+	`
+
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
@@ -117,11 +136,12 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createReactedCommentsTableStatement)
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
+	CreateTable(forumDB, createNotificationsTableStatement)
 
 	// had to manually reimplement hashing as get 'import cycle error' if you import auth package
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
-	InsertUser("admin", "a@a", string(hashedPassword), "admin")
+	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
 
 	log.Println("forum.db created successfully!")
 }

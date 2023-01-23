@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"forum/utils"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -23,7 +24,8 @@ func InsertComment(content string, postId string, ownerId string, likes int, dis
 	_, err = statement.Exec(UUID, content, postId, ownerId, likes, dislikes, time)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return Comment{UUID, content, postId, ownerId, likes, dislikes, time}
+	name, _ := SelectUserFromUUID(ownerId)
+	return Comment{UUID, content, postId, ownerId, name.Name, likes, dislikes, time, ""}
 }
 
 /*
@@ -64,6 +66,9 @@ func SelectCommentFromUUID(UUID string) Comment {
 	utils.HandleError("Statement failed: ", err)
 
 	err = stm.QueryRow(UUID).Scan(&comment.UUID, &comment.Content, &comment.PostId, &comment.OwnerId, &comment.Likes, &comment.Dislikes, &comment.Time)
+	comment.FormattedTime = strings.TrimSuffix(comment.Time.Format(time.RFC822), "UTC")
+	name, _ := SelectUserFromUUID(comment.OwnerId)
+	comment.OwnerName = name.Name
 	utils.HandleError("Query Row failed: ", err)
 
 	return comment
@@ -85,6 +90,9 @@ func SelectAllCommentsFromUser(ownerId string) []Comment {
 	for row.Next() {
 		var currentComment Comment
 		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
+		currentComment.FormattedTime = strings.TrimSuffix(currentComment.Time.Format(time.RFC822), "UTC")
+		name, _ := SelectUserFromUUID(currentComment.OwnerId)
+		currentComment.OwnerName = name.Name
 		allComments = append(allComments, currentComment)
 	}
 	return allComments
@@ -106,6 +114,9 @@ func SelectAllCommentsFromPost(postId string) []Comment {
 	for row.Next() {
 		var currentComment Comment
 		row.Scan(&currentComment.UUID, &currentComment.Content, &currentComment.PostId, &currentComment.OwnerId, &currentComment.Likes, &currentComment.Dislikes, &currentComment.Time)
+		currentComment.FormattedTime = strings.TrimSuffix(currentComment.Time.Format(time.RFC822), "UTC")
+		name, _ := SelectUserFromUUID(currentComment.OwnerId)
+		currentComment.OwnerName = name.Name
 		allComments = append(allComments, currentComment)
 	}
 	return allComments

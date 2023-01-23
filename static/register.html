@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-</head>
-<body>
-
+{{template "header" . }}
 <div class="container">
 	<div class="input-wrapper">
 		<div>
 			<h1>Register</h1>
+		</div>
+		<div>
+			<h3>Sign in with</h3>
 		</div>
 		<form action="/register_account" method="POST">
 			<div class="alternative-sign-up">
@@ -27,15 +21,20 @@
 			</div>
 			<div class="login-input">
 				<label for="user_name"><i class="fa-solid fa-user"></i></label>
-				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus/>
+				<input type="text" placeholder="Username" name="user_name" autocomplete="off" autofocus required/>
 			</div>
+			{{if .UserNameTake}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">Sorry, that username is already taken. Please choose another.</p>
+			</div>
+			{{end}}
 			<div class="login-input">
 				<label for="email"><i class="fa-solid fa-envelope"></i></label>
-				<input type="email" placeholder="Email" name="email" autocomplete="off" />
+				<input type="email" placeholder="Email" name="email" autocomplete="off" required/>
 			</div>
 			<div class="login-input">
 				<label for="password"><i class="fa-solid fa-lock"></i></label>
-				<input type="password" placeholder="Password" name="password" autocomplete="off" />
+				<input type="password" placeholder="Password" name="password" maxlength="20" autocomplete="off" required/>
 			</div>
 			<div class="login-input">
 				<button type="submit">Sign Up</button>
@@ -43,6 +42,4 @@
 		</form>
 	</div>
 </div>
-	
-</body>
-</html>
+{{template "footer"}} 
