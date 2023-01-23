@@ -129,6 +129,9 @@ func main() {
 	mux.HandleFunc("/privacy_policy", func(w http.ResponseWriter, r *http.Request) {
 		controller.PrivacyPolicy(w, r, tmpl)
 	})
+	mux.HandleFunc("/rateerror", func(w http.ResponseWriter, r *http.Request) {
+		controller.PageErrors(w, r, tmpl, "rate")
+	})
 
 	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"net/http"
@@ -16,9 +17,21 @@ func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.Use
 	startTime := userSession.CreatedAt
 	endTime := startTime.Add(limitTime)
 
-	if time.Now().After(endTime) {
-		user.LimitTokens = 10
-	}
+	go func(limitTime time.Duration, endTime time.Time) {
+		for {
+			time.Sleep(15 * time.Second)
+			user, err := dbmanagement.SelectUserFromSession(userSession.UUID)
+			utils.HandleError("go routine problem :", err)
+			if CheckTime(limitTime, endTime) {
+				dbmanagement.UpdateUserToken(userSession.UserId, Limit)
+			}
+			fmt.Println(user.LimitTokens)
+		}
+	}(limitTime, endTime)
 
 	return user
+}
+
+func CheckTime(limitTime time.Duration, endTime time.Time) bool {
+	return time.Now().After(endTime)
 }

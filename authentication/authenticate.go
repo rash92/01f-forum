@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -61,7 +60,12 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		err := CreateUserSession(w, r, user)
 		utils.HandleError("Failed to create session in authenticate", err)
 		// user.LimitTokens
-		fmt.Println("users limit token is:", user.LimitTokens)
+		LimitRequests(w, r, user)
+		usertoken := dbmanagement.GetUserToken(user.UUID)
+		if usertoken <= 0 {
+			tmpl.ExecuteTemplate(w, "error.html ", nil)
+		}
+		dbmanagement.UpdateUserToken(user.UUID, 1)
 		http.Redirect(w, r, "/forum", http.StatusSeeOther)
 	}
 }

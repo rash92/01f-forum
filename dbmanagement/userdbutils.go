@@ -98,7 +98,8 @@ func DisplayAllUsers() {
 		var email string
 		var password string
 		var permission string
-		row.Scan(&UUID, &name, &email, &password, &permission)
+		var tokens int
+		row.Scan(&UUID, &name, &email, &password, &permission, &tokens)
 		log.Println("User: ", UUID, " ", name, " ", email, " ", password, " ", permission)
 	}
 }
@@ -114,7 +115,7 @@ func SelectAllUsers() []User {
 	var allUsers []User
 	for row.Next() {
 		var currentUser User
-		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission)
+		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission, &currentUser.LimitTokens)
 		allUsers = append(allUsers, currentUser)
 	}
 	return allUsers
@@ -131,7 +132,7 @@ func SelectUserFromName(Name string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE name = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(Name).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -148,7 +149,7 @@ func SelectUserFromEmail(Email string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE email = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(Email).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -165,7 +166,7 @@ func SelectUserFromUUID(UUID string) (User, error) {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
 	utils.HandleError("Query Row failed: ", err)
 
 	return user, err
@@ -183,8 +184,49 @@ func SelectUserFromSession(UUID string) (User, error) {
 	utils.HandleError("User from session query failed: ", err)
 
 	var user User
-	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission)
+	err = db.QueryRow("SELECT * FROM Users WHERE uuid = ?", userID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
 	utils.HandleError("User query failed: ", err)
 
 	return user, err
+}
+
+func UpdateUserToken(UUID string, n int) {
+	var tokenStatement string
+
+	if n == 10 {
+		tokenStatement = `
+	UPDATE Users 
+	SET limitTokens = ?
+	WHERE uuid = ?
+`
+	} else {
+		tokenStatement = `
+	UPDATE Users 
+	SET limitTokens = limitTokens - ?
+	WHERE uuid = ?
+`
+	}
+
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement, err := db.Prepare(tokenStatement)
+	utils.HandleError("token statement failed: ", err)
+
+	_, err = statement.Exec(n, UUID)
+	utils.HandleError("token statement Exec failed: ", err)
+}
+
+func GetUserToken(UUID string) int {
+	var user User
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
+	utils.HandleError("Query Row failed: ", err)
+
+	return user.LimitTokens
 }

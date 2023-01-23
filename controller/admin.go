@@ -19,6 +19,9 @@ type AdminData struct {
 func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData := AdminData{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Can't get session from browser in admin handler", err)
+	user, err := dbmanagement.SelectUserFromSession(sessionId)
+	utils.HandleError("Can't get user session from admin handler", err)
 	if err != nil {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 		fmt.Println("please log in as a user with admin permissions")
@@ -34,6 +37,11 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	if r.Method == "POST" {
+		usertoken := dbmanagement.GetUserToken(user.UUID)
+		if usertoken <= 0 {
+			tmpl.ExecuteTemplate(w, "error.html ", nil)
+		}
+		dbmanagement.UpdateUserToken(user.UUID, 1)
 		userToChange := r.FormValue("set to user")
 		if userToChange != "" {
 			dbmanagement.UpdateUserPermissionFromUUID(userToChange, "user")

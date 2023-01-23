@@ -41,6 +41,11 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
+			usertoken := dbmanagement.GetUserToken(user.UUID)
+			if usertoken <= 0 {
+				tmpl.ExecuteTemplate(w, "error.html ", nil)
+			}
+			dbmanagement.UpdateUserToken(user.UUID, 1)
 			content := r.FormValue("post")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
