@@ -2,13 +2,13 @@
 {{$UserInfo := .UserInfo}}
 <div class="container-filter">
     <div class="filter">
-        <button onclick="hideShow(this)" value="posts"><i class="fa-solid fa-signs-post"></i> Your posts</button>
+        <button id="posts" onclick="hideShow(this)" value="posts"><i class="fa-solid fa-signs-post"></i> Your posts</button>
     </div>
     <div class="filter">
-        <button onclick="hideShow(this)" value="comments"><i class="fa-solid fa-message"></i> Your comments</button>
+        <button id="comments" onclick="hideShow(this)" value="comments"><i class="fa-solid fa-message"></i> Your comments</button>
     </div>
     <div class="filter">
-        <button onclick="hideShow(this)" value="liked-posts"><i class="fa-solid fa-message"></i> Your liked posts</button>
+        <button id="likes" onclick="hideShow(this)" value="liked-posts"><i class="fa-solid fa-thumbs-up"></i> Your liked posts</button>
     </div>
 </div>
 <div id="user-posts" style="display: block;">
