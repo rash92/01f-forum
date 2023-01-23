@@ -143,6 +143,10 @@ func CreateDatabaseWithTables() {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
 	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
+	e := os.RemoveAll("./static/uploads/")
+	if e != nil {
+		log.Fatal(e)
+	}
 
 	log.Println("forum.db created successfully!")
 }
