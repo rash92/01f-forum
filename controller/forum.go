@@ -55,7 +55,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			if filter == "oldest" {
 				filterOrder = true
 			}
-			if content != "" {
+			if CheckInputs(content) && CheckInputs(title) {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
 				dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, tag, time.Now())

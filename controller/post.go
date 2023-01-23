@@ -49,7 +49,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			if notfication != "" {
 				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
 			}
-			if comment != "" || CheckInputs(comment) {
+			if CheckInputs(comment) {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
 				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
