@@ -283,6 +283,10 @@ h3 {
     cursor: pointer;
 }
 
+.filter button:hover {
+    color: var(--dim-font);
+}
+
 /* LOGIN CARD */
 .input-wrapper {
     display: flex;
