@@ -33,6 +33,7 @@ var createPostTableStatement = `
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
+		imagename TEXT,
 		FOREIGN KEY (ownerId) REFERENCES Users(uuid) ON DELETE SET NULL
 	);`
 

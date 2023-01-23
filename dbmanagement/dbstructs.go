@@ -23,6 +23,7 @@ type Post struct {
 	Time          time.Time
 	FormattedTime string
 	NumOfComments int
+	ImageName     string
 }
 
 type Comment struct {

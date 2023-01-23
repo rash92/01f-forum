@@ -95,19 +95,19 @@ func ExistingTag(tag string) bool {
 	return false
 }
 
-func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader *multipart.FileHeader) {
+func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader *multipart.FileHeader) string {
 	err := os.MkdirAll("./static/uploads", os.ModePerm)
 	if err != nil {
 		utils.HandleError("error creating file directory for uploads", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return ""
 	}
 
 	destinationFile, err := os.Create(fmt.Sprintf("./static/uploads/%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename)))
 	if err != nil {
 		utils.HandleError("error creating file for image", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return ""
 	}
 
 	defer destinationFile.Close()
@@ -117,10 +117,12 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 	if err != nil {
 		utils.HandleError("error copying file to destination", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return ""
 	}
 
 	log.Println("file uploaded successfully")
+	fileName := destinationFile.Name()[1:]
+	return fileName
 }
 
 // followed this: https://freshman.tech/file-upload-golang/
@@ -162,13 +164,14 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	}
 
 	file, fileHeader, err := r.FormFile("submission-image")
+	fileName := ""
 	if err != nil {
 		// if you were trying to make a post without an image it will log this 'error' but still submit the text and tags
 		utils.HandleError("error retrieving file from form", err)
 	} else {
 		fmt.Println("trying to retrieve file...")
 		defer file.Close()
-		UploadHandler(w, r, file, fileHeader)
+		fileName = UploadHandler(w, r, file, fileHeader)
 	}
 
 	title := r.FormValue("submission-title")
@@ -178,7 +181,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	if content != "" {
 		userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 		utils.HandleError("cant get user with uuid in all posts", err)
-		post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now())
+		post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
 		// log.Println(tag)
 
 		if tags != "" {

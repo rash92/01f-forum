@@ -51,7 +51,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, time.Now())
+				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, time.Now(), "")
 				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
