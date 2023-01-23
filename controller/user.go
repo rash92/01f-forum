@@ -11,11 +11,12 @@ import (
 )
 
 type UserData struct {
-	UserPosts    []dbmanagement.Post
-	UserComments []dbmanagement.Comment
-	UserInfo     dbmanagement.User
-	TitleName    string
-	Cookie       string
+	UserPosts      []dbmanagement.Post
+	LikedUserPosts []dbmanagement.Post
+	UserComments   []dbmanagement.Comment
+	UserInfo       dbmanagement.User
+	TitleName      string
+	Cookie         string
 }
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -35,7 +36,8 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
 	utils.HandleError("Could not get user session in user", err)
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
-	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)
+	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
+	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
 	log.Println(data.UserComments)
 	data.TitleName = "Welcome"
 
