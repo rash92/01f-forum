@@ -18,14 +18,15 @@ func InsertUser(name string, email string, password string, permission string) U
 	log.Println("Inserting user record...")
 
 	UUID := GenerateUUIDString()
-	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission) VALUES (?, ?, ?, ?, ?)"
+	tokensnum := 10
+	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission, limitTokens) VALUES (?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertUserData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, name, email, password, permission)
+	_, err = statement.Exec(UUID, name, email, password, permission, tokensnum)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return User{UUID, name, email, password, permission, []Notification{}, 0}
+	return User{UUID, name, email, password, permission, []Notification{}, tokensnum}
 }
 
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {

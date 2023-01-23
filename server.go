@@ -126,7 +126,11 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
+	mux.HandleFunc("/privacy_policy", func(w http.ResponseWriter, r *http.Request) {
+		controller.PrivacyPolicy(w, r, tmpl)
+	})
 
+	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))

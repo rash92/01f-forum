@@ -18,7 +18,8 @@ var createUserTableStatement = `
 		name TEXT UNIQUE,
 		email TEXT,
 		password TEXT,
-		permission TEXT
+		permission TEXT,
+		limitTokens INTEGER
 	);`
 
 // ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
