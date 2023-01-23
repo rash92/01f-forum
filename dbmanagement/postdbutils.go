@@ -116,6 +116,28 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 	return allPosts
 }
 
+func SelectAllLikedPostsFromUser(user User) []Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Posts WHERE ownerId = ?", user.Name)
+	utils.HandleError("Post from User query failed: ", err)
+	defer row.Close()
+
+	var allPosts []Post
+
+	for row.Next() {
+		var currentPost Post
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
+		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
+		if SelectReactionFromPost(currentPost.UUID, user.UUID) == 1 {
+			allPosts = append(allPosts, currentPost)
+		}
+	}
+	return allPosts
+}
+
 /*
 Similar to SelectAllPosts() but for a specific user.  Uses the ownerID (users UUID) to specify which user and returns all the posts created by that user.
 */
