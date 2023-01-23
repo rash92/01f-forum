@@ -19,7 +19,7 @@ type SubData struct {
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
-	data := Data{}
+	data := SubData{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
@@ -51,7 +51,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
-				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, tag, time.Now())
+				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, time.Now(), "")
 				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
@@ -85,13 +85,13 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 		}
 
-		data := SubData{}
 		data.SubName = tag
 		data.Cookie = sessionId
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
-		data.ListOfData = append(data.ListOfData, posts...)
-		fmt.Println("Forum data: ", data)
+		data.ListOfData = posts
+		fmt.Println("Forum postdata: ", data.ListOfData)
+		fmt.Println("Forum subname: ", data.SubName)
 		tmpl.ExecuteTemplate(w, "subforum.html", data)
 	}
 }

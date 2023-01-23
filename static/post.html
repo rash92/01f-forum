@@ -6,12 +6,17 @@
         <div class="single-post-title">
             <h2>{{$PostInfo.Title}}</h2>
         </div>
+        <div class="post-tags">
+			{{range $PostInfo.Tags}}
+			<a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+			{{end}}
+		</div>
         <div class="single-post-author">
             <p>Posted by {{$PostInfo.OwnerId}} at {{$PostInfo.FormattedTime}}</p>
         </div>
         <div class="post-image">
-            <img src="https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
-                alt="Picture of Juptier">
+            <img src={{$PostInfo.ImageName}}
+                alt="user submitted image">
         </div>
         <div class="single-post-content">
             <p>{{$PostInfo.Content}}</p>
