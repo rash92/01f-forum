@@ -18,31 +18,13 @@
 			<button class="delete-btn" name="deletepost" value={{.UUID}}>Delete</button>
 		</form>
 		{{end}}
-<<<<<<< HEAD
-		<a href="/posts/{{.UUID}}">Post</a>
-		{{range .Tags}}
-		<div class="post-tags-author">
-			<a href="/categories/{{.TagName}}">{{.TagName}}</a>
-		</div>
-		{{end}}
-		<div class="post-title">
-			<p>{{.FormattedTime}}</p>
-			<h2>Look at this amazing photo of Jupiter I took!</h2>
-		</div>
-		<div class="post-tags-author">
-			<p>{{.OwnerId}}</p>
-		</div>
-		<div class="post-image">
-			<div>{{.Content}}</div>
-		</div>
-		<div class="post-comments-likes-dislikes">
-			<div>
-				<p><i class="fa-regular fa-comment"></i> 3 Comments</p>
-			</div>
-=======
+		
 		<div class="post-tags">
-			<a class="tag-link" href="/categories/{{.Tag}}">{{.Tag}}</a>
+			{{range .Tags}}
+			<a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+			{{end}}
 		</div>
+		
 		<div class="post-info">
 			<a href="/posts/{{.UUID}}">
 				<div class="post-author-time">
@@ -63,7 +45,6 @@
 					</div>
 				</div>
 			</a>
->>>>>>> master
 		</div>
 		<form action="/forum" method="post" target="_self">
 			<div class="post-likes-dislikes">

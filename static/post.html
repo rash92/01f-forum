@@ -6,6 +6,11 @@
         <div class="single-post-title">
             <h2>{{$PostInfo.Title}}</h2>
         </div>
+        <div class="post-tags">
+			{{range $PostInfo.Tags}}
+			<a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+			{{end}}
+		</div>
         <div class="single-post-author">
             <p>Posted by {{$PostInfo.OwnerId}} at {{$PostInfo.FormattedTime}}</p>
         </div>

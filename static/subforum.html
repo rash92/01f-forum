@@ -14,19 +14,6 @@
 	</div>
 	</form>
 	{{range .ListOfData}}
-<<<<<<< HEAD
-	<div id="{{.UUID}}">
-			<input type="checkbox" name="postid" id="postid" value="{{.UUID}}" style="visibility: hidden;" checked>
-			<div>{{.OwnerId}}</div>
-			<div>{{.Content}}</div>
-			<div>{{.FormattedTime}}</div>
-			<div>{{.Likes}}</div> <input type="submit" name="like" id="like" value="Like">
-			<div>{{.Dislikes}}</div> <input type="submit" name="dislike" id="dislike" value="Dislike">
-			{{range .Tags}}
-			<div>{{.TagName}}</div>
-			{{end}}
-		</form>
-=======
 	<div class="container-post">
 		<div class="post">
 			{{ if or (eq $UserInfo.Name .OwnerId ) (eq $UserInfo.Permission "admin") (eq $UserInfo.Permission "moderator")}}
@@ -76,7 +63,6 @@
 				</div>
 			</form>
 		</div>
->>>>>>> master
 	</div>
 	{{end}}
 	{{template "footer"}}

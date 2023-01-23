@@ -74,10 +74,13 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
+		data.TitleName = "Forum"
 		log.Println("SESSION ID: ", data.Cookie)
 		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
-		// fmt.Println("Forum data: ", data)
+		fmt.Println("Forum posts: ", data.ListOfData)
+		fmt.Println("Forum user: ", data.UserInfo)
+
 		tmpl.ExecuteTemplate(w, "forum.html", data)
 	}
 }
@@ -134,9 +137,15 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 
 	if like != "" {
 		dbmanagement.AddReactionToPost(user.UUID, like, 1)
+		post := dbmanagement.SelectPostFromUUID(like)
+		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
 	}
 	if dislike != "" {
 		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
+		post := dbmanagement.SelectPostFromUUID(dislike)
+		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
 	}
 
 	maxSize := 20 * 1024 * 1024
