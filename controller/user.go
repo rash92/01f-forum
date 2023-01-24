@@ -40,6 +40,11 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.TitleName = "Welcome"
 
 	if r.Method == "POST" {
+		err := dbmanagement.UpdateUserToken(data.UserInfo.UUID, 1)
+		if err != nil {
+			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+			return
+		}
 		postIdToDelete := r.FormValue("deletepost")
 		// fmt.Println("deleting post with id: ", postIdToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(postIdToDelete))
 		if postIdToDelete != "" {

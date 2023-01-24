@@ -34,11 +34,11 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
-			usertoken := dbmanagement.GetUserToken(user.UUID)
-			if usertoken <= 0 {
-				tmpl.ExecuteTemplate(w, "error.html ", nil)
+			err := dbmanagement.UpdateUserToken(user.UUID, 1)
+			if err != nil {
+				http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+				return
 			}
-			dbmanagement.UpdateUserToken(user.UUID, 1)
 			notfication := r.FormValue("notification")
 			comment := r.FormValue("comment")
 			like := r.FormValue("like")

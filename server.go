@@ -129,7 +129,7 @@ func main() {
 	mux.HandleFunc("/privacy_policy", func(w http.ResponseWriter, r *http.Request) {
 		controller.PrivacyPolicy(w, r, tmpl)
 	})
-	mux.HandleFunc("/rateerror", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/rate_error", func(w http.ResponseWriter, r *http.Request) {
 		controller.PageErrors(w, r, tmpl, "rate")
 	})
 

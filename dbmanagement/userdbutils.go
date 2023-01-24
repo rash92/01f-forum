@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"forum/utils"
 	"log"
@@ -18,15 +19,15 @@ func InsertUser(name string, email string, password string, permission string) U
 	log.Println("Inserting user record...")
 
 	UUID := GenerateUUIDString()
-	tokensnum := 10
+	tokens := 3
 	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission, limitTokens) VALUES (?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertUserData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, name, email, password, permission, tokensnum)
+	_, err = statement.Exec(UUID, name, email, password, permission, tokens)
 	utils.HandleError("Statement Exec failed: ", err)
 
-	return User{UUID, name, email, password, permission, []Notification{}, tokensnum}
+	return User{UUID, name, email, password, permission, []Notification{}, tokens}
 }
 
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {
@@ -190,31 +191,39 @@ func SelectUserFromSession(UUID string) (User, error) {
 	return user, err
 }
 
-func UpdateUserToken(UUID string, n int) {
-	var tokenStatement string
+func UpdateUserToken(UUID string, n int) error {
+	usertoken := GetUserToken(UUID)
+	if usertoken == 0 && n != 3 {
+		return errors.New("limit reached")
+	} else {
 
-	if n == 10 {
-		tokenStatement = `
+		var tokenStatement string
+
+		if n == 3 {
+			tokenStatement = `
 	UPDATE Users 
 	SET limitTokens = ?
 	WHERE uuid = ?
 `
-	} else {
-		tokenStatement = `
+		} else {
+			tokenStatement = `
 	UPDATE Users 
 	SET limitTokens = limitTokens - ?
 	WHERE uuid = ?
 `
+		}
+
+		db, _ := sql.Open("sqlite3", "./forum.db")
+		defer db.Close()
+
+		statement, err := db.Prepare(tokenStatement)
+		utils.HandleError("token statement failed: ", err)
+
+		_, err = statement.Exec(n, UUID)
+		utils.HandleError("token statement Exec failed: ", err)
+
+		return err
 	}
-
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-
-	statement, err := db.Prepare(tokenStatement)
-	utils.HandleError("token statement failed: ", err)
-
-	_, err = statement.Exec(n, UUID)
-	utils.HandleError("token statement Exec failed: ", err)
 }
 
 func GetUserToken(UUID string) int {

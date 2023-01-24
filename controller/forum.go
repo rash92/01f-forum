@@ -46,11 +46,12 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
-			usertoken := dbmanagement.GetUserToken(user.UUID)
-			if usertoken <= 0 {
-				http.Redirect(w, r, "/rateerror", http.StatusTooManyRequests)
+			err := dbmanagement.UpdateUserToken(user.UUID, 1)
+			if err != nil {
+				http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+				return
 			}
-			dbmanagement.UpdateUserToken(user.UUID, 1)
+
 			title := r.FormValue("submission-title")
 			content := r.FormValue("post")
 			tag := r.FormValue("tag")

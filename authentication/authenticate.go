@@ -61,11 +61,11 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		utils.HandleError("Failed to create session in authenticate", err)
 		// user.LimitTokens
 		LimitRequests(w, r, user)
-		usertoken := dbmanagement.GetUserToken(user.UUID)
-		if usertoken <= 0 {
-			tmpl.ExecuteTemplate(w, "error.html ", nil)
+		err = dbmanagement.UpdateUserToken(user.UUID, 1)
+		if err != nil {
+			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+			return
 		}
-		dbmanagement.UpdateUserToken(user.UUID, 1)
 		http.Redirect(w, r, "/forum", http.StatusSeeOther)
 	}
 }

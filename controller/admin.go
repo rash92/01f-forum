@@ -37,9 +37,10 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	if r.Method == "POST" {
-		usertoken := dbmanagement.GetUserToken(user.UUID)
-		if usertoken <= 0 {
-			tmpl.ExecuteTemplate(w, "error.html ", nil)
+		err := dbmanagement.UpdateUserToken(user.UUID, 1)
+		if err != nil {
+			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+			return
 		}
 		dbmanagement.UpdateUserToken(user.UUID, 1)
 		userToChange := r.FormValue("set to user")
