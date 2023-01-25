@@ -22,9 +22,13 @@ func DeleteFromTableWithUUID(table string, UUID string) {
 }
 
 func DeletePostWithUUID(UUID string) {
-	Post := SelectPostFromUUID(UUID)
-	if Post.ImageName != "" {
-		os.Remove("." + Post.ImageName)
+	post := SelectPostFromUUID(UUID)
+	if post.ImageName != "" {
+		os.Remove("." + post.ImageName)
+	}
+	comments := SelectAllCommentsFromPost(UUID)
+	for _, comment := range comments {
+		DeleteFromTableWithUUID("comments", comment.UUID)
 	}
 	DeleteFromTableWithUUID("posts", UUID)
 }

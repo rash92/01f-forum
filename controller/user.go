@@ -47,7 +47,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		}
 		commentIdToDelete := r.FormValue("deletecomment")
 		// fmt.Println("deleting comment with id: ", commentIdToDelete, " and contents: ", dbmanagement.SelectCommentFromUUID(commentIdToDelete))
-		if postIdToDelete != "" {
+		if commentIdToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("Comments", commentIdToDelete)
 		}
 		userIdToRequestModerator := r.FormValue("request to become moderator")
