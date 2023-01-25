@@ -11,7 +11,7 @@ import (
 // Google Oauth
 func GoogleLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	googleConfig := GoogleSetupConfig()
-	url := googleConfig.AuthCodeURL("randomstate")
+	url := googleConfig.AuthCodeURL(Randomstate)
 	// redirect to google login page
 	http.Redirect(w, r, url, http.StatusFound)
 }
@@ -19,7 +19,7 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template
 func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// state
 	state := r.FormValue("state")
-	if state != "randomstate" {
+	if state != Randomstate {
 		fmt.Fprintln(w, "Google auth state error")
 		return
 	}
@@ -35,7 +35,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	utils.HandleError("Code-taken exchange failed", err)
 
 	// use google api to get user info
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+	resp, err := http.Get(GoogleAuthURL + token.AccessToken)
 	utils.HandleError("Failed to fetch user data from google:", err)
 
 	// parse response

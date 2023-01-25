@@ -11,7 +11,7 @@ import (
 // Github Oauth
 func GithubLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	githubConfig := GithubSetupConfig()
-	url := githubConfig.AuthCodeURL("randomstate")
+	url := githubConfig.AuthCodeURL(Randomstate)
 	// redirect to github login page
 	http.Redirect(w, r, url, http.StatusFound)
 }
@@ -19,7 +19,7 @@ func GithubLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template
 func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	//state
 	state := r.FormValue("state")
-	if state != "randomstate" {
+	if state != Randomstate {
 		fmt.Fprintln(w, "Google auth state error")
 		return
 	}
@@ -37,7 +37,7 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	client := githubConfig.Client(context.Background(), token)
 
-	resp, err := client.Get("https://api.github.com/user")
+	resp, err := client.Get(GithubAuthURL)
 	utils.HandleError("Failed to fetch user data from github:", err)
 
 	defer resp.Body.Close()

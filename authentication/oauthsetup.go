@@ -1,11 +1,28 @@
 package auth
 
 import (
+	"fmt"
+	"math/rand"
+	"time"
+
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/facebook"
 	"golang.org/x/oauth2/github"
 	"golang.org/x/oauth2/google"
 )
+
+func randomString(length int) string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)[:length]
+}
+
+var GoogleAuthURL = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+var GithubAuthURL = "https://api.github.com/user"
+var FBAuthURL = "https://graph.facebook.com/v13.0/me?fields=id,name,email,picture&access_token&access_token="
+var stateRandomiser = randomString(12)
+var Randomstate = stateRandomiser
 
 func GoogleSetupConfig() *oauth2.Config {
 	// Your credentials should be obtained from the Google

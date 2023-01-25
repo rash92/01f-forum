@@ -11,7 +11,7 @@ import (
 // Google Oauth
 func FacebookLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	facebookConfig := FacebookSetupConfig()
-	url := facebookConfig.AuthCodeURL("randomstate")
+	url := facebookConfig.AuthCodeURL(Randomstate)
 	// redirect to facebook login page
 	http.Redirect(w, r, url, http.StatusFound)
 }
@@ -19,7 +19,7 @@ func FacebookLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Templa
 func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// state
 	state := r.FormValue("state")
-	if state != "randomstate" {
+	if state != Randomstate {
 		fmt.Fprintln(w, "facebook auth state error")
 		return
 	}
@@ -35,7 +35,7 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	utils.HandleError("Code-taken exchange failed", err)
 
 	// use google api to get user info
-	resp, err := http.Get("https://graph.facebook.com/v13.0/me?fields=id,name,email,picture&access_token&access_token=" + token.AccessToken)
+	resp, err := http.Get(FBAuthURL + token.AccessToken)
 	utils.HandleError("Failed to fetch user data from facebook:", err)
 
 	defer resp.Body.Close()
