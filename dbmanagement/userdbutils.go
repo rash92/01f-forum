@@ -39,6 +39,18 @@ func UpdateUserLoggedInStatus(UUUID string, isLoggedIn int) {
 	utils.HandleError("Statement Exec failed: ", err)
 }
 
+func ResetAllUserLoggedInStatus() {
+	logoutInt := 0
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("updating user login status to: ", logoutInt)
+	updateUserData := "UPDATE Users SET IsLoggedIn = ?"
+	statement, err := db.Prepare(updateUserData)
+	utils.HandleError("User Reset Prepare failed: ", err)
+	_, err = statement.Exec(logoutInt)
+	utils.HandleError("Statement Exec failed: ", err)
+}
+
 func UpdateUserPermissionFromUUID(UUID string, newpermission string) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()

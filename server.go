@@ -126,6 +126,7 @@ func main() {
 		controller.User(w, r, tmpl)
 	})
 	// dbmanagement.CreateDatabaseWithTables()
+	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
