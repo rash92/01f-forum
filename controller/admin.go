@@ -66,12 +66,11 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		}
 
 	}
-	user, err := dbmanagement.SelectUserFromSession(sessionId)
 	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()
 	adminData.AdminRequests = dbmanagement.SelectAllAdminRequests()
 	adminData.AllTags = dbmanagement.SelectAllTags()
 	adminData.TitleName = "Admin"
-	adminData.UserInfo = user
+	adminData.UserInfo = loggedInAs
 	tmpl.ExecuteTemplate(w, "admin.html", adminData)
 }

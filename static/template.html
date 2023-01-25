@@ -78,6 +78,7 @@
 							<i class="fa-solid fa-user"></i> Profile
 						</div>
 					</a>
+					{{ if eq $UserInfo.Permission "user"}}
 					<form action="/user" method="POST">
 						<button class="dropdown-content-links" name="request to become moderator"
 							value={{$UserInfo.UUID}}>
@@ -86,9 +87,10 @@
 							</div>
 						</button>
 					</form>
+					{{end}}
 					{{ if eq $UserInfo.Permission "admin"}}
 					<div class="dropdown-content-links">
-						<a href="/admin"><i class="fa-solid fa-gear"></i> admin tools</a>
+						<a href="/admin"><i class="fa-solid fa-gear"></i> Admin tools</a>
 					</div>
 					{{end}}
 					<a class="dropdown-content-links" href="/logout">

@@ -6,16 +6,17 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Data struct {
-	ListOfData   []dbmanagement.Post
-	Cookie       string
-	UserInfo     dbmanagement.User
-	TitleName    string
-	IsCorrect    bool
-	IsLoggedIn   bool
-	UserNameTake bool
+	ListOfData    []dbmanagement.Post
+	Cookie        string
+	UserInfo      dbmanagement.User
+	TitleName     string
+	IsCorrect     bool
+	IsLoggedIn    bool
+	RegisterError string
 }
 
 type OauthAccount struct {
@@ -94,7 +95,8 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 // Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "register.html", nil)
+	data := Data{}
+	tmpl.ExecuteTemplate(w, "register.html", data)
 }
 
 // Registers a user with given details then redirects to log in page.  Password is hashed here.
@@ -104,9 +106,9 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
 		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
+		data := Data{}
 		if err != nil {
-			data := Data{}
-			data.UserNameTake = true
+			data.RegisterError = strings.Split(err.Error(), ".")[1]
 			tmpl.ExecuteTemplate(w, "register.html", data)
 		}
 	}

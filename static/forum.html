@@ -4,7 +4,7 @@
 		<div class="filter">
 			<button name="filter" value="newest">
 				<i class="fa-brands fa-hotjar"></i>
-				Hot
+				Newest
 			</button>
 		</div>
 		<div class="filter">
@@ -41,9 +41,11 @@
 				<div class="post-title">
 					<h2>{{.Title}}</h2>
 				</div>
-					<div class="post-image">
-						<img src="{{.ImageName}}" alt="user submitted image" />
-					</div>
+				{{ if ne .ImageName ""}}
+				<div class="post-image">
+					<img src="{{.ImageName}}" alt="user submitted image" />
+				</div>
+				{{end}}
 				<div class="post-content">
 					<div class="post-content-text">{{.Content}}</div>
 				</div>

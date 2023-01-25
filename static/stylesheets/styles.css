@@ -422,6 +422,14 @@ h3 {
     font-size: 1em;
 }
 
+.delete-btn:hover {
+    background: var(--dislke);
+}
+
+.admin-all-tag-delete {
+    width: fit-content;
+}
+
 .post-info {
     width: 100%;
     cursor: pointer;

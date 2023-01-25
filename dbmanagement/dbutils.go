@@ -17,7 +17,7 @@ var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
 		name TEXT UNIQUE,
-		email TEXT,
+		email TEXT UNIQUE,
 		password TEXT,
 		permission TEXT,
 		IsLoggedIn INTEGER

@@ -16,17 +16,17 @@
 	</div>
 </div>
 
-<div class="mod-requests" style="display: block;">
+<div id="mod-requests" style="display: block;">
 	{{range .AdminRequests}}
 	<div class="container-post">
 		<div class="post">
 			{{.RequestFromId}} {{.RequestFromName}}
 			<p>{{.Content}}</p>
 			<form action="/admin" method="POST">
-				<button name="delete request" value="{{.UUID}}">
+				<button class="delete-btn" name="delete request" value="{{.UUID}}">
 					delete request
 				</button>
-				<button name="set to moderator" value="{{.RequestFromId}}">
+				<button class="delete-btn" name="set to moderator" value="{{.RequestFromId}}">
 					Set to moderator
 				</button>
 			</form>
@@ -35,33 +35,33 @@
 	{{end}}
 </div>
 
-<div class="user-admin" style="display: none;">
+<div id="user-admin" style="display: none;">
 	{{range .AllUsers}}
 	<div class="container-post">
 		<div class="post">
 			<p>User name: {{.Name}}</p>
 			<p>Permission: {{.Permission}}</p>
 			<form action="/admin" method="POST">
-				<button name="set to user" value="{{.UUID}}">set to user</button>
-				<button name="set to moderator" value="{{.UUID}}">
+				<button class="delete-btn" name="set to user" value="{{.UUID}}">set to user</button>
+				<button class="delete-btn" name="set to moderator" value="{{.UUID}}">
 					Set to moderator
 				</button>
-				<button name="set to admin" value="{{.UUID}}">set to admin</button>
-				<button name="delete user" value="{{.UUID}}">delete user</button>
+				<button class="delete-btn" name="set to admin" value="{{.UUID}}">set to admin</button>
+				<button class="delete-btn" name="delete user" value="{{.UUID}}">delete user</button>
 			</form>
 		</div>
 	</div>
 	{{end}}
 </div>
 
-<div class="tags-admin" style="display: none;">
+<div id="tags-admin" style="display: none;">
 	{{range .AllTags}}
 	<div class="container-post">
 		<div class="post">
-			<p>{{.TagName}}</p>
+			<p>Tag Name: {{.TagName}}</p>
 			<form action="/admin" method="POST">
-				<button name="delete tag" value={{.UUID}}>delete tag</button>
-				<button name="delete all posts with tag" value={{.TagName}}>delete all posts with this tag</button>
+				<button class="delete-btn" name="delete tag" value={{.UUID}}>delete tag</button>
+				<button class="delete-btn admin-all-tag-delete" name="delete all posts with tag" value={{.TagName}}>delete all posts with this tag</button>
 			</form>
 		</div>
 	</div>

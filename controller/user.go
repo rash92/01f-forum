@@ -6,7 +6,6 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -58,6 +57,5 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			fmt.Println("new request content is: ", newrequest.Content)
 		}
 	}
-	log.Println("User liked posts: ", data.LikedUserPosts)
 	tmpl.ExecuteTemplate(w, "user.html", data)
 }

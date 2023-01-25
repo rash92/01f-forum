@@ -125,16 +125,13 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 }
 
 func SelectAllLikedPostsFromUser(user User) []Post {
-
 	allPosts := SelectAllPosts()
 	likedPosts := []Post{}
-
 	for _, v := range allPosts {
 		if SelectReactionFromPost(v.UUID, user.UUID) == 1 {
 			likedPosts = append(likedPosts, v)
 		}
 	}
-
 	return likedPosts
 }
 
