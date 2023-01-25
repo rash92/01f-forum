@@ -14,7 +14,7 @@ Inserts post into database with the relevant data, likes and dislikes should be 
 func InsertPost(title string, content string, ownerId string, likes int, dislikes int, tag string, inputtime time.Time) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting post record...")
+	utils.WriteMessageToLogFile("Inserting post record...")
 
 	UUID := GenerateUUIDString()
 	insertPostData := "INSERT INTO Posts(UUID, title, content, ownerId, likes, dislikes, tag, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"

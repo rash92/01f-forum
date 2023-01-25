@@ -11,7 +11,7 @@ Changes a plain text password into a hashed key password and returns that key.  
 */
 func HashPassword(p string) string {
 	h, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
-	utils.HandleError("password hashing error", err)
+	utils.HandleError("Password hashing error", err)
 	return string(h)
 }
 

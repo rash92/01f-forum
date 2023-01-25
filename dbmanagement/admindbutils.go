@@ -2,22 +2,20 @@ package dbmanagement
 
 import (
 	"database/sql"
-	"fmt"
 	"forum/utils"
-	"log"
 )
 
 func CreateAdminRequest(RequestFromId string, RequestFromName string, content string) AdminRequest {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting admin request record...")
+	utils.WriteMessageToLogFile("Inserting admin request record...")
 
 	UUID := GenerateUUIDString()
 	insertAdminRequestData := "INSERT INTO AdminRequests(UUID, requestfromid, requestfromname, content) VALUES (?, ?, ?, ?)"
 	statement, err := db.Prepare(insertAdminRequestData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	fmt.Println("admint request content is: ", content)
+	utils.WriteMessageToLogFile("admint request content is: " + content)
 
 	_, err = statement.Exec(UUID, RequestFromId, RequestFromName, content)
 	utils.HandleError("Statement Exec failed: ", err)

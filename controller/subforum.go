@@ -25,7 +25,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
-			utils.HandleError("unable to create visitor session", err)
+			utils.HandleError("Unable to create visitor session", err)
 		} else {
 			sessionId, _ = auth.GetSessionFromBrowser(w, r)
 			http.Redirect(w, r, "/", http.StatusFound)
@@ -55,7 +55,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-				utils.HandleError("cant get user with uuid in all posts", err)
+				utils.HandleError("Unable get user with UUID in all Subforum function", err)
 				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, tag, time.Now())
 				// log.Println(tag)
 				if !ExistingTag(tag) {
@@ -82,7 +82,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 		}
 
-		utils.HandleError("cant get user", err)
+		utils.HandleError("Unable to select user using sessionid", err)
 		posts := dbmanagement.SelectAllPostsFromTag(tag)
 		if !filterOrder {
 			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {

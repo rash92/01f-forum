@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -22,12 +20,11 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := UserData{}
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
 	if err != nil {
-		utils.HandleError("couldn't find user sessions id", err)
+		utils.HandleError("Unable to find user session id", err)
 	}
 
 	if SessionId == "" {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
-		// fmt.Println("please log in")
 		return
 	}
 
@@ -36,7 +33,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	utils.HandleError("Could not get user session in user", err)
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)
-	log.Println(data.UserComments)
+	utils.WriteMessageToLogFile(data.UserComments)
 	data.TitleName = "Welcome"
 
 	if r.Method == "POST" {
@@ -59,7 +56,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// fmt.Println("requesting user id: ", userIdToRequestModerator, "to become moderator")
 		if userIdToRequestModerator != "" {
 			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "this user is asking to become a moderator")
-			fmt.Println("new request content is: ", newrequest.Content)
+			utils.WriteMessageToLogFile("new request content is: " + newrequest.Content)
 		}
 	}
 

@@ -20,7 +20,7 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	//state
 	state := r.FormValue("state")
 	if state != Randomstate {
-		fmt.Fprintln(w, "Google auth state error")
+		utils.WriteMessageToLogFile("Github auth state error")
 		return
 	}
 

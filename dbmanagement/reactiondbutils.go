@@ -152,7 +152,7 @@ func SelectReactionFromPost(postid, userid string) int {
  */
 func AddReactionToComment(userId string, commentid string, reaction int) {
 	if reaction > 1 || reaction < -1 || reaction == 0 {
-		log.Println("Incorrect reaction integer")
+		utils.WriteMessageToLogFile("Incorrect reaction integer")
 		return
 	}
 

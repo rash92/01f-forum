@@ -2,8 +2,8 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
-	"log"
 	"strings"
 	"time"
 )
@@ -14,7 +14,7 @@ Inserts post into database with the relevant data, likes and dislikes should be 
 func InsertComment(content string, postId string, ownerId string, likes int, dislikes int, time time.Time) Comment {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting comment record...")
+	utils.WriteMessageToLogFile("Inserting comment record...")
 
 	UUID := GenerateUUIDString()
 	insertCommentData := "INSERT INTO Comments(UUID, content, postId, ownerId, likes, dislikes, time) VALUES (?, ?, ?, ?, ?, ?, ?)"
@@ -50,7 +50,8 @@ func DisplayAllComments() {
 		row.Scan(&UUID, &content, &postId, &ownerId, &likes, &dislikes, &time)
 		owner, err := SelectUserFromUUID(ownerId)
 		utils.HandleError("Selecting user from uuid failed: ", err)
-		log.Println("Comment: ", UUID, " replying to: ", postId, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
+		message := fmt.Sprint("Comment: ", UUID, " replying to: ", postId, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time)
+		utils.WriteMessageToLogFile(message)
 	}
 }
 

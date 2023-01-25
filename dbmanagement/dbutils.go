@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"forum/utils"
-	"log"
 	"os"
 	"time"
 
@@ -138,7 +137,11 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createAdminRequestTableStatement)
 	CreateTable(forumDB, createNotificationsTableStatement)
 
-	log.Println("forum.db created successfully!")
+	err := os.Remove("logfile.txt")
+	utils.PrintErrOnCommandLine(err)
+
+	utils.WriteMessageToLogFile("forum.db created successfully!")
+
 }
 
 /*
@@ -146,7 +149,7 @@ Creates a new database file to store tables.  If database already exists, it is 
 */
 func CreateDatabase(name string) *sql.DB {
 	os.Remove(name + ".db")
-	log.Println("Creating " + name + ".db...")
+	utils.WriteMessageToLogFile("Creating " + name + ".db...")
 	file, err := os.Create(name + ".db")
 	utils.HandleError("", err)
 
@@ -228,7 +231,8 @@ func DeleteSessionByUUID(UUID string) (err error) {
 	n, err := res.RowsAffected()
 	utils.HandleError("Rows affected error:", err)
 
-	fmt.Println("Number of rows affected: ", n)
+	message := fmt.Sprintf("The statement has affected %d rows", n)
+	utils.WriteMessageToLogFile(message)
 	return
 }
 
@@ -243,6 +247,7 @@ func DeleteAllSessions() (err error) {
 	n, err := res.RowsAffected()
 	utils.HandleError("Rows affected error:", err)
 
-	fmt.Printf("The statement has affected %d rows\n", n)
+	message := fmt.Sprintf("The statement has affected %d rows", n)
+	utils.WriteMessageToLogFile(message)
 	return err
 }

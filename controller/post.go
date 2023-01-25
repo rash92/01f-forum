@@ -24,14 +24,15 @@ type PostData struct {
 func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, postid string) {
 	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	fmt.Println("session error is: ", err)
+	utils.HandleError("session error is: ", err)
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		data.Cookie = sessionId
 
 		data.UserInfo = user
-		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+		message := fmt.Sprintf("session id is: %v user info is: %v cookie data is: %v", sessionId, data.UserInfo, data.Cookie)
+		utils.WriteMessageToLogFile(message)
 
 		if r.Method == "POST" {
 			err := dbmanagement.UpdateUserToken(user.UUID, 1)
@@ -50,7 +51,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			}
 			if comment != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-				utils.HandleError("cant get user with uuid in all posts", err)
+				utils.HandleError("Unable to get user with uuid in all posts", err)
 				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
 				post := dbmanagement.SelectPostFromUUID(postid)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
@@ -81,13 +82,14 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1)
 			}
 			idToDelete := r.FormValue("deletepost")
-			fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
+			message := fmt.Sprintf("Deleting post with id: %v and contents: %v", idToDelete, dbmanagement.SelectPostFromUUID(idToDelete))
+			utils.WriteMessageToLogFile(message)
 			if idToDelete != "" {
 				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 			}
 		}
 
-		utils.HandleError("cant get user", err)
+		utils.HandleError("Unable to get user", err)
 		post := dbmanagement.SelectPostFromUUID(postid)
 		comments := dbmanagement.SelectAllCommentsFromPost(postid)
 		for i, j := 0, len(comments)-1; i < j; i, j = i+1, j-1 {

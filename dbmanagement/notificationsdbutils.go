@@ -3,7 +3,6 @@ package dbmanagement
 import (
 	"database/sql"
 	"forum/utils"
-	"log"
 )
 
 func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int) {
@@ -16,7 +15,7 @@ func AddNotification(receivingUserId, postId, commentId, sendingUserId string, r
 
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting notification record...")
+	utils.WriteMessageToLogFile("Inserting notification record...")
 
 	UUID := GenerateUUIDString()
 

@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
 )
@@ -30,7 +30,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
-			utils.HandleError("unable to create visitor session", err)
+			utils.HandleError("Unable to create visitor session", err)
 		} else {
 			sessionId, _ = auth.GetSessionFromBrowser(w, r)
 			http.Redirect(w, r, "/", http.StatusFound)
@@ -43,7 +43,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 		filterOrder := false
 		data.UserInfo = user
-		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
 			err := dbmanagement.UpdateUserToken(user.UUID, 1)
@@ -62,7 +62,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			}
 			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-				utils.HandleError("cant get user with uuid in all posts", err)
+				utils.HandleError("Unable to get user with uuid", err)
 				dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, tag, time.Now())
 				// log.Println(tag)
 				if !ExistingTag(tag) {
@@ -90,7 +90,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			}
 		}
 
-		utils.HandleError("cant get user", err)
+		utils.HandleError("Unable to get user", err)
 		posts := dbmanagement.SelectAllPosts()
 		if !filterOrder {
 			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
@@ -102,8 +102,8 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
-		log.Println("SESSION ID: ", data.Cookie)
-		log.Println("CURRENT USER: ", data.UserInfo.Name)
+		// log.Println("SESSION ID: ", data.Cookie)
+		// log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
 		// fmt.Println("Forum data: ", data)
 		tmpl.ExecuteTemplate(w, "forum.html", data)

@@ -15,7 +15,7 @@ const timeout = 30 * time.Minute
 
 func GetSessionFromBrowser(w http.ResponseWriter, r *http.Request) (string, error) {
 	session, err := r.Cookie("session")
-	utils.HandleError("cannot get session from browser Err:", err)
+	utils.HandleError("Unable to get session from browser Err:", err)
 
 	if err != nil {
 		return "", err
@@ -30,7 +30,7 @@ Creates session that gives a sessions ID, used to determine which user is using 
 */
 func CreateUserSession(w http.ResponseWriter, r *http.Request, user dbmanagement.User) error {
 	session, err := user.CreateSession()
-	utils.HandleError("Cannot create user session err:", err)
+	utils.HandleError("Unable to create user session err:", err)
 	cookie := http.Cookie{
 		Name:     "session",
 		Value:    session.UUID,

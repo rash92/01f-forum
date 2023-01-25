@@ -4,7 +4,6 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -48,7 +47,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	password := r.FormValue("password")
 
 	user, err := dbmanagement.SelectUserFromName(userName)
-	utils.HandleError("unable to get user error:", err)
+	utils.HandleError("Unable to get user error:", err)
 
 	if !CompareHash(user.Password, password) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -69,9 +68,8 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 
 // Logs user out
 func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	log.Println("logging out...")
+	utils.WriteMessageToLogFile("Logging out")
 	cookie, err := r.Cookie("session")
-	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
 	if err != http.ErrNoCookie {
 		session := cookie.Value

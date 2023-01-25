@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"forum/utils"
 	"html/template"
 	"net/http"
@@ -20,7 +19,7 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	// state
 	state := r.FormValue("state")
 	if state != Randomstate {
-		fmt.Fprintln(w, "facebook auth state error")
+		utils.WriteMessageToLogFile("Fcaebook auth state error")
 		return
 	}
 

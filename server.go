@@ -8,15 +8,24 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
+	file, err := os.OpenFile("logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	if err != nil {
+		file, _ := os.Create("logfile.txt")
+		defer file.Close()
+	} else {
+		defer file.Close()
+	}
 }
 
 func main() {
+
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -136,5 +145,6 @@ func main() {
 	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
+	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"forum/utils"
 	"html/template"
 	"net/http"
@@ -20,7 +19,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	// state
 	state := r.FormValue("state")
 	if state != Randomstate {
-		fmt.Fprintln(w, "Google auth state error")
+		utils.WriteMessageToLogFile("Google auth state error")
 		return
 	}
 

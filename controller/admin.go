@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -19,20 +18,20 @@ type AdminData struct {
 func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData := AdminData{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	utils.HandleError("Can't get session from browser in admin handler", err)
+	utils.HandleError("Unable to get session from browser in admin handler", err)
 	user, err := dbmanagement.SelectUserFromSession(sessionId)
-	utils.HandleError("Can't get user session from admin handler", err)
+	utils.HandleError("Unable to user session from admin handler", err)
 	if err != nil {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
-		fmt.Println("please log in as a user with admin permissions")
+		utils.WriteMessageToLogFile("Please log in as a user with admin permissions")
 		return
 	}
 
 	loggedInAs, err := dbmanagement.SelectUserFromSession(sessionId)
-	utils.HandleError("cant get logged in user in admin", err)
+	utils.HandleError("Unable get logged in user in admin", err)
 	if loggedInAs.Permission != "admin" {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
-		fmt.Println("please log in as a user with admin permissions")
+		utils.WriteMessageToLogFile("Please log in as a user with admin permissions")
 		return
 	}
 
