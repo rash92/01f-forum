@@ -20,7 +20,8 @@ func ParseOauthResponse(resp *http.Response) map[string]interface{} {
 // Gets account details from Oauth response and creates if they don't exist, if they do it creates a session and logs them in
 func LoginUserWithOauth(w http.ResponseWriter, r *http.Request, tmpl *template.Template, account OauthAccount) {
 	user, err := dbmanagement.SelectUserFromEmail(account.Email)
-	if err == nil {
+	_, err2 := dbmanagement.SelectUserFromName(account.Name)
+	if err == nil && err2 == nil {
 		// create session cookie for user
 		CreateUserSession(w, r, user)
 	} else {

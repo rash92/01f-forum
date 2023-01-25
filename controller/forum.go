@@ -48,8 +48,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if r.Method == "POST" {
 			err := dbmanagement.UpdateUserToken(user.UUID, 1)
 			if err != nil {
-				http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
-				return
+				http.Redirect(w, r, "/error", http.StatusSeeOther)
 			}
 
 			title := r.FormValue("submission-title")

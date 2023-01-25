@@ -24,12 +24,21 @@ var FBAuthURL = "https://graph.facebook.com/v13.0/me?fields=id,name,email,pictur
 var stateRandomiser = randomString(12)
 var Randomstate = stateRandomiser
 
+var GoogleClientID = "518245388319-qj8tmfb4ue1hfodjophsp9bprfe0om66.apps.googleusercontent.com"
+var GoogleClientSecret = "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"
+
+var GithubClientID = "7a5de3b35a748e59ec9b"
+var GithubClientSecret = "5256fcbe219c58b572029d7443dc3a996c7d378a"
+
+var FacebookClientID = "1481843748971935"
+var FacebookClientSecret = "43dbe0fc14822f0b89eab4262a6e6978"
+
 func GoogleSetupConfig() *oauth2.Config {
 	// Your credentials should be obtained from the Google
 	// Developer Console (https://console.developers.google.com).
 	conf := &oauth2.Config{
-		ClientID:     "518245388319-qj8tmfb4ue1hfodjophsp9bprfe0om66.apps.googleusercontent.com",
-		ClientSecret: "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",
+		ClientID:     GoogleClientID,
+		ClientSecret: GoogleClientSecret,
 		Endpoint:     google.Endpoint,
 		RedirectURL:  "https://localhost:8080/google/callback",
 		Scopes: []string{
@@ -43,8 +52,8 @@ func GoogleSetupConfig() *oauth2.Config {
 func GithubSetupConfig() *oauth2.Config {
 	// Oauth configuration for github
 	conf := &oauth2.Config{
-		ClientID:     "7a5de3b35a748e59ec9b",
-		ClientSecret: "5256fcbe219c58b572029d7443dc3a996c7d378a",
+		ClientID:     GithubClientID,
+		ClientSecret: GithubClientSecret,
 		Endpoint:     github.Endpoint,
 		RedirectURL:  "https://localhost:8080/github/callback",
 		Scopes: []string{
@@ -56,10 +65,10 @@ func GithubSetupConfig() *oauth2.Config {
 }
 
 func FacebookSetupConfig() *oauth2.Config {
-	// Oauth configuration for github
+	// Oauth configuration for facebook
 	conf := &oauth2.Config{
-		ClientID:     "1481843748971935",
-		ClientSecret: "43dbe0fc14822f0b89eab4262a6e6978",
+		ClientID:     FacebookClientID,
+		ClientSecret: FacebookClientSecret,
 		Endpoint:     facebook.Endpoint,
 		RedirectURL:  "https://localhost:8080/facebook/callback",
 		Scopes: []string{

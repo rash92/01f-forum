@@ -42,7 +42,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.Method == "POST" {
 		err := dbmanagement.UpdateUserToken(data.UserInfo.UUID, 1)
 		if err != nil {
-			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+			http.Redirect(w, r, "/error", http.StatusSeeOther)
 			return
 		}
 		postIdToDelete := r.FormValue("deletepost")

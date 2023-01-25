@@ -50,7 +50,7 @@ func main() {
 			}
 		}
 		if !tagexists && r.URL.Path == "/" {
-			//controller.AllPosts(w, r, tmpl)
+			controller.PageErrors(w, r, tmpl, "what ever you are looking for isn't here my dude")
 		}
 		if tagexists && r.URL.Path != "/" {
 			controller.SubForum(w, r, tmpl, url)
@@ -68,7 +68,7 @@ func main() {
 			}
 		}
 		if !postexists && r.URL.Path == "/" {
-			//controller.AllPosts(w, r, tmpl)
+			controller.PageErrors(w, r, tmpl, "what ever you are looking for isn't here my dude")
 		}
 		if postexists && r.URL.Path != "/" {
 			controller.Post(w, r, tmpl, url)
@@ -129,8 +129,8 @@ func main() {
 	mux.HandleFunc("/privacy_policy", func(w http.ResponseWriter, r *http.Request) {
 		controller.PrivacyPolicy(w, r, tmpl)
 	})
-	mux.HandleFunc("/rate_error", func(w http.ResponseWriter, r *http.Request) {
-		controller.PageErrors(w, r, tmpl, "rate")
+	mux.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
+		controller.PageErrors(w, r, tmpl, "you're doing too much my dude")
 	})
 
 	// dbmanagement.DeleteUser("Yell Tro")

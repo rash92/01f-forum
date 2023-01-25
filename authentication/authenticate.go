@@ -62,10 +62,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		// user.LimitTokens
 		LimitRequests(w, r, user)
 		err = dbmanagement.UpdateUserToken(user.UUID, 1)
-		if err != nil {
-			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
-			return
-		}
+		utils.HandleError("Unable to update users token", err)
 		http.Redirect(w, r, "/forum", http.StatusSeeOther)
 	}
 }
