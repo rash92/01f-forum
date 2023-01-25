@@ -29,6 +29,12 @@ func LoginUserWithOauth(w http.ResponseWriter, r *http.Request, tmpl *template.T
 		// create session cookie for user
 		CreateUserSession(w, r, user)
 		// utils.HandleError("Failed to create session in google authenticate", err)
+		LimitRequests(w, r, user)
+		err = dbmanagement.UpdateUserToken(user.UUID, 1)
+		if err != nil {
+			http.Redirect(w, r, "/rate_error", http.StatusTooManyRequests)
+			return
+		}
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
 }
