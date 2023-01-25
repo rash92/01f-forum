@@ -10,11 +10,14 @@ import (
 )
 
 type AdminData struct {
-	AllUsers      []dbmanagement.User
-	AllTags       []dbmanagement.Tag
-	AdminRequests []dbmanagement.AdminRequest
-	TitleName     string
-	UserInfo      dbmanagement.User
+	AllUsers         []dbmanagement.User
+	AllTags          []dbmanagement.Tag
+	AdminRequests    []dbmanagement.AdminRequest
+	ReportedPosts    []dbmanagement.Post
+	ReportedComments []dbmanagement.Comment
+	ReportedUsers    []dbmanagement.User
+	TitleName        string
+	UserInfo         dbmanagement.User
 }
 
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
@@ -69,6 +72,19 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()
 	adminData.AdminRequests = dbmanagement.SelectAllAdminRequests()
+	for _, adminRequest := range adminData.AdminRequests {
+		if adminRequest.ReportedPostId != "" {
+			adminData.ReportedPosts = append(adminData.ReportedPosts, dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId))
+		}
+		if adminRequest.ReportedCommentId != "" {
+			adminData.ReportedComments = append(adminData.ReportedComments, dbmanagement.SelectCommentFromUUID(adminRequest.ReportedCommentId))
+		}
+		if adminRequest.ReportedUserId != "" {
+			currentUser, err := dbmanagement.SelectUserFromUUID(adminRequest.ReportedUserId)
+			utils.HandleError("couldn't select user when looking for reported users", err)
+			adminData.ReportedUsers = append(adminData.ReportedUsers, currentUser)
+		}
+	}
 	adminData.AllTags = dbmanagement.SelectAllTags()
 	adminData.TitleName = "Admin"
 	adminData.UserInfo = loggedInAs

@@ -7,6 +7,11 @@
 			Mod Requests</button>
 	</div>
 	<div class="filter">
+		<button id="reports" onclick="hideShowAdmin(this)" value="reports"><i class="fa-solid fa-reports"></i>
+			Pending
+			Reported Posts</button>
+	</div>
+	<div class="filter">
 		<button id="users" onclick="hideShowAdmin(this)" value="users"><i class="fa-solid fa-users"></i>
 			Users</button>
 	</div>
@@ -16,12 +21,13 @@
 	</div>
 </div>
 
-<div id="mod-requests" style="display: block;">
+<div id="mod-requests" style="display: block;">hourglass-start
 	{{range .AdminRequests}}
+	{{if eq .Description "this user is asking to become a moderator"}}
 	<div class="container-post">
 		<div class="post">
 			{{.RequestFromId}} {{.RequestFromName}}
-			<p>{{.Content}}</p>
+			<p>{{.Description}}</p>
 			<form action="/admin" method="POST">
 				<button class="delete-btn" name="delete request" value="{{.UUID}}">
 					delete request
@@ -32,6 +38,22 @@
 			</form>
 		</div>
 	</div>
+	{{end}}
+	{{end}}
+</div>
+
+<div id="reported-posts" style="display: none">
+	{{range .AdminRequests}}
+	{{if ne .ReportedPostId ""}}
+	<div class="container-post">
+		<div class="post">
+			the post {{.ReportedPostId}} has been reported by:
+			{{.RequestFromId}} {{.RequestFromName}}
+			<p>{{.Description}}</p>
+			<a href="/posts/{{.ReportedPostId}}">Go to post</a>
+		</div>
+	</div>
+	{{end}}
 	{{end}}
 </div>
 

@@ -46,6 +46,9 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			dislike := r.FormValue("dislike")
 			commentlike := r.FormValue("commentlike")
 			commentdislike := r.FormValue("commentdislike")
+			idToDelete := r.FormValue("deletepost")
+			idToReport := r.FormValue("reportpost")
+
 			if notfication != "" {
 				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
 			}
@@ -81,10 +84,11 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1)
 			}
-			idToDelete := r.FormValue("deletepost")
-			fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 			if idToDelete != "" {
-				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
+				dbmanagement.DeletePostWithUUID(idToDelete)
+			}
+			if idToReport != "" {
+				dbmanagement.CreateAdminRequest(user.UUID, user.Name, idToReport, "", "", "this post has been reported by a moderator")
 			}
 		}
 
