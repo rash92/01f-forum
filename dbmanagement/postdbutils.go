@@ -125,26 +125,17 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 }
 
 func SelectAllLikedPostsFromUser(user User) []Post {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
 
-	row, err := db.Query("SELECT * FROM Posts WHERE ownerId = ?", user.Name)
-	utils.HandleError("Post from User query failed: ", err)
-	defer row.Close()
+	allPosts := SelectAllPosts()
+	likedPosts := []Post{}
 
-	var allPosts []Post
-
-	for row.Next() {
-		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time, &currentPost.ImageName)
-		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
-		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
-		currentPost.Tags = SelectAllTagsFromPost(currentPost.UUID)
-		if SelectReactionFromPost(currentPost.UUID, user.UUID) == 1 {
-			allPosts = append(allPosts, currentPost)
+	for _, v := range allPosts {
+		if SelectReactionFromPost(v.UUID, user.UUID) == 1 {
+			likedPosts = append(likedPosts, v)
 		}
 	}
-	return allPosts
+
+	return likedPosts
 }
 
 /*

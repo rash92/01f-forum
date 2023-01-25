@@ -1,25 +1,26 @@
-function hideShow(elem) {
-    var x = document.getElementById("user-posts");
-    var a = document.getElementById("posts")
-    var y = document.getElementById("user-comments");
-    var b = document.getElementById("comments")
-    var z = document.getElementById("liked-user-posts");
-    var c = document.getElementById("likes")
-    if (elem.value == "posts") {
+
+function hideShowAdmin(elem) {
+    var x = document.getElementById("mod-requests");
+    var a = document.getElementById("mod")
+    var y = document.getElementById("user-admin");
+    var b = document.getElementById("users")
+    var z = document.getElementById("tag-admin");
+    var c = document.getElementById("tags")
+    if (elem.value == "mod-requests") {
         x.style.display = "block";
         y.style.display = "none";
         z.style.display = "none";
         a.style.textDecoration = "underline"
         b.style.textDecoration = "none"
         c.style.textDecoration = "none"
-    } else if (elem.value == "comments") {
+    } else if (elem.value == "cser-admin") {
         x.style.display = "none";
         y.style.display = "block";
         z.style.display = "none";
         a.style.textDecoration = "none"
         b.style.textDecoration = "underline"
         c.style.textDecoration = "none"
-    } else if (elem.value == "liked-posts") {
+    } else if (elem.value == "tag-admin") {
         x.style.display = "none";
         y.style.display = "none";
         z.style.display = "block";

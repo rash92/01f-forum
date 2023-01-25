@@ -13,6 +13,8 @@ type AdminData struct {
 	AllUsers      []dbmanagement.User
 	AllTags       []dbmanagement.Tag
 	AdminRequests []dbmanagement.AdminRequest
+	TitleName     string
+	UserInfo      dbmanagement.User
 }
 
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
@@ -64,9 +66,12 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		}
 
 	}
-
+	user, err := dbmanagement.SelectUserFromSession(sessionId)
+	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()
 	adminData.AdminRequests = dbmanagement.SelectAllAdminRequests()
 	adminData.AllTags = dbmanagement.SelectAllTags()
+	adminData.TitleName = "Admin"
+	adminData.UserInfo = user
 	tmpl.ExecuteTemplate(w, "admin.html", adminData)
 }

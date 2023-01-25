@@ -38,7 +38,6 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
-	log.Println(data.UserComments)
 	data.TitleName = "Welcome"
 
 	if r.Method == "POST" {
@@ -59,6 +58,6 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			fmt.Println("new request content is: ", newrequest.Content)
 		}
 	}
-
+	log.Println("User liked posts: ", data.LikedUserPosts)
 	tmpl.ExecuteTemplate(w, "user.html", data)
 }
