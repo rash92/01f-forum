@@ -4,7 +4,6 @@ import (
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
-
 	"forum/utils"
 	"html/template"
 	"io"
@@ -132,7 +131,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	idToDelete := r.FormValue("deletepost")
 	// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 	if idToDelete != "" {
-		dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
+		dbmanagement.DeletePostWithUUID(idToDelete)
 	}
 	like := r.FormValue("like")
 	dislike := r.FormValue("dislike")

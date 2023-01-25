@@ -43,7 +43,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		postIdToDelete := r.FormValue("deletepost")
 		// fmt.Println("deleting post with id: ", postIdToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(postIdToDelete))
 		if postIdToDelete != "" {
-			dbmanagement.DeleteFromTableWithUUID("Posts", postIdToDelete)
+			dbmanagement.DeletePostWithUUID(postIdToDelete)
 		}
 		commentIdToDelete := r.FormValue("deletecomment")
 		// fmt.Println("deleting comment with id: ", commentIdToDelete, " and contents: ", dbmanagement.SelectCommentFromUUID(commentIdToDelete))

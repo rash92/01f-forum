@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"forum/utils"
 	"log"
+	"os"
 )
 
 func DeleteFromTableWithUUID(table string, UUID string) {
@@ -20,6 +21,14 @@ func DeleteFromTableWithUUID(table string, UUID string) {
 	utils.HandleError("Statement Exec failed: ", err)
 }
 
+func DeletePostWithUUID(UUID string) {
+	Post := SelectPostFromUUID(UUID)
+	if Post.ImageName != "" {
+		os.Remove("." + Post.ImageName)
+	}
+	DeleteFromTableWithUUID("posts", UUID)
+}
+
 func DeleteAllPostsWithTag(tagName string) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
@@ -30,11 +39,6 @@ func DeleteAllPostsWithTag(tagName string) {
 	fmt.Println("trying to delete the posts: ", listOfPostsToDelete)
 
 	for _, post := range listOfPostsToDelete {
-		deleteRowStatement := "DELETE FROM Posts WHERE uuid = ?"
-		statement, err := db.Prepare(deleteRowStatement)
-		utils.HandleError("Delete Prepare failed: ", err)
-
-		_, err = statement.Exec(post.UUID)
-		utils.HandleError("Statement Exec failed: ", err)
+		DeletePostWithUUID(post.UUID)
 	}
 }
