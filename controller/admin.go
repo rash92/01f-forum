@@ -11,13 +11,13 @@ import (
 
 type AdminData struct {
 	AllUsers         []dbmanagement.User
-	AllTags          []dbmanagement.Tag
 	AdminRequests    []dbmanagement.AdminRequest
 	ReportedPosts    []dbmanagement.Post
 	ReportedComments []dbmanagement.Comment
 	ReportedUsers    []dbmanagement.User
 	TitleName        string
 	UserInfo         dbmanagement.User
+	TagsList         []dbmanagement.Tag
 }
 
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
@@ -85,8 +85,8 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			adminData.ReportedUsers = append(adminData.ReportedUsers, currentUser)
 		}
 	}
-	adminData.AllTags = dbmanagement.SelectAllTags()
 	adminData.TitleName = "Admin"
+	adminData.TagsList = dbmanagement.SelectAllTags()
 	adminData.UserInfo = loggedInAs
 	tmpl.ExecuteTemplate(w, "admin.html", adminData)
 }

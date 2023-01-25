@@ -46,11 +46,11 @@
 				<div class="post-title">
 					<h2>{{.Title}}</h2>
 				</div>
+				{{ if ne .ImageName ""}}
 				<div class="post-image">
-					<div class="post-image">
-						<img src="{{.ImageName}}" alt="user submitted image" />
-					</div>
+					<img src="{{.ImageName}}" alt="user submitted image" />
 				</div>
+				{{end}}
 				<div class="post-content">
 					<div class="post-content-text">{{.Content}}</div>
 				</div>

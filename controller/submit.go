@@ -18,5 +18,6 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 	data.TitleName = "Submit to Forum"
 	data.Cookie = sessionId
 	data.UserInfo = user
+	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "submitpost.html", data)
 }

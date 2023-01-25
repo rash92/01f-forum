@@ -36,9 +36,8 @@ h3 {
     font-size: 1em;
 }
 
-
 ::placeholder {
-    padding: 10px 20px;
+    padding: 10px 10px;
 }
 
 /* NAVBAR */
@@ -64,16 +63,17 @@ h3 {
     transition: 0.3s ease;
 }
 
+
 .searchbar {
     width: 100%;
     max-width: 600px;
     height: 75%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     background: transparent;
     border: 1px solid black;
     border-radius: 25px;
-    padding: 10px;
+    padding: 10ppx 25%;
 }
 
 .searchbar input {
@@ -81,8 +81,14 @@ h3 {
     flex: 1;
     border: 0;
     outline: none;
-    padding: 10px;
+    padding: 10px 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 
+}
+
+.searchbar input[type=text] {
+    -webkit-transition: width 0.15s ease-in-out;
+    transition: width 0.15s ease-in-out;
 }
 
 .searchbar button {
@@ -101,9 +107,30 @@ h3 {
     transition: 0.3s ease;
 }
 
+#list {
+    background-color: var(--highlight-color);
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    display: none;
+    margin-top: 10  px;
+
+}
+
+.listItem {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    border-bottom: 1px solid lightgrey;
+    padding: 5px 20px;
+    color: black;
+}
+
+.listItem:hover {
+    background-color: var(--main-color);
+}
+
 .create {
     padding: 10px;
-    border-left: 1px solid black;
 }
 
 .create a:hover {
@@ -133,31 +160,6 @@ h3 {
 .username {
     font-size: 22px;
     padding-right: 10px;
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.tooltip .signout-text {
-    visibility: hidden;
-    width: 100px;
-    top: 100%;
-    left: 50%;
-    margin-left: -60px;
-    background-color: var(--dim-font);
-    color: #fff;
-    text-align: center;
-    padding: 2px 0;
-    border-radius: 2px;
-    position: absolute;
-    z-index: 1;
-}
-
-.tooltip:hover .signout-text {
-    visibility: visible;
 }
 
 .dropdown {
@@ -213,7 +215,8 @@ h3 {
     width: 100%;
 }
 
-.dropdown-content-links a, p {
+.dropdown-content-links a,
+p {
     font-size: 1rem;
     cursor: pointer;
 }

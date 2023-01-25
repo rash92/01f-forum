@@ -16,6 +16,7 @@ type UserData struct {
 	UserInfo       dbmanagement.User
 	TitleName      string
 	Cookie         string
+	TagsList       []dbmanagement.Tag
 }
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -37,7 +38,8 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
-	data.TitleName = "Welcome"
+	data.TitleName = data.UserInfo.Name
+	data.TagsList = dbmanagement.SelectAllTags()
 
 	if r.Method == "POST" {
 		postIdToDelete := r.FormValue("deletepost")

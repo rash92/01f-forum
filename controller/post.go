@@ -20,6 +20,7 @@ type PostData struct {
 	TitleName        string
 	HasNotifications bool
 	Notifications    []dbmanagement.Notification
+	TagsList         []dbmanagement.Tag
 }
 
 func CheckInputs(str string) bool {
@@ -106,6 +107,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		data.Post = post
 		data.Comments = append(data.Comments, comments...)
 		data.NumOfComments = len(comments)
+		data.TagsList = dbmanagement.SelectAllTags()
 		tmpl.ExecuteTemplate(w, "post.html", data)
 	}
 }

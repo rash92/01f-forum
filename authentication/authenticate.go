@@ -17,6 +17,7 @@ type Data struct {
 	IsCorrect     bool
 	IsLoggedIn    bool
 	RegisterError string
+	TagsList      []dbmanagement.Tag
 }
 
 type OauthAccount struct {
@@ -28,6 +29,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	data.TitleName = "Login"
 	data.IsCorrect = true
+	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "login.html", data)
 }
 
@@ -56,12 +58,14 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 				data.TitleName = "Login"
 				data.IsCorrect = true
 				data.IsLoggedIn = true
+				data.TagsList = dbmanagement.SelectAllTags()
 				tmpl.ExecuteTemplate(w, "login.html", data)
 			} else {
 				log.Println("Incorrect Password!")
 				data := Data{}
 				data.TitleName = "Login"
 				data.IsCorrect = false
+				data.TagsList = dbmanagement.SelectAllTags()
 				tmpl.ExecuteTemplate(w, "login.html", data)
 			}
 		}
@@ -96,6 +100,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 // Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
+	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "register.html", data)
 }
 
@@ -109,6 +114,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		data := Data{}
 		if err != nil {
 			data.RegisterError = strings.Split(err.Error(), ".")[1]
+			data.TagsList = dbmanagement.SelectAllTags()
 			tmpl.ExecuteTemplate(w, "register.html", data)
 		}
 	}
