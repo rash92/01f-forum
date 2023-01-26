@@ -121,6 +121,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
+// Checks whether the user is logged in or not for displaying certain pages
 func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	cookie, err := r.Cookie("session")
 	log.Println("Current Cookie: ", cookie)

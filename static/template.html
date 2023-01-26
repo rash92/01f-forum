@@ -117,10 +117,11 @@
 			let listContainer = document.getElementById("list");
 			let listItems = document.getElementsByClassName("listItem");
 			let input = document.getElementById("search").value;
+			console.log(input)
 
 			let noResults = true;
 			for (i = 0; i < listItems.length; i++) {
-				if (!listItems[i].innerHTML.includes(input) || input === "") {
+				if (!listItems[i].innerText.includes(input) || input === "") {
 					listItems[i].style.display = "none";
 					continue;
 				}
