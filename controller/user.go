@@ -20,6 +20,7 @@ type UserData struct {
 }
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	auth.LoggedInStatus(w, r, tmpl)
 	data := UserData{}
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
 	if err != nil {

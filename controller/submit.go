@@ -9,6 +9,7 @@ import (
 )
 
 func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	auth.LoggedInStatus(w, r, tmpl)
 	data := Data{}
 	user := dbmanagement.User{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)

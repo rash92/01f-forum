@@ -120,3 +120,15 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
+
+func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
+	utils.HandleError("Failed to get cookie", err)
+	session := cookie.Value
+	user, _ := dbmanagement.SelectUserFromSession(session)
+	if user.IsLoggedIn == 0 {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+}
