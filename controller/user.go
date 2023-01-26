@@ -16,9 +16,11 @@ type UserData struct {
 	UserInfo       dbmanagement.User
 	TitleName      string
 	Cookie         string
+	TagsList       []dbmanagement.Tag
 }
 
 func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	auth.LoggedInStatus(w, r, tmpl)
 	data := UserData{}
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
 	if err != nil {
@@ -37,7 +39,8 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
-	data.TitleName = "Welcome"
+	data.TitleName = data.UserInfo.Name
+	data.TagsList = dbmanagement.SelectAllTags()
 
 	if r.Method == "POST" {
 		postIdToDelete := r.FormValue("deletepost")
@@ -53,8 +56,8 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		userIdToRequestModerator := r.FormValue("request to become moderator")
 		// fmt.Println("requesting user id: ", userIdToRequestModerator, "to become moderator")
 		if userIdToRequestModerator != "" {
-			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "this user is asking to become a moderator")
-			fmt.Println("new request content is: ", newrequest.Content)
+			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "", "", "", "this user is asking to become a moderator")
+			fmt.Println("new request content is: ", newrequest.Description)
 		}
 	}
 	tmpl.ExecuteTemplate(w, "user.html", data)

@@ -98,7 +98,13 @@ var createAdminRequestTableStatement = `
 		uuid TEXT NOT NULL PRIMARY KEY,
 		requestfromid TEXT,
 		requestfromname TEXT,
-		content TEXT,
+		reportedpostid TEXT,
+		reportedcommentid TEXT,
+		reporteduserid TEXT,
+		description TEXT,
+		FOREIGN KEY (reportedpostid) REFERENCES Posts(uuid),
+		FOREIGN KEY (reportedcommentid) REFERENCES Comments(uuid),
+		FOREIGN KEY (reporteduserid) REFERENCES Users(uuid),
 		FOREIGN KEY (requestfromid) REFERENCES Users(uuid),
 		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
 	);`

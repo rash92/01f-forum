@@ -17,9 +17,11 @@ type SubmitData struct {
 	IsEdit     bool
 	EditPost   dbmanagement.Post
 	Tags       string
+	TagsList   []dbmanagement.Tag
 }
 
 func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	auth.LoggedInStatus(w, r, tmpl)
 	data := SubmitData{}
 	user := dbmanagement.User{}
 	tags := []dbmanagement.Tag{}
@@ -44,5 +46,6 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 		tagsAsString += " "
 	}
 	data.Tags = tagsAsString
+	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "submitpost.html", data)
 }

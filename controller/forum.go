@@ -22,6 +22,7 @@ type Data struct {
 	UserInfo   dbmanagement.User
 	TitleName  string
 	IsCorrect  bool
+	TagsList   []dbmanagement.Tag
 }
 
 /*
@@ -74,11 +75,13 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
 		data.TitleName = "Forum"
+		data.TagsList = dbmanagement.SelectAllTags()
 		log.Println("SESSION ID: ", data.Cookie)
 		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
 		fmt.Println("Forum posts: ", data.ListOfData)
 		fmt.Println("Forum user: ", data.UserInfo)
+		fmt.Println("Tags list: ", data.TagsList)
 
 		tmpl.ExecuteTemplate(w, "forum.html", data)
 	}

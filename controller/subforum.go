@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -16,6 +15,7 @@ type SubData struct {
 	Cookie     string
 	UserInfo   dbmanagement.User
 	TitleName  string
+	TagsList   []dbmanagement.Tag
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
@@ -90,8 +90,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
 		data.ListOfData = posts
-		fmt.Println("Forum postdata: ", data.ListOfData)
-		fmt.Println("Forum subname: ", data.SubName)
+		data.TagsList = dbmanagement.SelectAllTags()
 		tmpl.ExecuteTemplate(w, "subforum.html", data)
 	}
 }

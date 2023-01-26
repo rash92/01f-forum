@@ -3,6 +3,19 @@
 {{$UserInfo := .UserInfo}}
 <div class="container-post">
     <div class="single-post">
+        {{if or (eq $UserInfo.Permission "moderator") (eq $UserInfo.Permission "admin")}}
+        <div class="report-post">
+            <form action="/posts/{{$PostInfo.UUID}}" method="post">
+            <button class="report-btn" name="reportpost" value="{{$PostInfo.UUID}}">
+                report post
+            </button>
+            <button class="delete-btn" name="deletepost" value="{{$PostInfo.UUID}}">
+                delete post
+            </button>
+            </form>
+        </div>
+        {{end}}
+        
         <div class="single-post-title">
             <h2>{{$PostInfo.Title}}</h2>
         </div>
@@ -14,10 +27,12 @@
         <div class="single-post-author">
             <p>Posted by {{$PostInfo.OwnerId}} at {{$PostInfo.FormattedTime}}</p>
         </div>
+        {{if ne $PostInfo.ImageName ""}}
         <div class="post-image">
             <img src={{$PostInfo.ImageName}}
                 alt="user submitted image">
         </div>
+        {{end}}
         <div class="single-post-content">
             <p>{{$PostInfo.Content}}</p>
         </div>

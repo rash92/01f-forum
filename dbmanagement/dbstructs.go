@@ -50,10 +50,13 @@ type Tag struct {
 }
 
 type AdminRequest struct {
-	UUID            string
-	RequestFromId   string
-	RequestFromName string
-	Content         string
+	UUID              string
+	RequestFromId     string
+	RequestFromName   string
+	ReportedPostId    string
+	ReportedCommentId string
+	ReportedUserId    string
+	Description       string
 }
 
 type Notification struct {
