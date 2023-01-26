@@ -25,6 +25,13 @@
 				Delete
 			</button>
 		</form>
+		{{if eq $UserInfo.Name .OwnerId}}
+		<form action="/submitpost" method="post">
+			<button class="delete-btn" name="editpost" value="{{.UUID}}">
+				Edit
+			</button>
+		</form>
+			{{end}}
 		{{end}}
 
 		<div class="post-tags">

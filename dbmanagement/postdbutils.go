@@ -30,6 +30,27 @@ func InsertPost(title string, content string, ownerId string, likes int, dislike
 	return Post{UUID, title, content, ownerId, likes, dislikes, tags, inputtime, strings.TrimSuffix(inputtime.Format(time.RFC822), "UTC"), 0, imageName}
 }
 
+func UpdatePost(postuuid string, title string, content string, ownerId string, likes int, dislikes int, edittime time.Time, imageName string) Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("Updating post record...")
+
+	updatePostData := `
+	UPDATE Posts
+	SET title = ?, content = ?, time = ?
+	WHERE uuid = ?
+	`
+	statement, err := db.Prepare(updatePostData)
+	utils.HandleError("User Prepare failed: ", err)
+
+	_, err = statement.Exec(title, content, edittime, postuuid)
+	utils.HandleError("Statement Exec failed: ", err)
+
+	tags := SelectAllTagsFromPost(postuuid)
+
+	return Post{postuuid, title, content, ownerId, likes, dislikes, tags, edittime, strings.TrimSuffix(edittime.Format(time.RFC822), "UTC"), 0, imageName}
+}
+
 /*
 Displays all posts from the database in the console.  Only for internal use.
 */

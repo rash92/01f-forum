@@ -133,6 +133,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	if idToDelete != "" {
 		dbmanagement.DeletePostWithUUID(idToDelete)
 	}
+
 	like := r.FormValue("like")
 	dislike := r.FormValue("dislike")
 
@@ -176,23 +177,38 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	title := r.FormValue("submission-title")
 	content := r.FormValue("post")
 	tags := r.FormValue("tag")
+	edit := r.FormValue("editpost")
 
-	if CheckInputs(content) && CheckInputs(title) {
-		userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
-		utils.HandleError("cant get user with uuid in all posts", err)
-		post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
-		// log.Println(tag)
+	if edit != "" {
+		if CheckInputs(content) && CheckInputs(title) {
+			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
+			utils.HandleError("cant get user with uuid in all posts", err)
+			editedPost := dbmanagement.UpdatePost(edit, title, content, userFromUUID.Name, dbmanagement.SelectPostFromUUID(edit).Likes, dbmanagement.SelectPostFromUUID(edit).Dislikes, time.Now(), fileName)
+			dbmanagement.UpdateTaggedPost(edit)
+			InputTags(tags, editedPost)
+		}
+	} else {
+		if CheckInputs(content) && CheckInputs(title) {
+			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
+			utils.HandleError("cant get user with uuid in all posts", err)
+			post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
+			// log.Println(tag)
 
-		if CheckInputs(tags) {
-			tagslice := strings.Fields(tags)
-			for _, tagname := range tagslice {
-				if !ExistingTag(tagname) {
-					dbmanagement.InsertTag(tagname)
-				}
-				tag, err := dbmanagement.SelectTagFromName(tagname)
-				utils.HandleError("unable to retrieve tag id", err)
-				dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
+			InputTags(tags, post)
+		}
+	}
+}
+
+func InputTags(tags string, post dbmanagement.Post) {
+	if CheckInputs(tags) {
+		tagslice := strings.Fields(tags)
+		for _, tagname := range tagslice {
+			if !ExistingTag(tagname) {
+				dbmanagement.InsertTag(tagname)
 			}
+			tag, err := dbmanagement.SelectTagFromName(tagname)
+			utils.HandleError("unable to retrieve tag id", err)
+			dbmanagement.InsertTaggedPost(tag.UUID, post.UUID)
 		}
 	}
 }

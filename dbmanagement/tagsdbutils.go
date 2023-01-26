@@ -35,6 +35,11 @@ func InsertTaggedPost(tagId string, postId string) {
 	utils.HandleError("Statement Exec failed: ", err)
 }
 
+func UpdateTaggedPost(postId string) {
+	log.Println("Updating tagged post record...")
+	DeleteFromTableWithPostId("TaggedPosts", postId)
+}
+
 func SelectAllTags() []Tag {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()

@@ -21,6 +21,19 @@ func DeleteFromTableWithUUID(table string, UUID string) {
 	utils.HandleError("Statement Exec failed: ", err)
 }
 
+func DeleteFromTableWithPostId(table string, postId string) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("Deleting "+table+" record for postId: ", postId, "...")
+
+	deleteRowStatement := "DELETE FROM " + table + " WHERE postId = ?"
+	statement, err := db.Prepare(deleteRowStatement)
+	utils.HandleError("Delete Prepare failed: ", err)
+
+	_, err = statement.Exec(postId)
+	utils.HandleError("Statement Exec failed: ", err)
+}
+
 func DeletePostWithUUID(UUID string) {
 	post := SelectPostFromUUID(UUID)
 	if post.ImageName != "" {
