@@ -156,6 +156,17 @@ func SelectAllLikedPostsFromUser(user User) []Post {
 	return likedPosts
 }
 
+func SelectAllDislikedPostsFromUser(user User) []Post {
+	allPosts := SelectAllPosts()
+	DislikedPosts := []Post{}
+	for _, v := range allPosts {
+		if SelectReactionFromPost(v.UUID, user.UUID) == -1 {
+			DislikedPosts = append(DislikedPosts, v)
+		}
+	}
+	return DislikedPosts
+}
+
 /*
 Similar to SelectAllPosts() but for a specific user.  Uses the ownerID (users UUID) to specify which user and returns all the posts created by that user.
 */
