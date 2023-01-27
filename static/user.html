@@ -24,17 +24,35 @@
     {{range .UserPosts}}
     <div class="container-post">
         <div class="post">
-            <form method="POST">
-                <button class="delete-btn" name="deletepost" value="{{.UUID}}">
-                    Delete
-                </button>
-            </form>
-            <div class="post-tags">
-                {{range .Tags}}
-                <a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+            <div class="tags-interactions">
+                <div class="post-tags">
+                    {{range .Tags}}
+                    <a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+                    {{end}}
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletepost" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{if eq $UserInfo.Name .OwnerId}}
+                    <form action="/submitpost" method="post">
+                        <div class="tooltip">
+                            <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
+                                value="{{.UUID}}">
+                                <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{end}}
+                </div>
                 {{end}}
             </div>
-
             <div class="post-info">
                 <a href="/posts/{{.UUID}}">
                     <div class="post-author-time">
@@ -224,9 +242,18 @@
     {{range .UserComments}}
     <div class="container-post">
         <div class="post">
-            <form method="POST">
-                <button class="delete-btn" name="deletecomment" value={{.UUID}}>Delete</button>
-            </form>
+            {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+            $UserInfo.Permission "moderator")}}
+            <div class="post-interactions">
+                <form method="POST">
+                    <div class="tooltip">
+                        <button class="delete-btn" name="deletecomment" value="{{.UUID}}">
+                            <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {{end}}
             <div>{{.OwnerName}}</div>
             <div>{{.Content}}</div>
             <a href="/posts/{{.PostId}}">replying to : {{.PostId}}</a>

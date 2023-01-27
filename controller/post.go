@@ -49,6 +49,9 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			commentdislike := r.FormValue("commentdislike")
 			idToDelete := r.FormValue("deletepost")
 			idToReport := r.FormValue("reportpost")
+			deleteComment := r.FormValue("deletecomment")
+			editComment := r.FormValue("editcomment")
+			commentuuid := r.FormValue("commentuuid")
 
 			if notfication != "" {
 				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
@@ -90,6 +93,12 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			}
 			if idToReport != "" {
 				dbmanagement.CreateAdminRequest(user.UUID, user.Name, idToReport, "", "", "this post has been reported by a moderator")
+			}
+			if deleteComment != "" {
+				dbmanagement.DeleteFromTableWithUUID("Comments", deleteComment)
+			}
+			if editComment != "" {
+				dbmanagement.UpdateComment(commentuuid, editComment, postid, user.UUID, dbmanagement.SelectCommentFromUUID(editComment).Likes, dbmanagement.SelectCommentFromUUID(editComment).Dislikes, time.Now())
 			}
 		}
 
