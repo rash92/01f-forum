@@ -76,13 +76,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.UserInfo = user
 		data.TitleName = "Forum"
 		data.TagsList = dbmanagement.SelectAllTags()
-		log.Println("SESSION ID: ", data.Cookie)
-		log.Println("CURRENT USER: ", data.UserInfo.Name)
 		data.ListOfData = append(data.ListOfData, posts...)
-		fmt.Println("Forum posts: ", data.ListOfData)
-		fmt.Println("Forum user: ", data.UserInfo)
-		fmt.Println("Tags list: ", data.TagsList)
-
 		tmpl.ExecuteTemplate(w, "forum.html", data)
 	}
 }
@@ -195,8 +189,6 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
 			post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
-			// log.Println(tag)
-
 			InputTags(tags, post)
 		}
 	}

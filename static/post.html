@@ -12,9 +12,9 @@
             {{ if or (eq $UserInfo.Name $PostInfo.OwnerId) (eq $UserInfo.Permission "admin") (eq
             $UserInfo.Permission "moderator")}}
             <div class="post-interactions">
-                <form action="/posts/{{$PostInfo.UUID}}" method="POST">
+                <form action="/" method="POST">
                     <div class="tooltip">
-                        <button class="delete-btn" name="deletepost" value="{{.UUID}}">
+                        <button class="delete-btn" name="deletepost" value="{{$PostInfo.UUID}}">
                             <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
                         </button>
                     </div>
@@ -24,11 +24,11 @@
                         </button>
                     </div>
                 </form>
-                {{if eq $UserInfo.Name .OwnerId}}
+                {{if eq $UserInfo.Name $PostInfo.OwnerId}}
                 <form action="/submitpost" method="post">
                     <div class="tooltip">
                         <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
-                            value="{{.UUID}}">
+                            value="{{$PostInfo.UUID}}">
                             <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
                         </button>
                     </div>
@@ -78,7 +78,7 @@
         <form action="/posts/{{$PostInfo.UUID}}" method="POST">
             <textarea name="comment" id="" cols="30" rows="5" placeholder="Comment" autofocus required></textarea>
             </textarea>
-            <button class="comment-btn" type="submit">Comment</button>
+            <button id="comment-btn" type="submit">Comment</button>
         </form>
         {{else}}
         <p>Click <a href="/register">here</a> to reigster to make a comment</p>

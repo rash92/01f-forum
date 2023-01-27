@@ -6,6 +6,7 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -117,6 +118,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		data.Comments = append(data.Comments, comments...)
 		data.NumOfComments = len(comments)
 		data.TagsList = dbmanagement.SelectAllTags()
+		log.Println(data.UserInfo.Name, data.Post.OwnerId)
 		tmpl.ExecuteTemplate(w, "post.html", data)
 	}
 }

@@ -627,6 +627,10 @@ h3 {
     margin: 10px 0;
 }
 
+#comment-btn {
+    border: 1px solid black;
+}
+
 /* SUBMISSION */
 
 .submission {
