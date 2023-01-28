@@ -62,6 +62,10 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "", "", "", "this user is asking to become a moderator")
 			fmt.Println("new request content is: ", newrequest.Description)
 		}
+		notificationToDelete := r.FormValue("delete notification")
+		if notificationToDelete != "" {
+			dbmanagement.DeleteFromTableWithUUID("Notifications", notificationToDelete)
+		}
 	}
 	tmpl.ExecuteTemplate(w, "user.html", data)
 }

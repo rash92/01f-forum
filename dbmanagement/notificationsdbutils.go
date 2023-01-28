@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"log"
 )
@@ -59,6 +60,7 @@ func SelectAllNotificationsFromUser(receiver string) []Notification {
 	for row.Next() {
 		var currentNotification Notification
 		row.Scan(&currentNotification.UUID, &currentNotification.Receiver, &currentNotification.PostId, &currentNotification.CommentId, &currentNotification.Sender, &currentNotification.Reaction, &currentNotification.Statement)
+		fmt.Println("current notification has post id: ", currentNotification.PostId)
 		allNotifications = append(allNotifications, currentNotification)
 	}
 	return allNotifications
