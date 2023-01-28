@@ -51,6 +51,15 @@
 			{{.RequestFromId}} {{.RequestFromName}}
 			<p>{{.Description}}</p>
 			<a href="/posts/{{.ReportedPostId}}">Go to post</a>
+			<form action="/admin" method="POST">
+				<input type="text" name="response message" placeholder="reponse message">
+				<button type="submit" name="acknowledge report" value="{{.UUID}}">
+					acknowledge report
+				</button>
+				<button class="delete-btn" name="delete request" value="{{.UUID}}">
+					delete request
+				</button>
+			</form>
 		</div>
 	</div>
 	{{end}}

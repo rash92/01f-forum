@@ -138,13 +138,13 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		dbmanagement.AddReactionToPost(user.UUID, like, 1)
 		post := dbmanagement.SelectPostFromUUID(like)
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
+		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 	}
 	if dislike != "" {
 		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
 		post := dbmanagement.SelectPostFromUUID(dislike)
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
+		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 	}
 
 	maxSize := 20 * 1024 * 1024

@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int) {
+func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int, notificationStatement string) {
 	receiverName, _ := SelectUserFromUUID(receivingUserId)
 	senderName, _ := SelectUserFromUUID(sendingUserId)
 
@@ -20,20 +20,21 @@ func AddNotification(receivingUserId, postId, commentId, sendingUserId string, r
 
 	UUID := GenerateUUIDString()
 
-	notificationStatement := ""
-	if postId != "" && reaction != 0 {
-		if reaction == 1 {
-			notificationStatement = "liked your post"
-		} else {
-			notificationStatement = "disliked your post"
-		}
-	} else if postId != "" && commentId != "" {
-		notificationStatement = "commented on your post"
-	} else if commentId != "" && reaction != 0 {
-		if reaction == 1 {
-			notificationStatement = "liked your comment"
-		} else {
-			notificationStatement = "disliked your comment"
+	if notificationStatement == "" {
+		if postId != "" && reaction != 0 {
+			if reaction == 1 {
+				notificationStatement = "liked your post"
+			} else {
+				notificationStatement = "disliked your post"
+			}
+		} else if postId != "" && commentId != "" {
+			notificationStatement = "commented on your post"
+		} else if commentId != "" && reaction != 0 {
+			if reaction == 1 {
+				notificationStatement = "liked your comment"
+			} else {
+				notificationStatement = "disliked your comment"
+			}
 		}
 	}
 

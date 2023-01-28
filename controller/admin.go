@@ -67,6 +67,16 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if adminRequestToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("AdminRequests", adminRequestToDelete)
 		}
+		adminRequestToAcknowledge := r.FormValue("acknowledge report")
+		if adminRequestToAcknowledge != "" {
+			request := dbmanagement.SelectAdminRequestFromUUID(adminRequestToAcknowledge)
+			responseMessage := r.FormValue("response message")
+			if responseMessage == "" {
+				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, "The admin has recieved your report")
+			} else {
+				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, responseMessage)
+			}
+		}
 
 	}
 	utils.HandleError("cant get user", err)
@@ -75,6 +85,7 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	for _, adminRequest := range adminData.AdminRequests {
 		if adminRequest.ReportedPostId != "" {
 			adminData.ReportedPosts = append(adminData.ReportedPosts, dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId))
+			fmt.Println("reported posts retrieved are: ", adminRequest)
 		}
 		if adminRequest.ReportedCommentId != "" {
 			adminData.ReportedComments = append(adminData.ReportedComments, dbmanagement.SelectCommentFromUUID(adminRequest.ReportedCommentId))

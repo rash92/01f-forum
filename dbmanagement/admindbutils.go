@@ -41,3 +41,17 @@ func SelectAllAdminRequests() []AdminRequest {
 	}
 	return allAdminRequests
 }
+
+func SelectAdminRequestFromUUID(UUID string) AdminRequest {
+	var adminRequest AdminRequest
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	stm, err := db.Prepare("SELECT * FROM AdminRequests WHERE uuid = ?")
+	utils.HandleError("Statement failed: ", err)
+
+	err = stm.QueryRow(UUID).Scan(&adminRequest.UUID, &adminRequest.RequestFromId, &adminRequest.RequestFromName, &adminRequest.ReportedPostId, &adminRequest.ReportedCommentId, &adminRequest.ReportedUserId, &adminRequest.Description)
+	utils.HandleError("Query Row failed: ", err)
+
+	return adminRequest
+}

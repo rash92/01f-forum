@@ -63,37 +63,38 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
 				post := dbmanagement.SelectPostFromUUID(postid)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, postid, thisComment.UUID, user.UUID, 0)
+				dbmanagement.AddNotification(receiverId.UUID, postid, thisComment.UUID, user.UUID, 0, "")
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
 				post := dbmanagement.SelectPostFromUUID(like)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
+				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
 				post := dbmanagement.SelectPostFromUUID(dislike)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
+				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 			}
 			if commentlike != "" {
 				dbmanagement.AddReactionToComment(user.UUID, commentlike, 1)
 				comment := dbmanagement.SelectCommentFromUUID(commentlike)
 				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, "", commentlike, user.UUID, 1)
+				dbmanagement.AddNotification(receiverId.UUID, "", commentlike, user.UUID, 1, "")
 			}
 			if commentdislike != "" {
 				dbmanagement.AddReactionToComment(user.UUID, commentdislike, -1)
 				comment := dbmanagement.SelectCommentFromUUID(commentdislike)
 				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1)
+				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1, "")
 			}
 			if idToDelete != "" {
 				dbmanagement.DeletePostWithUUID(idToDelete)
 			}
 			if idToReport != "" {
 				dbmanagement.CreateAdminRequest(user.UUID, user.Name, idToReport, "", "", "this post has been reported by a moderator")
+				fmt.Println("a post has been reported with id: ", idToReport)
 			}
 			if deleteComment != "" {
 				dbmanagement.DeleteFromTableWithUUID("Comments", deleteComment)
