@@ -1,5 +1,3 @@
-#syntax=docker/dockerfile:1
-
 FROM golang:1.16-alpine
 
 LABEL version="1.0"
