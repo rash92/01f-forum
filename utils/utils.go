@@ -34,7 +34,7 @@ func HandleError(message string, err error) {
 }
 
 func WriteToLogFile(message string) {
-	file, err := os.OpenFile("./logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := os.OpenFile("../logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	PrintErrOnCommandLine(err)
 
 	messageWithNewline := message
