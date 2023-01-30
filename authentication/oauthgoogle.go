@@ -10,6 +10,7 @@ import (
 
 // Google Oauth
 func GoogleLogin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	LoggedInStatus(w, r, tmpl, 0)
 	googleConfig := GoogleSetupConfig()
 	url := googleConfig.AuthCodeURL("randomstate")
 	// redirect to google login page

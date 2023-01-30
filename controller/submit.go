@@ -21,7 +21,7 @@ type SubmitData struct {
 }
 
 func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	auth.LoggedInStatus(w, r, tmpl)
+	auth.LoggedInStatus(w, r, tmpl, 1)
 	data := SubmitData{}
 	user := dbmanagement.User{}
 	tags := []dbmanagement.Tag{}

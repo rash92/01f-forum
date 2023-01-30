@@ -26,7 +26,7 @@ type OauthAccount struct {
 
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	LoggedInStatus(w, r, tmpl)
+	LoggedInStatus(w, r, tmpl, 0)
 	data := Data{}
 	data.TitleName = "Login"
 	data.IsCorrect = true
@@ -100,7 +100,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 // Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	LoggedInStatus(w, r, tmpl)
+	LoggedInStatus(w, r, tmpl, 0)
 	data := Data{}
 	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "register.html", data)
@@ -124,13 +124,13 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 }
 
 // Checks whether the user is logged in or not for displaying certain pages
-func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template, desiredStatus int) {
 	cookie, err := r.Cookie("session")
 	log.Println("Current Cookie: ", cookie)
 	utils.HandleError("Failed to get cookie", err)
 	session := cookie.Value
 	user, _ := dbmanagement.SelectUserFromSession(session)
-	if user.IsLoggedIn == 1 {
+	if user.IsLoggedIn != desiredStatus {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
