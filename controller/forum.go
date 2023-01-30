@@ -61,6 +61,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			}
 
 			SubmissionHandler(w, r, user)
+
 		}
 
 		posts := dbmanagement.SelectAllPosts()

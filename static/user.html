@@ -242,21 +242,32 @@
     {{range .UserComments}}
     <div class="container-post">
         <div class="post">
-            {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
-            $UserInfo.Permission "moderator")}}
-            <div class="post-interactions">
-                <form method="POST">
-                    <div class="tooltip">
-                        <button class="delete-btn" name="deletecomment" value="{{.UUID}}">
-                            <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
-                        </button>
-                    </div>
-                </form>
+            <div class="tags-interactions">
+                <div class="commentor-name-time">
+                    <p>{{.OwnerName}}</p>
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerName) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletecomment" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {{end}}
             </div>
-            {{end}}
-            <div>{{.OwnerName}}</div>
-            <div>{{.Content}}</div>
-            <a href="/posts/{{.PostId}}">replying to : {{.PostId}}</a>
+            <div class="comment">
+                <p>
+                    {{.Content}}
+                </p>
+            </div>
+            <div class="go-to-post">
+                <a href="/posts/{{.PostId}}">Go to post</a>
+            </div>
+
         </div>
     </div>
     {{end}}

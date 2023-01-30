@@ -701,6 +701,16 @@ input[type="file"] {
     border: 1px solid black;
 }
 
+/* USER-PAGE */
+
+.go-to-post a {
+    color: black;
+}
+
+.go-to-post a:hover {
+    color: var(--dim-font);
+}
+
 /* ERROR-PAGES */
 
 .error {

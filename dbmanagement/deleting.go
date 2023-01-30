@@ -43,6 +43,10 @@ func DeletePostWithUUID(UUID string) {
 	for _, comment := range comments {
 		DeleteFromTableWithUUID("comments", comment.UUID)
 	}
+	notifications := SelectAllNotificationsFromUUID(UUID)
+	for _, notification := range notifications {
+		DeleteFromTableWithUUID("Notifications", notification.PostId)
+	}
 	DeleteFromTableWithUUID("posts", UUID)
 }
 
