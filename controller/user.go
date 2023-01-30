@@ -24,6 +24,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	auth.LoggedInStatus(w, r, tmpl)
 	data := UserData{}
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
+	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
 	if err != nil {
 		utils.HandleError("couldn't find user sessions id", err)
 	}
@@ -34,22 +35,11 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		return
 	}
 
-	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
-	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
-	utils.HandleError("Could not get user session in user", err)
-	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
-	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
-	data.DislikedUserPosts = dbmanagement.SelectAllDislikedPostsFromUser(data.UserInfo)
-	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
-	data.TitleName = data.UserInfo.Name
-	data.TagsList = dbmanagement.SelectAllTags()
-
 	if r.Method == "POST" {
 		postIdToDelete := r.FormValue("deletepost")
 		// fmt.Println("deleting post with id: ", postIdToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(postIdToDelete))
 		if postIdToDelete != "" {
 			dbmanagement.DeletePostWithUUID(postIdToDelete)
-			data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
 		}
 		commentIdToDelete := r.FormValue("deletecomment")
 		// fmt.Println("deleting comment with id: ", commentIdToDelete, " and contents: ", dbmanagement.SelectCommentFromUUID(commentIdToDelete))
@@ -62,6 +52,16 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "", "", "", "this user is asking to become a moderator")
 			fmt.Println("new request content is: ", newrequest.Description)
 		}
+
 	}
+
+	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
+	utils.HandleError("Could not get user session in user", err)
+	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
+	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
+	data.DislikedUserPosts = dbmanagement.SelectAllDislikedPostsFromUser(data.UserInfo)
+	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
+	data.TitleName = data.UserInfo.Name
+	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "user.html", data)
 }

@@ -60,11 +60,17 @@
 				</button>
 				<div class="dropdown-content">
 					{{range $UserInfo.Notifications}}
+					<div>
+						<p>{{.Sender}} {{.Statement}}</p>
+					</div>
 					<form action="/posts/{{.PostId}}" method="POST">
 						<button class="dropdown-content-links" name="notification" value={{.UUID}}>
-							<div>
-								<p>{{.Sender}} {{.Statement}}</p>
-							</div>
+							go to post
+						</button>
+					</form>
+					<form action="/forum" method="POST">
+						<button class="dropdown-content-links" name="delete notification" value={{.UUID}}>
+							delete notification
 						</button>
 					</form>
 					{{end}}

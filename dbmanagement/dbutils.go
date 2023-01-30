@@ -110,20 +110,19 @@ var createAdminRequestTableStatement = `
 	);`
 
 var createNotificationsTableStatement = `
-		CREATE TABLE Notifications (
-			uuid TEXT NOT NULL PRIMARY KEY,
-			receivingUserId TEXT,
-			postId TEXT,
-			commentId TEXT,
-			sendingUserId TEXT,
-			reaction INT,
-			notificationStatement TEXT,
-			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
-			FOREIGN KEY (postId) REFERENCES Posts(uuid),
-			FOREIGN KEY (commentId) REFERENCES Comments(uuid),
-			FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
-		)
-	`
+	CREATE TABLE Notifications (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		receivingUserId TEXT,
+		postId TEXT,
+		commentId TEXT,
+		sendingUserId TEXT,
+		reaction INT,
+		notificationStatement TEXT,
+		FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+		FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
+	);`
 
 /*
 Only used to create brand new databases, wiping all previous data in the process.

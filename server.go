@@ -50,8 +50,8 @@ func main() {
 				tagexists = true
 			}
 		}
-		if !tagexists && r.URL.Path == "/" {
-			// controller.AllPosts(w, r, tmpl)
+		if !tagexists && r.URL.Path != "/" {
+			controller.PageErrors(w, r, tmpl, "404")
 		}
 		if tagexists && r.URL.Path != "/" {
 			controller.SubForum(w, r, tmpl, url)
@@ -68,8 +68,8 @@ func main() {
 				postexists = true
 			}
 		}
-		if !postexists && r.URL.Path == "/" {
-			// controller.AllPosts(w, r, tmpl)
+		if !postexists && r.URL.Path != "/" {
+			controller.PageErrors(w, r, tmpl, "404")
 		}
 		if postexists && r.URL.Path != "/" {
 			controller.Post(w, r, tmpl, url)
@@ -125,7 +125,7 @@ func main() {
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		controller.User(w, r, tmpl)
 	})
-	// dbmanagement.CreateDatabaseWithTables()
+	dbmanagement.CreateDatabaseWithTables()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.DeleteAllSessions()
 	log.Fatal(s.ListenAndServeTLS("", ""))

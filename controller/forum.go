@@ -52,26 +52,19 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		filterOrder := false
 		data.UserInfo = user
 		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
-
 		if r.Method == "POST" {
-
 			filter := r.FormValue("filter")
 			if filter == "oldest" {
 				filterOrder = true
 			}
-
 			SubmissionHandler(w, r, user)
-
 		}
-
 		posts := dbmanagement.SelectAllPosts()
 		if !filterOrder {
 			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
 				posts[i], posts[j] = posts[j], posts[i]
 			}
 		}
-
-		data := Data{}
 		data.Cookie = sessionId
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
@@ -131,6 +124,10 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	if idToDelete != "" {
 		dbmanagement.DeletePostWithUUID(idToDelete)
 	}
+	notificationToDelete := r.FormValue("delete notification")
+	if notificationToDelete != "" {
+		dbmanagement.DeleteFromTableWithUUID("Notifications", notificationToDelete)
+	}
 
 	like := r.FormValue("like")
 	dislike := r.FormValue("dislike")
@@ -139,13 +136,13 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		dbmanagement.AddReactionToPost(user.UUID, like, 1)
 		post := dbmanagement.SelectPostFromUUID(like)
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
+		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 	}
 	if dislike != "" {
 		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
 		post := dbmanagement.SelectPostFromUUID(dislike)
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
+		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 	}
 
 	maxSize := 20 * 1024 * 1024
