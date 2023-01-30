@@ -84,7 +84,6 @@ func main() {
 		auth.Authenticate(w, r, tmpl)
 	})
 	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("I made it here!")
 		auth.Logout(w, r, tmpl)
 	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {

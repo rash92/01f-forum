@@ -26,6 +26,7 @@ type OauthAccount struct {
 
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	LoggedInStatus(w, r, tmpl)
 	data := Data{}
 	data.TitleName = "Login"
 	data.IsCorrect = true
@@ -99,6 +100,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 // Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	LoggedInStatus(w, r, tmpl)
 	data := Data{}
 	data.TagsList = dbmanagement.SelectAllTags()
 	tmpl.ExecuteTemplate(w, "register.html", data)
@@ -128,7 +130,7 @@ func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	utils.HandleError("Failed to get cookie", err)
 	session := cookie.Value
 	user, _ := dbmanagement.SelectUserFromSession(session)
-	if user.IsLoggedIn == 0 {
+	if user.IsLoggedIn == 1 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}

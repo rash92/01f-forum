@@ -59,24 +59,25 @@
 					{{end}}
 				</button>
 				<div class="dropdown-content">
-					{{range $UserInfo.Notifications}}
-					<div>
-						<p>{{.Sender}} {{.Statement}}</p>
+					<div class="notifications-interactions">
+						{{range $UserInfo.Notifications}}
+						<div class="tags-interactions">
+							<div>
+								<a href="/posts/{{.PostId}}">{{.Sender}} {{.Statement}}</a>
+							</div>
+							<div class="tooltip">
+								<form action="/forum" method="post">
+									<button class="delete-btn" name="delete notification" value="{{.UUID}}">
+										<i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+									</button>
+								</form>
+							</div>
+						</div>
+						{{end}}
+
 					</div>
-					<form action="/posts/{{.PostId}}" method="POST">
-						<button class="dropdown-content-links" name="notification" value={{.UUID}}>
-							go to post
-						</button>
-					</form>
-					<form action="/forum" method="POST">
-						<button class="dropdown-content-links" name="delete notification" value={{.UUID}}>
-							delete notification
-						</button>
-					</form>
-					{{end}}
 				</div>
 			</div>
-
 			<div class="dropdown">
 				<button class="dropbtn">
 					<i class="fa-solid fa-chevron-down"></i>
