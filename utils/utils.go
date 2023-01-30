@@ -9,7 +9,7 @@ import (
 
 func PrintErrOnCommandLine(err error) {
 	if err != nil {
-		fmt.Println("unable to open logfile", err)
+		fmt.Println("Error:", err)
 	}
 }
 
@@ -34,14 +34,12 @@ func HandleError(message string, err error) {
 }
 
 func WriteToLogFile(message string) {
-	file, err := os.OpenFile("../logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := os.OpenFile("./logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	PrintErrOnCommandLine(err)
 
-	messageWithNewline := message
-
-	n, err := file.Write([]byte(messageWithNewline))
+	n, err := file.Write([]byte(message))
 	PrintErrOnCommandLine(err)
-	if n != len(messageWithNewline) {
+	if n != len(message) {
 		fmt.Println("message length not the same")
 	}
 }

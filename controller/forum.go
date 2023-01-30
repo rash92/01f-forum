@@ -20,7 +20,6 @@ type Data struct {
 
 /*
 Executes the forum.html template that includes all posts in the database.  SessionID is used the determine which user is currently using the website.
-
 Also handles inserting a new post that updates in realtime.
 */
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -43,7 +42,8 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.Cookie = sessionId
 		filterOrder := false
 		data.UserInfo = user
-		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+		message := fmt.Sprint("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
+		utils.WriteMessageToLogFile(message)
 
 		if r.Method == "POST" {
 			err := dbmanagement.UpdateUserToken(user.UUID, 1)
@@ -84,7 +84,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			}
 
 			idToDelete := r.FormValue("deletepost")
-			// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 			if idToDelete != "" {
 				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 			}

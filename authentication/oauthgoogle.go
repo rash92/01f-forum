@@ -25,7 +25,6 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	// code
 	code := r.FormValue("code")
-
 	// configuration
 	googleConfig := GoogleSetupConfig()
 

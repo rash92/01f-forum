@@ -12,12 +12,13 @@ import (
 )
 
 var tmpl *template.Template
+var Tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
-	file, err := os.OpenFile("./logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := os.OpenFile("logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
-		file, _ := os.Create("./logfile.txt")
+		file, _ := os.Create("logfile.txt")
 		defer file.Close()
 	} else {
 		defer file.Close()

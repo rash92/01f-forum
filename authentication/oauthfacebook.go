@@ -25,10 +25,8 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 
 	// code
 	code := r.FormValue("code")
-
 	// configuration
 	facebookConfig := FacebookSetupConfig()
-
 	// exchange code for token
 	token, err := facebookConfig.Exchange(context.Background(), code)
 	utils.HandleError("Code-taken exchange failed", err)

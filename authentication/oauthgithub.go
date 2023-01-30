@@ -26,8 +26,6 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	// code
 	code := r.FormValue("code")
-	fmt.Println("code is:", code)
-
 	// configuration
 	githubConfig := GithubSetupConfig()
 
@@ -35,15 +33,25 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	token, err := githubConfig.Exchange(context.Background(), code)
 	utils.HandleError("Code-taken exchange failed", err)
 
-	client := githubConfig.Client(context.Background(), token)
+	// Check if the token is expired
+	// if !token.Valid() {
+	// 	token, err = githubConfig.TokenSource(context.Background(), token).Token()
+	// 	if err != nil {
+	// 		http.Error(w, "Failed to refresh token", http.StatusBadRequest)
+	// 		return
+	// 	}
+	// }
 
+	client := githubConfig.Client(context.Background(), token)
 	resp, err := client.Get(GithubAuthURL)
+	// fmt.Println(resp.Body)
 	utils.HandleError("Failed to fetch user data from github:", err)
 
 	defer resp.Body.Close()
 
 	// parse response
 	value := ParseOauthResponse(resp)
+	fmt.Println(value)
 
 	account := OauthAccount{
 		Name:  utils.AssertString(value["name"]),
