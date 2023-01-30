@@ -196,6 +196,7 @@ func InputTags(tags string, post dbmanagement.Post) {
 	if CheckInputs(tags) {
 		tagslice := strings.Fields(tags)
 		for _, tagname := range tagslice {
+			tagname = strings.ToLower(tagname)
 			if !ExistingTag(tagname) {
 				dbmanagement.InsertTag(tagname)
 			}
