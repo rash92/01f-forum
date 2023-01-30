@@ -62,9 +62,11 @@
 					<div class="notifications-interactions">
 						{{range $UserInfo.Notifications}}
 						<div class="tags-interactions">
-							<div>
-								<a href="/posts/{{.PostId}}">{{.Sender}} {{.Statement}}</a>
-							</div>
+							<a class="dropdown-content-links" href="/posts/{{.PostId}}">
+								<div>
+									{{.Sender}} {{.Statement}}
+								</div>
+							</a>
 							<div class="tooltip">
 								<form action="/forum" method="post">
 									<button class="delete-btn" name="delete notification" value="{{.UUID}}">
@@ -99,7 +101,7 @@
 					</form>
 					{{end}}
 					{{ if eq $UserInfo.Permission "admin"}}
-					<a class="dropdown-content-links"href="/admin">
+					<a class="dropdown-content-links" href="/admin">
 						<div>
 							<i class="fa-solid fa-gear"></i> Admin tools
 						</div>
