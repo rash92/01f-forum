@@ -7,7 +7,7 @@
 			Mod Requests</button>
 	</div>
 	<div class="filter">
-		<button id="reports" onclick="hideShowAdmin(this)" value="reports"><i class="fa-solid fa-reports"></i>
+		<button id="reports" onclick="hideShowAdmin(this)" value="reports"><i class="fa-solid fa-flag"></i>
 			Pending
 			Reported Posts</button>
 	</div>
@@ -92,7 +92,8 @@
 			<p>Tag Name: {{.TagName}}</p>
 			<form action="/admin" method="POST">
 				<button class="delete-btn" name="delete tag" value={{.UUID}}>delete tag</button>
-				<button class="delete-btn admin-all-tag-delete" name="delete all posts with tag" value={{.TagName}}>delete all posts with this tag</button>
+				<button class="delete-btn admin-all-tag-delete" name="delete all posts with tag"
+					value={{.TagName}}>delete all posts with this tag</button>
 			</form>
 		</div>
 	</div>

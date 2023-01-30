@@ -99,9 +99,11 @@
 					</form>
 					{{end}}
 					{{ if eq $UserInfo.Permission "admin"}}
-					<div class="dropdown-content-links">
-						<a href="/admin"><i class="fa-solid fa-gear"></i> Admin tools</a>
-					</div>
+					<a class="dropdown-content-links"href="/admin">
+						<div>
+							<i class="fa-solid fa-gear"></i> Admin tools
+						</div>
+					</a>
 					{{end}}
 					<a class="dropdown-content-links" href="/logout">
 						<div>
