@@ -42,7 +42,6 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
 
 		if r.Method == "POST" {
-			notfication := r.FormValue("notification")
 			comment := r.FormValue("comment")
 			like := r.FormValue("like")
 			dislike := r.FormValue("dislike")
@@ -53,10 +52,6 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			deleteComment := r.FormValue("deletecomment")
 			editComment := r.FormValue("editcomment")
 			commentuuid := r.FormValue("commentuuid")
-
-			if notfication != "" {
-				dbmanagement.DeleteFromTableWithUUID("Notifications", notfication)
-			}
 			if CheckInputs(comment) {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("cant get user with uuid in all posts", err)
