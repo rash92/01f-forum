@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -16,8 +18,10 @@ func PrintErrOnCommandLine(err error) {
 func WriteMessageToLogFile(message interface{}) {
 	now := time.Now()
 	formatTime := now.Format(time.UnixDate)
-	_, _, functionName := trace()
-	stringMessage := string(AssertString(message)) + " in " + functionName
+	file, line, functionName := trace()
+	filename := strings.Split(file, "/")
+	stringMessage := fmt.Sprintf("%s on line %s in %s at file %s", message, strconv.Itoa(line), functionName, filename[len(filename)-1])
+	// stringMessage := string(AssertString(message)) + " on line " + strconv.Itoa(line) + " in " + functionName + " at file " + filename[len(filename)-1]
 	MessageWithFormatTime := formatTime + ": " + stringMessage + "\n"
 	WriteToLogFile(MessageWithFormatTime)
 }
@@ -26,8 +30,9 @@ func HandleError(message string, err error) {
 	if err != nil {
 		now := time.Now()
 		formatTime := now.Format(time.UnixDate)
-		_, _, functionName := trace()
-		errorMessage := fmt.Sprintf("%s: %v in %s", message, err, functionName)
+		file, line, functionName := trace()
+		filename := strings.Split(file, "/")
+		errorMessage := fmt.Sprintf("***** %s: %v on line %s in %s at file %s *****", message, err, strconv.Itoa(line), functionName, filename[len(filename)-1])
 		errorMessageWithFormatTime := formatTime + ": " + errorMessage + "\n"
 		WriteToLogFile(errorMessageWithFormatTime)
 	}

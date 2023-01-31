@@ -12,7 +12,6 @@ import (
 )
 
 var tmpl *template.Template
-var Tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
