@@ -347,3 +347,60 @@ Tue Jan 31 18:56:03 GMT 2023: ***** Unable to get user: sql: no rows in result s
 Tue Jan 31 18:56:03 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Tue Jan 31 18:56:03 GMT 2023: session id is: f9e9b9bd-5b09-4348-847e-587b9c0be8a5user info is: {     [] 0}cookie data is: f9e9b9bd-5b09-4348-847e-587b9c0be8a5 on line 46 in forum/controller.AllPosts at file forum.go
 Tue Jan 31 18:56:03 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 92 in forum/controller.AllPosts at file forum.go *****
+Tue Jan 31 20:40:03 GMT 2023: User: e10337f9-fb16-49ec-a18a-2580e5330630 b b@b $2a$10$1pSKMCNFjPjEvSvQl6kLYuPFYG1llWKzgV6VqVLg7ALC24Lv4oWii user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 20:40:03 GMT 2023: User: 2930fb3c-ec28-42b2-b4de-ca1876935d09 bob b@ssd $2a$10$gETpoFf0QYUwRLCC2LBStuXQb9AdfKPaPXpyYM6dend8AYGvbGW.. user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 20:40:03 GMT 2023: User: 88daa87e-a15d-4c49-80c0-dd3d4c8e6d3d r r@r $2a$10$HwlPco3PM44uOeOI0IWXtuJcvQoLSivEZ/Zm8zcofh7USsTVji0au user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 20:40:03 GMT 2023: User: 50f27e75-b732-4643-9e1b-002ad4e45bee rhemtro rhemtro@gmail.com  user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 20:40:03 GMT 2023: User: 9ef358fa-24f6-4b2a-a67d-e8c137ea98fa test testrhem2@gmail.com  user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 20:44:49 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 20:44:49 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 20:44:49 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 20:44:49 GMT 2023: session id is: 6c43792f-4372-4f49-947e-64ed51bbf5d5user info is: {     [] 0}cookie data is: 6c43792f-4372-4f49-947e-64ed51bbf5d5 on line 46 in forum/controller.AllPosts at file forum.go
+Tue Jan 31 20:44:49 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 92 in forum/controller.AllPosts at file forum.go *****
+Tue Jan 31 22:06:24 GMT 2023: User: e10337f9-fb16-49ec-a18a-2580e5330630 b b@b $2a$10$1pSKMCNFjPjEvSvQl6kLYuPFYG1llWKzgV6VqVLg7ALC24Lv4oWii user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 22:06:24 GMT 2023: User: 2930fb3c-ec28-42b2-b4de-ca1876935d09 bob b@ssd $2a$10$gETpoFf0QYUwRLCC2LBStuXQb9AdfKPaPXpyYM6dend8AYGvbGW.. user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 22:06:24 GMT 2023: User: 88daa87e-a15d-4c49-80c0-dd3d4c8e6d3d r r@r $2a$10$HwlPco3PM44uOeOI0IWXtuJcvQoLSivEZ/Zm8zcofh7USsTVji0au user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 22:06:24 GMT 2023: User: 50f27e75-b732-4643-9e1b-002ad4e45bee rhemtro rhemtro@gmail.com  user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 22:06:24 GMT 2023: User: 9ef358fa-24f6-4b2a-a67d-e8c137ea98fa test testrhem2@gmail.com  user on line 107 in forum/dbmanagement.DisplayAllUsers at file userdbutils.go
+Tue Jan 31 22:06:46 GMT 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Tue Jan 31 22:06:46 GMT 2023: ***** Unable to get user error:: sql: no rows in result set on line 46 in forum/authentication.Authenticate at file authenticate.go *****
+Tue Jan 31 22:06:46 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:06:46 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:06:46 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:06:46 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:06:57 GMT 2023: Logging out on line 67 in forum/authentication.Logout at file authenticate.go
+Tue Jan 31 22:06:57 GMT 2023: ***** Failed to get cookie: http: named cookie not present on line 69 in forum/authentication.Logout at file authenticate.go *****
+Tue Jan 31 22:07:15 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:07:15 GMT 2023: ***** Unable to get session from browser in admin handler: http: named cookie not present on line 21 in forum/controller.Admin at file admin.go *****
+Tue Jan 31 22:07:15 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:07:15 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:07:15 GMT 2023: ***** Unable to user session from admin handler: sql: no rows in result set on line 23 in forum/controller.Admin at file admin.go *****
+Tue Jan 31 22:07:15 GMT 2023: Please log in as a user with admin permissions on line 26 in forum/controller.Admin at file admin.go
+Tue Jan 31 22:07:35 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:07:35 GMT 2023: ***** Unable to find user session id: http: named cookie not present on line 23 in forum/controller.User at file user.go *****
+Tue Jan 31 22:07:52 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:07:52 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:07:52 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:07:52 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:07:58 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:07:58 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:07:58 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:07:58 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:08:12 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:08:12 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:08:12 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:08:12 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:08:19 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:08:19 GMT 2023: ***** Unable to find user session id: http: named cookie not present on line 23 in forum/controller.User at file user.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** Unable to get user error:: sql: no rows in result set on line 46 in forum/authentication.Authenticate at file authenticate.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:08:28 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** Unable to get user error:: sql: no rows in result set on line 46 in forum/authentication.Authenticate at file authenticate.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** Unable to get session id from browser in login:: http: named cookie not present on line 25 in forum/authentication.Login at file authenticate.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Tue Jan 31 22:09:06 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****

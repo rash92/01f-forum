@@ -33,15 +33,6 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	token, err := githubConfig.Exchange(context.Background(), code)
 	utils.HandleError("Code-taken exchange failed", err)
 
-	// Check if the token is expired
-	// if !token.Valid() {
-	// 	token, err = githubConfig.TokenSource(context.Background(), token).Token()
-	// 	if err != nil {
-	// 		http.Error(w, "Failed to refresh token", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// }
-
 	client := githubConfig.Client(context.Background(), token)
 	resp, err := client.Get(GithubAuthURL)
 	// fmt.Println(resp.Body)

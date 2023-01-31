@@ -32,6 +32,15 @@ func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			controller.PageErrors(w, r, tmpl, "404")
+		}
+		h(w, r)
+	}
+}
+
 func main() {
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
@@ -54,10 +63,10 @@ func main() {
 
 	// authentication handlers
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
-	mux.HandleFunc("/authenticate", AuthenticateHandler)
+	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
 	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
 	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
-	mux.HandleFunc("/register_account", RegisterAccountHandler)
+	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
 	mux.HandleFunc("/google/login", protectGetRequests(GoogleLoginHandler))
@@ -68,12 +77,12 @@ func main() {
 	mux.HandleFunc("/facebook/callback", FacebookCallbackHandler)
 
 	// forum handlers
-	mux.HandleFunc("/forum", ForumHandler)
-	mux.HandleFunc("/submitpost", SubmitPostHandler)
-	mux.HandleFunc("/admin", AdminHandler)
-	mux.HandleFunc("/user", UserHandler)
-	mux.HandleFunc("/privacy_policy", PrivacyPolicyHandler)
-	mux.HandleFunc("/error", ErrorHandler)
+	mux.HandleFunc("/forum", protectGetRequests(ForumHandler))
+	mux.HandleFunc("/submitpost", protectGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/admin", protectPostRequests(AdminHandler))
+	mux.HandleFunc("/user", protectPostRequests(UserHandler))
+	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
+	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 
 	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()
