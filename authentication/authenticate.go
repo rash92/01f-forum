@@ -39,10 +39,6 @@ Authenticate user with credentials - If the username and password match an entry
 otherwise the user stays on the log in page. Session Cookie is also set here.
 */
 func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	if r.Method != "POST" {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-	}
-
 	userName := r.FormValue("user_name")
 	password := r.FormValue("password")
 

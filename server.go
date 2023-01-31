@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/tls"
-	auth "forum/authentication"
 	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
@@ -24,8 +23,16 @@ func init() {
 	}
 }
 
-func main() {
+func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			controller.PageErrors(w, r, tmpl, "404")
+		}
+		h(w, r)
+	}
+}
 
+func main() {
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -39,108 +46,34 @@ func main() {
 	fs := http.FileServer(http.Dir(path))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	// index handlers
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			controller.PageErrors(w, r, tmpl, "404")
-		} else {
-			controller.AllPosts(w, r, tmpl)
-		}
-	})
-
-	mux.HandleFunc("/categories/", func(w http.ResponseWriter, r *http.Request) {
-		tags := dbmanagement.SelectAllTags()
-		tagexists := false
-		var url string
-		for _, v := range tags {
-			if r.URL.Path == "/categories/"+v.TagName {
-				url = v.TagName
-				tagexists = true
-			}
-		}
-		if !tagexists && r.URL.Path == "/" {
-			controller.PageErrors(w, r, tmpl, "what ever you are looking for isn't here my dude")
-		}
-		if tagexists && r.URL.Path != "/" {
-			controller.SubForum(w, r, tmpl, url)
-		}
-	})
-
-	mux.HandleFunc("/posts/", func(w http.ResponseWriter, r *http.Request) {
-		posts := dbmanagement.SelectAllPosts()
-		postexists := false
-		var url string
-		for _, v := range posts {
-			if r.URL.Path == "/posts/"+v.UUID {
-				url = v.UUID
-				postexists = true
-			}
-		}
-		if !postexists && r.URL.Path == "/" {
-			controller.PageErrors(w, r, tmpl, "what ever you are looking for isn't here my dude")
-		}
-		if postexists && r.URL.Path != "/" {
-			controller.Post(w, r, tmpl, url)
-		}
-	})
+	// handlers
+	mux.HandleFunc("/", protectGetRequests(IndexHandler))
+	mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
+	mux.HandleFunc("/categories/", protectGetRequests(CategoriesHandler))
+	mux.HandleFunc("/posts/", protectGetRequests(PostsHandler))
 
 	// authentication handlers
-	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		auth.Login(w, r, tmpl)
-	})
-	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
-		auth.Authenticate(w, r, tmpl)
-	})
-	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		auth.Logout(w, r, tmpl)
-	})
-	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		auth.Register(w, r, tmpl)
-	})
-	mux.HandleFunc("/register_account", func(w http.ResponseWriter, r *http.Request) {
-		auth.RegisterAcount(w, r, tmpl)
-	})
+	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
+	mux.HandleFunc("/authenticate", AuthenticateHandler)
+	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
+	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
+	mux.HandleFunc("/register_account", RegisterAccountHandler)
 
 	// oauth handlers
-	mux.HandleFunc("/google/login", func(w http.ResponseWriter, r *http.Request) {
-		auth.GoogleLogin(w, r, tmpl)
-	})
-	mux.HandleFunc("/google/callback", func(w http.ResponseWriter, r *http.Request) {
-		auth.GoogleCallback(w, r, tmpl)
-	})
-	mux.HandleFunc("/github/login", func(w http.ResponseWriter, r *http.Request) {
-		auth.GithubLogin(w, r, tmpl)
-	})
-	mux.HandleFunc("/github/callback", func(w http.ResponseWriter, r *http.Request) {
-		auth.GithubCallback(w, r, tmpl)
-	})
-	mux.HandleFunc("/facebook/login", func(w http.ResponseWriter, r *http.Request) {
-		auth.FacebookLogin(w, r, tmpl)
-	})
-	mux.HandleFunc("/facebook/callback", func(w http.ResponseWriter, r *http.Request) {
-		auth.FacebookCallback(w, r, tmpl)
-	})
+	mux.HandleFunc("/google/login", protectGetRequests(GoogleLoginHandler))
+	mux.HandleFunc("/google/callback", GoogleCallbackHandler)
+	mux.HandleFunc("/github/login", protectGetRequests(GithubLoginHandler))
+	mux.HandleFunc("/github/callback", GithubCallbackHandler)
+	mux.HandleFunc("/facebook/login", protectGetRequests(FacebookLoginHandler))
+	mux.HandleFunc("/facebook/callback", FacebookCallbackHandler)
 
 	// forum handlers
-	mux.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
-		controller.AllPosts(w, r, tmpl)
-	})
-	mux.HandleFunc("/submitpost", func(w http.ResponseWriter, r *http.Request) {
-		controller.SubmitPost(w, r, tmpl)
-	})
-
-	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
-		controller.Admin(w, r, tmpl)
-	})
-	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		controller.User(w, r, tmpl)
-	})
-	mux.HandleFunc("/privacy_policy", func(w http.ResponseWriter, r *http.Request) {
-		controller.PrivacyPolicy(w, r, tmpl)
-	})
-	mux.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
-		controller.PageErrors(w, r, tmpl, "you're doing too much my dude")
-	})
+	mux.HandleFunc("/forum", ForumHandler)
+	mux.HandleFunc("/submitpost", SubmitPostHandler)
+	mux.HandleFunc("/admin", AdminHandler)
+	mux.HandleFunc("/user", UserHandler)
+	mux.HandleFunc("/privacy_policy", PrivacyPolicyHandler)
+	mux.HandleFunc("/error", ErrorHandler)
 
 	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()
