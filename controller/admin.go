@@ -94,7 +94,8 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	for _, adminRequest := range adminData.AdminRequests {
 		if adminRequest.ReportedPostId != "" {
 			adminData.ReportedPosts = append(adminData.ReportedPosts, dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId))
-			fmt.Println("reported posts retrieved are: ", adminRequest)
+			message := fmt.Sprint("reported posts retrieved are: ", adminRequest)
+			utils.WriteMessageToLogFile(message)
 		}
 		if adminRequest.ReportedCommentId != "" {
 			adminData.ReportedComments = append(adminData.ReportedComments, dbmanagement.SelectCommentFromUUID(adminRequest.ReportedCommentId))

@@ -6,12 +6,15 @@ import (
 )
 
 type Errors struct {
-	Error string
+	Errorcode    int
+	Errormessage string
 }
 
-func PageErrors(w http.ResponseWriter, r *http.Request, tmpl *template.Template, errortype string) {
+func PageErrors(w http.ResponseWriter, r *http.Request, tmpl *template.Template, errorcode int, errormessage string) {
 	errors := Errors{
-		Error: errortype,
+		Errorcode:    errorcode,
+		Errormessage: errormessage,
 	}
+	w.WriteHeader(errorcode)
 	tmpl.ExecuteTemplate(w, "error.html", errors)
 }

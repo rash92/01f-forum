@@ -9,7 +9,7 @@ import (
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" && r.URL.Path != "/posts" {
-		controller.PageErrors(w, r, tmpl, "404")
+		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 	} else {
 		controller.AllPosts(w, r, tmpl)
 	}
@@ -29,7 +29,7 @@ func CategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 	if !tagexists && r.URL.Path != "/categories/" {
-		controller.PageErrors(w, r, tmpl, "404")
+		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 	}
 
 	if tagexists && r.URL.Path != "/" {
@@ -51,7 +51,7 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 	if !postexists && r.URL.Path != "/posts/" {
-		controller.PageErrors(w, r, tmpl, "404")
+		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 	}
 	if postexists && r.URL.Path != "/" {
 		controller.Post(w, r, tmpl, url)
@@ -59,10 +59,6 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		controller.PageErrors(w, r, tmpl, "404")
-	}
-
 	auth.Login(w, r, tmpl)
 }
 
@@ -75,16 +71,10 @@ func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		controller.PageErrors(w, r, tmpl, "404")
-	}
 	auth.Logout(w, r, tmpl)
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		controller.PageErrors(w, r, tmpl, "404")
-	}
 	auth.Register(w, r, tmpl)
 }
 
@@ -119,6 +109,9 @@ func FacebookCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 // forum handlers
 func ForumHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" && r.Method != "GET" {
+		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+	}
 	controller.AllPosts(w, r, tmpl)
 }
 
@@ -139,5 +132,5 @@ func PrivacyPolicyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request) {
-	controller.PageErrors(w, r, tmpl, "you're doing too much my dude")
+	controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 }

@@ -20,7 +20,7 @@
                     </div>
                 </form>
                 {{if eq $UserInfo.Name $PostInfo.OwnerId}}
-                <form action="/submitpost" method="post">
+                <form action="/editpost" method="post">
                     <div class="tooltip">
                         <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
                             value="{{$PostInfo.UUID}}">

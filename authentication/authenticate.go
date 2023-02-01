@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
@@ -132,14 +133,15 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 }
 
 // Checks whether the user is logged in or not for displaying certain pages
-func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template, desiredStatus int) {
+func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template, desiredStatus int) error {
 	cookie, err := r.Cookie("session")
-	log.Println("Current Cookie: ", cookie)
+	message := fmt.Sprint("Current Cookie: ", cookie)
+	utils.WriteMessageToLogFile(message)
 	utils.HandleError("Failed to get cookie", err)
 	session := cookie.Value
-	user, _ := dbmanagement.SelectUserFromSession(session)
-	if user.IsLoggedIn != desiredStatus {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
+	user, err := dbmanagement.SelectUserFromSession(session)
+	if user.IsLoggedIn != desiredStatus || err != nil {
+		return err
 	}
+	return nil
 }

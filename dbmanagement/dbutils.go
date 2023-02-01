@@ -19,8 +19,8 @@ var createUserTableStatement = `
 		email TEXT UNIQUE,
 		password TEXT,
 		permission TEXT,
+		IsLoggedIn INTEGER,
 		limitTokens INTEGER
-		IsLoggedIn INTEGER
 	);`
 
 // ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
@@ -144,20 +144,20 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createAdminRequestTableStatement)
 	CreateTable(forumDB, createNotificationsTableStatement)
 
-	err := os.Remove("logfile.txt")
-	utils.PrintErrOnCommandLine(err)
+	os.Remove("logfile.txt")
+	os.Create("logfile.txt")
 
-	utils.WriteMessageToLogFile("forum.db created successfully!")
 	// had to manually reimplement hashing as get 'import cycle error' if you import auth package
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
+
 	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
 	e := os.RemoveAll("./static/uploads/")
 	if e != nil {
 		log.Fatal(e)
 	}
 
-	log.Println("forum.db created successfully!")
+	utils.WriteMessageToLogFile("forum.db created successfully!")
 }
 
 /*

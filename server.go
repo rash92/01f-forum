@@ -7,26 +7,18 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 )
 
 var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
-	file, err := os.OpenFile("logfile.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		file, _ := os.Create("logfile.txt")
-		defer file.Close()
-	} else {
-		defer file.Close()
-	}
 }
 
 func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
-			controller.PageErrors(w, r, tmpl, "404")
+			controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 		}
 		h(w, r)
 	}
@@ -35,14 +27,13 @@ func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
 func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
-			controller.PageErrors(w, r, tmpl, "404")
+			controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
 		}
 		h(w, r)
 	}
 }
 
 func main() {
-	// dbmanagement.CreateDatabaseWithTables()
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -70,16 +61,16 @@ func main() {
 	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
-	mux.HandleFunc("/google/login", protectGetRequests(GoogleLoginHandler))
-	mux.HandleFunc("/google/callback", GoogleCallbackHandler)
-	mux.HandleFunc("/github/login", protectGetRequests(GithubLoginHandler))
-	mux.HandleFunc("/github/callback", GithubCallbackHandler)
+	mux.HandleFunc("/google/login", protectPostRequests(GoogleLoginHandler))
+	mux.HandleFunc("/google/callback", protectPostRequests(GoogleCallbackHandler))
+	mux.HandleFunc("/github/login", protectPostRequests(GithubLoginHandler))
+	mux.HandleFunc("/github/callback", protectPostRequests(GithubCallbackHandler))
 	mux.HandleFunc("/facebook/login", protectGetRequests(FacebookLoginHandler))
-	mux.HandleFunc("/facebook/callback", FacebookCallbackHandler)
+	mux.HandleFunc("/facebook/callback", protectPostRequests(FacebookCallbackHandler))
 
 	// forum handlers
-	mux.HandleFunc("/forum", protectGetRequests(ForumHandler))
-	mux.HandleFunc("/submitpost", protectGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/forum", ForumHandler)
+	mux.HandleFunc("/submitpost", protectPostRequests(SubmitPostHandler))
 	mux.HandleFunc("/admin", protectPostRequests(AdminHandler))
 	mux.HandleFunc("/user", protectPostRequests(UserHandler))
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
@@ -89,6 +80,6 @@ func main() {
 	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
-	dbmanagement.DisplayAllUsers()
+	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
