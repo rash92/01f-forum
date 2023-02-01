@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -16,10 +15,11 @@ type SubData struct {
 	Cookie     string
 	UserInfo   dbmanagement.User
 	TitleName  string
+	TagsList   []dbmanagement.Tag
 }
 
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
-	data := Data{}
+	data := SubData{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
@@ -56,7 +56,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			if content != "" {
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("Unable get user with UUID in all Subforum function", err)
-				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, tag, time.Now())
+				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, time.Now(), "")
 				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
@@ -66,13 +66,13 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
 				post := dbmanagement.SelectPostFromUUID(like)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1)
+				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
 				post := dbmanagement.SelectPostFromUUID(dislike)
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1)
+				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 			}
 
 			idToDelete := r.FormValue("deletepost")
@@ -90,13 +90,12 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 		}
 
-		data := SubData{}
 		data.SubName = tag
 		data.Cookie = sessionId
 		user.Notifications = dbmanagement.SelectAllNotificationsFromUser(user.UUID)
 		data.UserInfo = user
-		data.ListOfData = append(data.ListOfData, posts...)
-		fmt.Println("Forum data: ", data)
+		data.ListOfData = posts
+		data.TagsList = dbmanagement.SelectAllTags()
 		tmpl.ExecuteTemplate(w, "subforum.html", data)
 	}
 }

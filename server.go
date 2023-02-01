@@ -42,6 +42,7 @@ func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+	// dbmanagement.CreateDatabaseWithTables()
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -87,6 +88,7 @@ func main() {
 	// dbmanagement.DeleteUser("Yell Tro")
 	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
+	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

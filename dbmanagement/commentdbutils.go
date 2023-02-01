@@ -28,6 +28,26 @@ func InsertComment(content string, postId string, ownerId string, likes int, dis
 	return Comment{UUID, content, postId, ownerId, name.Name, likes, dislikes, time, ""}
 }
 
+func UpdateComment(commentuuid string, content string, postId string, ownerId string, likes int, dislikes int, edittime time.Time) Comment {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	utils.WriteMessageToLogFile("Updating comment record...")
+
+	updateCommentData := `
+	UPDATE Comments
+	SET content = ?, time = ?
+	WHERE uuid = ?
+	`
+	statement, err := db.Prepare(updateCommentData)
+	utils.HandleError("User Prepare failed: ", err)
+
+	_, err = statement.Exec(content, edittime, commentuuid)
+	utils.HandleError("Statement Exec failed: ", err)
+
+	name, _ := SelectUserFromUUID(ownerId)
+	return Comment{commentuuid, content, postId, ownerId, name.Name, likes, dislikes, edittime, strings.TrimSuffix(edittime.Format(time.RFC822), "UTC")}
+}
+
 /*
 Displays all comments from the database in the console.  Only for internal use.
 */

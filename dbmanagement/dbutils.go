@@ -2,23 +2,25 @@ package dbmanagement
 
 import (
 	"database/sql"
-	"fmt"
 	"forum/utils"
+	"log"
 	"os"
 	"time"
 
 	"github.com/gofrs/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
 		name TEXT UNIQUE,
-		email TEXT,
+		email TEXT UNIQUE,
 		password TEXT,
 		permission TEXT,
 		limitTokens INTEGER
+		IsLoggedIn INTEGER
 	);`
 
 // ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
@@ -30,10 +32,9 @@ var createPostTableStatement = `
 		ownerId TEXT,
 		likes INTEGER,
 		dislikes INTEGER,
-		tag TEXT,
 		time DATETIME,
-		FOREIGN KEY (ownerId) REFERENCES Users(uuid),
-		FOREIGN KEY (tag) REFERENCES Tags(tagname)
+		imagename TEXT,
+		FOREIGN KEY (ownerId) REFERENCES Users(uuid) ON DELETE SET NULL
 	);`
 
 var createCommentTableStatement = `
@@ -52,15 +53,15 @@ var createCommentTableStatement = `
 var createTagsTableStatement = `
 	CREATE TABLE Tags (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		tagname TEXT
+		tagname TEXT NOT NULL UNIQUE
 	);`
 
 var createTaggedPostsStatement = `
 CREATE TABLE TaggedPosts (
 		tagId TEXT NOT NULL,
 		postId TEXT NOT NULL,
-		FOREIGN KEY (tagId) REFERENCES Tags(uuid),
-		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (tagId) REFERENCES Tags(uuid) ON DELETE CASCADE,
+		FOREIGN KEY (postId) REFERENCES Posts(uuid) ON DELETE CASCADE,
 		PRIMARY KEY (tagId, postId)
 	);`
 
@@ -97,30 +98,36 @@ var createAdminRequestTableStatement = `
 		uuid TEXT NOT NULL PRIMARY KEY,
 		requestfromid TEXT,
 		requestfromname TEXT,
-		content TEXT,
+		reportedpostid TEXT,
+		reportedcommentid TEXT,
+		reporteduserid TEXT,
+		description TEXT,
+		FOREIGN KEY (reportedpostid) REFERENCES Posts(uuid),
+		FOREIGN KEY (reportedcommentid) REFERENCES Comments(uuid),
+		FOREIGN KEY (reporteduserid) REFERENCES Users(uuid),
 		FOREIGN KEY (requestfromid) REFERENCES Users(uuid),
 		FOREIGN KEY (requestfromid) REFERENCES Users(name)	
 	);`
 
 var createNotificationsTableStatement = `
-		CREATE TABLE Notifications (
-			uuid TEXT NOT NULL PRIMARY KEY,
-			receivingUserId TEXT,
-			postId TEXT,
-			commentId TEXT,
-			sendingUserId TEXT,
-			reaction INT,
-			notificationStatement TEXT,
-			FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
-			FOREIGN KEY (postId) REFERENCES Posts(uuid),
-			FOREIGN KEY (commentId) REFERENCES Comments(uuid),
-			FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
-		)
-	`
+	CREATE TABLE Notifications (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		receivingUserId TEXT,
+		postId TEXT,
+		commentId TEXT,
+		sendingUserId TEXT,
+		reaction INT,
+		notificationStatement TEXT,
+		FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
+		FOREIGN KEY (postId) REFERENCES Posts(uuid),
+		FOREIGN KEY (commentId) REFERENCES Comments(uuid),
+		FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
+	);`
 
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
+Also inserts a user with admin permissions by default, with both username and password being 'admin'
 */
 func CreateDatabaseWithTables() {
 	forumDB := CreateDatabase("forum")
@@ -141,7 +148,16 @@ func CreateDatabaseWithTables() {
 	utils.PrintErrOnCommandLine(err)
 
 	utils.WriteMessageToLogFile("forum.db created successfully!")
+	// had to manually reimplement hashing as get 'import cycle error' if you import auth package
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+	utils.HandleError("password hashing error for default admin on database creation", err)
+	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
+	e := os.RemoveAll("./static/uploads/")
+	if e != nil {
+		log.Fatal(e)
+	}
 
+	log.Println("forum.db created successfully!")
 }
 
 /*
@@ -213,41 +229,4 @@ func (user *User) ReturnSession(userId string) (session Session, err error) {
 	utils.HandleError("Query Row failed: ", err)
 
 	return
-}
-
-// Delete session from database
-func DeleteSessionByUUID(UUID string) (err error) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-
-	statement := "DELETE FROM Sessions WHERE uuid = ?"
-	stm, err := db.Prepare(statement)
-	utils.HandleError("Failed to delete session by uuid:", err)
-
-	defer stm.Close()
-
-	res, err := stm.Exec(UUID)
-
-	n, err := res.RowsAffected()
-	utils.HandleError("Rows affected error:", err)
-
-	message := fmt.Sprintf("The statement has affected %d rows", n)
-	utils.WriteMessageToLogFile(message)
-	return
-}
-
-// Delete all session from database
-func DeleteAllSessions() (err error) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-
-	res, err := db.Exec("DELETE FROM Sessions")
-	utils.HandleError("Failed to delete all sessions:", err)
-
-	n, err := res.RowsAffected()
-	utils.HandleError("Rows affected error:", err)
-
-	message := fmt.Sprintf("The statement has affected %d rows", n)
-	utils.WriteMessageToLogFile(message)
-	return err
 }

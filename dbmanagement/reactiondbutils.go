@@ -18,7 +18,7 @@ func AddReactionToPost(userId string, postId string, reaction int) {
 	var reactionStatement string
 	var postUpdateStatement string
 
-	switch SelectReactionFromPost(userId, postId) {
+	switch SelectReactionFromPost(postId, userId) {
 	case -2:
 		reactionStatement = `
 		INSERT OR IGNORE INTO ReactedPosts(userId, postId, reaction) 
@@ -117,7 +117,7 @@ func AddReactionToPost(userId string, postId string, reaction int) {
 	ps, err := db.Prepare(postUpdateStatement)
 	utils.HandleError("Post Update Prepare failed: ", err)
 
-	if SelectReactionFromPost(userId, postId) == -2 {
+	if SelectReactionFromPost(postId, userId) == -2 {
 		_, err = statement.Exec(userId, postId, reaction)
 		utils.HandleError("statement Exec failed: ", err)
 		_, err = ps.Exec(postId)
@@ -141,7 +141,7 @@ func SelectReactionFromPost(postid, userid string) int {
 	stm, err := db.Prepare("SELECT * FROM ReactedPosts WHERE userId = ? and postid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(postid, userid).Scan(&user, &post, &reaction)
+	err = stm.QueryRow(userid, postid).Scan(&user, &post, &reaction)
 	utils.HandleError("Query Row failed: ", err)
 
 	return reaction

@@ -4,15 +4,20 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
+	"log"
 	"net/http"
+	"strings"
 )
 
 type Data struct {
-	ListOfData []dbmanagement.Post
-	Cookie     string
-	UserInfo   dbmanagement.User
-	TitleName  string
-	IsCorrect  bool
+	ListOfData    []dbmanagement.Post
+	Cookie        string
+	UserInfo      dbmanagement.User
+	TitleName     string
+	IsCorrect     bool
+	IsLoggedIn    bool
+	RegisterError string
+	TagsList      []dbmanagement.Tag
 }
 
 type OauthAccount struct {
@@ -27,9 +32,11 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
+		LoggedInStatus(w, r, tmpl, 0)
 		data := Data{}
 		data.TitleName = "Login"
 		data.IsCorrect = true
+		data.TagsList = dbmanagement.SelectAllTags()
 		tmpl.ExecuteTemplate(w, "login.html", data)
 	}
 }
@@ -45,20 +52,33 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	user, err := dbmanagement.SelectUserFromName(userName)
 	utils.HandleError("Unable to get user error:", err)
 
-	if !CompareHash(user.Password, password) {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		data := Data{}
-		data.TitleName = "Login"
-		data.IsCorrect = false
-		tmpl.ExecuteTemplate(w, "login.html", data)
-	} else {
+	if CompareHash(user.Password, password) && user.IsLoggedIn == 0 {
 		err := CreateUserSession(w, r, user)
 		utils.HandleError("Failed to create session in authenticate", err)
 		// user.LimitTokens
 		LimitRequests(w, r, user)
 		err = dbmanagement.UpdateUserToken(user.UUID, 1)
 		utils.HandleError("Unable to update users token", err)
+		dbmanagement.UpdateUserLoggedInStatus(user.UUID, 1)
+		utils.WriteMessageToLogFile(user.IsLoggedIn)
 		http.Redirect(w, r, "/forum", http.StatusSeeOther)
+	} else {
+		if user.IsLoggedIn != 0 {
+			log.Println("Already Logged In!")
+			data := Data{}
+			data.TitleName = "Login"
+			data.IsCorrect = true
+			data.IsLoggedIn = true
+			data.TagsList = dbmanagement.SelectAllTags()
+			tmpl.ExecuteTemplate(w, "login.html", data)
+		} else {
+			log.Println("Incorrect Password!")
+			data := Data{}
+			data.TitleName = "Login"
+			data.IsCorrect = false
+			data.TagsList = dbmanagement.SelectAllTags()
+			tmpl.ExecuteTemplate(w, "login.html", data)
+		}
 	}
 }
 
@@ -67,8 +87,11 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	utils.WriteMessageToLogFile("Logging out")
 	cookie, err := r.Cookie("session")
 	utils.HandleError("Failed to get cookie", err)
+	session := cookie.Value
+	user, _ := dbmanagement.SelectUserFromSession(session)
+	dbmanagement.UpdateUserLoggedInStatus(user.UUID, 0)
+	log.Println(user.IsLoggedIn)
 	if err != http.ErrNoCookie {
-		session := cookie.Value
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)
 	}
@@ -78,13 +101,17 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		HttpOnly: true,
 		Path:     "/",
 	}
+
 	http.SetCookie(w, &clearcookie)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // Displays the register page
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	tmpl.ExecuteTemplate(w, "register.html", nil)
+	LoggedInStatus(w, r, tmpl, 0)
+	data := Data{}
+	data.TagsList = dbmanagement.SelectAllTags()
+	tmpl.ExecuteTemplate(w, "register.html", data)
 }
 
 // Registers a user with given details then redirects to log in page.  Password is hashed here.
@@ -93,7 +120,26 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		userName := r.FormValue("user_name")
 		email := r.FormValue("email")
 		password := HashPassword(r.FormValue("password"))
-		dbmanagement.InsertUser(userName, email, password, "user")
+		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
+		data := Data{}
+		if err != nil {
+			data.RegisterError = strings.Split(err.Error(), ".")[1]
+			data.TagsList = dbmanagement.SelectAllTags()
+			tmpl.ExecuteTemplate(w, "register.html", data)
+		}
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+// Checks whether the user is logged in or not for displaying certain pages
+func LoggedInStatus(w http.ResponseWriter, r *http.Request, tmpl *template.Template, desiredStatus int) {
+	cookie, err := r.Cookie("session")
+	log.Println("Current Cookie: ", cookie)
+	utils.HandleError("Failed to get cookie", err)
+	session := cookie.Value
+	user, _ := dbmanagement.SelectUserFromSession(session)
+	if user.IsLoggedIn != desiredStatus {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 }

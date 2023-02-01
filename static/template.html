@@ -19,18 +19,19 @@
 		<!-- LOGO -->
 		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
 		<!-- SEARCHBAR & CREATE -->
-		<form class="searchbar" action="/" method="POST">
-			<input type="text" placeholder="Search Forum" name="search" id="searchInput" autocomplete="off">
-			<button type="submit">
-				<i class="fa-solid fa-magnifying-glass"></i>
-			</button>
-			{{if not .}}
-			{{else if ne $UserInfo.Name ""}}
-			<div class="create">
-				<a href="/submitpost"><i class="fa-solid fa-plus"></i> Create</a>
+		<div class="searchbar">
+			<input type="text" placeholder="Search tags" name="search" onkeyup="searchTags()" id="search"
+				autocomplete="off">
+			<div id="list">
+				{{range .TagsList}}
+				<ul>
+					<li class="listItem"><a href="/categories/{{.TagName}}">{{.TagName}}</a></li>
+				</ul>
+				{{end}}
 			</div>
-			{{end}}
-		</form>
+			<button type="submit">
+			</button>
+		</div>
 		<!-- MENU -->
 		{{if not .}}
 		<div class="menu">
@@ -46,7 +47,10 @@
 		</div>
 		{{else}}
 		<div class="menu">
-			<li><a href="/forum"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
+			<div class="create">
+				<a href="/submitpost"><i class="fa-solid fa-plus"></i> Create</a>
+			</div>
+			<li><a href="/user"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
 			<div class="dropdown">
 				<button class="dropbtn">
 					<i class="fa-solid fa-bell"></i>
@@ -55,19 +59,27 @@
 					{{end}}
 				</button>
 				<div class="dropdown-content">
-					{{range $UserInfo.Notifications}}
-					<form action="/posts/{{.PostId}}" method="POST">
-						<button class="dropdown-content-links" name="notification"
-							value={{.UUID}}>
-							<div>
-								<p>{{.Sender}} {{.Statement}}</p>
+					<div class="notifications-interactions">
+						{{range $UserInfo.Notifications}}
+						<div class="tags-interactions">
+							<a class="dropdown-content-links" href="/posts/{{.PostId}}">
+								<div>
+									{{.Sender}} {{.Statement}}
+								</div>
+							</a>
+							<div class="tooltip">
+								<form action="/forum" method="post">
+									<button class="delete-btn" name="delete notification" value="{{.UUID}}">
+										<i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+									</button>
+								</form>
 							</div>
-						</button>
-					</form>
-					{{end}}
+						</div>
+						{{end}}
+
+					</div>
 				</div>
 			</div>
-
 			<div class="dropdown">
 				<button class="dropbtn">
 					<i class="fa-solid fa-chevron-down"></i>
@@ -78,6 +90,7 @@
 							<i class="fa-solid fa-user"></i> Profile
 						</div>
 					</a>
+					{{ if eq $UserInfo.Permission "user"}}
 					<form action="/user" method="POST">
 						<button class="dropdown-content-links" name="request to become moderator"
 							value={{$UserInfo.UUID}}>
@@ -86,10 +99,13 @@
 							</div>
 						</button>
 					</form>
+					{{end}}
 					{{ if eq $UserInfo.Permission "admin"}}
-					<div class="dropdown-content-links">
-						<a href="/admin"><i class="fa-solid fa-gear"></i> admin tools</a>
-					</div>
+					<a class="dropdown-content-links" href="/admin">
+						<div>
+							<i class="fa-solid fa-gear"></i> Admin tools
+						</div>
+					</a>
 					{{end}}
 					<a class="dropdown-content-links" href="/logout">
 						<div>
@@ -102,12 +118,33 @@
 		{{end}}
 	</nav>
 	{{end}}
+	<script>
+		function searchTags() {
+			console.log("got here");
+			let listContainer = document.getElementById("list");
+			let listItems = document.getElementsByClassName("listItem");
+			let input = document.getElementById("search").value;
+			console.log(input)
 
-	{{ define "footer"}}
+			let noResults = true;
+			for (i = 0; i < listItems.length; i++) {
+				if (!listItems[i].innerText.includes(input) || input === "") {
+					listItems[i].style.display = "none";
+					continue;
+				}
+				else {
+					listItems[i].style.display = "flex";
+					noResults = false;
+				}
+			}
+			listContainer.style.display = noResults ? "none" : "block";
+		}
+	</script>
+</body>
+
+{{ define "footer"}}
 	<footer>
 		<p>privacy policy</p><a href="/privacy_policy">here</a>
 	</footer>
-</body>
-
 </html>
 {{end}}

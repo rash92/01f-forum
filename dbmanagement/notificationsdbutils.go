@@ -2,10 +2,11 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 )
 
-func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int) {
+func AddNotification(receivingUserId, postId, commentId, sendingUserId string, reaction int, notificationStatement string) {
 	receiverName, _ := SelectUserFromUUID(receivingUserId)
 	senderName, _ := SelectUserFromUUID(sendingUserId)
 
@@ -19,20 +20,21 @@ func AddNotification(receivingUserId, postId, commentId, sendingUserId string, r
 
 	UUID := GenerateUUIDString()
 
-	notificationStatement := ""
-	if postId != "" && reaction != 0 {
-		if reaction == 1 {
-			notificationStatement = "liked your post"
-		} else {
-			notificationStatement = "disliked your post"
-		}
-	} else if postId != "" && commentId != "" {
-		notificationStatement = "commented on your post"
-	} else if commentId != "" && reaction != 0 {
-		if reaction == 1 {
-			notificationStatement = "liked your comment"
-		} else {
-			notificationStatement = "disliked your comment"
+	if notificationStatement == "" {
+		if postId != "" && reaction != 0 {
+			if reaction == 1 {
+				notificationStatement = "liked your post"
+			} else {
+				notificationStatement = "disliked your post"
+			}
+		} else if postId != "" && commentId != "" {
+			notificationStatement = "commented on your post"
+		} else if commentId != "" && reaction != 0 {
+			if reaction == 1 {
+				notificationStatement = "liked your comment"
+			} else {
+				notificationStatement = "disliked your comment"
+			}
 		}
 	}
 
@@ -54,6 +56,22 @@ func SelectAllNotificationsFromUser(receiver string) []Notification {
 
 	var allNotifications []Notification
 
+	for row.Next() {
+		var currentNotification Notification
+		row.Scan(&currentNotification.UUID, &currentNotification.Receiver, &currentNotification.PostId, &currentNotification.CommentId, &currentNotification.Sender, &currentNotification.Reaction, &currentNotification.Statement)
+		fmt.Println("current notification has post id: ", currentNotification.PostId)
+		allNotifications = append(allNotifications, currentNotification)
+	}
+	return allNotifications
+}
+
+func SelectAllNotificationsFromUUID(UUID string) []Notification {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	row, err := db.Query("SELECT * FROM Notifications WHERE postId = ?", UUID)
+	utils.HandleError("Notification from UUID query failed: ", err)
+	defer row.Close()
+	var allNotifications []Notification
 	for row.Next() {
 		var currentNotification Notification
 		row.Scan(&currentNotification.UUID, &currentNotification.Receiver, &currentNotification.PostId, &currentNotification.CommentId, &currentNotification.Sender, &currentNotification.Reaction, &currentNotification.Statement)

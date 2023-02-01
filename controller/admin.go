@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -9,9 +10,14 @@ import (
 )
 
 type AdminData struct {
-	AllUsers      []dbmanagement.User
-	AllTags       []dbmanagement.Tag
-	AdminRequests []dbmanagement.AdminRequest
+	AllUsers         []dbmanagement.User
+	AdminRequests    []dbmanagement.AdminRequest
+	ReportedPosts    []dbmanagement.Post
+	ReportedComments []dbmanagement.Comment
+	ReportedUsers    []dbmanagement.User
+	TitleName        string
+	UserInfo         dbmanagement.User
+	TagsList         []dbmanagement.Tag
 }
 
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
@@ -62,15 +68,45 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if tagToChange != "" {
 			dbmanagement.DeleteFromTableWithUUID("Tags", tagToChange)
 		}
+		tagToDeletePostsLinkedTo := r.FormValue("delete all posts with tag")
+		if tagToDeletePostsLinkedTo != "" {
+			dbmanagement.DeleteAllPostsWithTag(tagToDeletePostsLinkedTo)
+		}
 		adminRequestToDelete := r.FormValue("delete request")
 		if adminRequestToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("AdminRequests", adminRequestToDelete)
 		}
+		adminRequestToAcknowledge := r.FormValue("acknowledge report")
+		if adminRequestToAcknowledge != "" {
+			request := dbmanagement.SelectAdminRequestFromUUID(adminRequestToAcknowledge)
+			responseMessage := r.FormValue("response message")
+			if responseMessage == "" {
+				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, "The admin has recieved your report")
+			} else {
+				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, responseMessage)
+			}
+		}
 
 	}
-
+	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()
 	adminData.AdminRequests = dbmanagement.SelectAllAdminRequests()
-	adminData.AllTags = dbmanagement.SelectAllTags()
+	for _, adminRequest := range adminData.AdminRequests {
+		if adminRequest.ReportedPostId != "" {
+			adminData.ReportedPosts = append(adminData.ReportedPosts, dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId))
+			fmt.Println("reported posts retrieved are: ", adminRequest)
+		}
+		if adminRequest.ReportedCommentId != "" {
+			adminData.ReportedComments = append(adminData.ReportedComments, dbmanagement.SelectCommentFromUUID(adminRequest.ReportedCommentId))
+		}
+		if adminRequest.ReportedUserId != "" {
+			currentUser, err := dbmanagement.SelectUserFromUUID(adminRequest.ReportedUserId)
+			utils.HandleError("couldn't select user when looking for reported users", err)
+			adminData.ReportedUsers = append(adminData.ReportedUsers, currentUser)
+		}
+	}
+	adminData.TitleName = "Admin"
+	adminData.TagsList = dbmanagement.SelectAllTags()
+	adminData.UserInfo = loggedInAs
 	tmpl.ExecuteTemplate(w, "admin.html", adminData)
 }

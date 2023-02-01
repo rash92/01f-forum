@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"log"
 	"strings"
@@ -11,18 +12,43 @@ import (
 /*
 Inserts post into database with the relevant data, likes and dislikes should be set to 0 for most cases.  Each post has it's own UUID.
 */
-func InsertPost(title string, content string, ownerId string, likes int, dislikes int, tag string, inputtime time.Time) {
+func InsertPost(title string, content string, ownerId string, likes int, dislikes int, inputtime time.Time, imageName string) Post {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	utils.WriteMessageToLogFile("Inserting post record...")
 
 	UUID := GenerateUUIDString()
-	insertPostData := "INSERT INTO Posts(UUID, title, content, ownerId, likes, dislikes, tag, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	insertPostData := "INSERT INTO Posts(UUID, title, content, ownerId, likes, dislikes, time, imagename) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertPostData)
 	utils.HandleError("User Prepare failed: ", err)
 
-	_, err = statement.Exec(UUID, title, content, ownerId, likes, dislikes, tag, inputtime)
+	_, err = statement.Exec(UUID, title, content, ownerId, likes, dislikes, inputtime, imageName)
 	utils.HandleError("Statement Exec failed: ", err)
+
+	tags := SelectAllTagsFromPost(UUID)
+
+	return Post{UUID, title, content, ownerId, likes, dislikes, tags, inputtime, strings.TrimSuffix(inputtime.Format(time.RFC822), "UTC"), 0, imageName}
+}
+
+func UpdatePost(postuuid string, title string, content string, ownerId string, likes int, dislikes int, edittime time.Time, imageName string) Post {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+	log.Println("Updating post record...")
+
+	updatePostData := `
+	UPDATE Posts
+	SET title = ?, content = ?, time = ?
+	WHERE uuid = ?
+	`
+	statement, err := db.Prepare(updatePostData)
+	utils.HandleError("User Prepare failed: ", err)
+
+	_, err = statement.Exec(title, content, edittime, postuuid)
+	utils.HandleError("Statement Exec failed: ", err)
+
+	tags := SelectAllTagsFromPost(postuuid)
+
+	return Post{postuuid, title, content, ownerId, likes, dislikes, tags, edittime, strings.TrimSuffix(edittime.Format(time.RFC822), "UTC"), 0, imageName}
 }
 
 /*
@@ -43,12 +69,12 @@ func DisplayAllPosts() {
 		var ownerId string
 		var likes int
 		var dislikes int
-		var tag string
 		var time time.Time
-		row.Scan(&UUID, &title, &content, &ownerId, &likes, &dislikes, &tag, &time)
+		var imageName string
+		row.Scan(&UUID, &title, &content, &ownerId, &likes, &dislikes, &time, &imageName)
 		owner, err := SelectUserFromUUID(ownerId)
 		utils.HandleError("unable to get user to display post", err)
-		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " tag", tag, " time ", time)
+		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time, "tags ", SelectAllTagsFromPost(UUID))
 	}
 }
 
@@ -63,9 +89,10 @@ func SelectPostFromUUID(UUID string) Post {
 	stm, err := db.Prepare("SELECT * FROM Posts WHERE uuid = ?")
 	utils.HandleError("Statement failed: ", err)
 
-	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Title, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Tag, &post.Time)
+	err = stm.QueryRow(UUID).Scan(&post.UUID, &post.Title, &post.Content, &post.OwnerId, &post.Likes, &post.Dislikes, &post.Time, &post.ImageName)
 	post.FormattedTime = strings.TrimSuffix(post.Time.Format(time.RFC822), "UTC")
 	post.NumOfComments = len(SelectAllCommentsFromPost(post.UUID))
+	post.Tags = SelectAllTagsFromPost(post.UUID)
 	utils.HandleError("Query Row failed: ", err)
 
 	return post
@@ -85,9 +112,10 @@ func SelectAllPosts() []Post {
 	var allPosts []Post
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time, &currentPost.ImageName)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
+		currentPost.Tags = SelectAllTagsFromPost(currentPost.UUID)
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
@@ -108,33 +136,64 @@ func SelectAllPostsFromUser(ownerId string) []Post {
 
 	for row.Next() {
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Time, &currentPost.ImageName)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
+		currentPost.Tags = SelectAllTagsFromPost(currentPost.UUID)
 		allPosts = append(allPosts, currentPost)
 	}
 	return allPosts
 }
 
+func SelectAllLikedPostsFromUser(user User) []Post {
+	allPosts := SelectAllPosts()
+	likedPosts := []Post{}
+	for _, v := range allPosts {
+		if SelectReactionFromPost(v.UUID, user.UUID) == 1 {
+			likedPosts = append(likedPosts, v)
+		}
+	}
+	return likedPosts
+}
+
+func SelectAllDislikedPostsFromUser(user User) []Post {
+	allPosts := SelectAllPosts()
+	DislikedPosts := []Post{}
+	for _, v := range allPosts {
+		if SelectReactionFromPost(v.UUID, user.UUID) == -1 {
+			DislikedPosts = append(DislikedPosts, v)
+		}
+	}
+	return DislikedPosts
+}
+
 /*
 Similar to SelectAllPosts() but for a specific user.  Uses the ownerID (users UUID) to specify which user and returns all the posts created by that user.
 */
-func SelectAllPostsFromTag(tag string) []Post {
+func SelectAllPostsFromTag(tagName string) []Post {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
-	row, err := db.Query("SELECT * FROM Posts WHERE tag = ?", tag)
+	tag, err := SelectTagFromName(tagName)
+	utils.HandleError("couldn't find tag", err)
+
+	row, err := db.Query("SELECT postId FROM TaggedPosts WHERE tagId = ?", tag.UUID)
 	utils.HandleError("Tag query failed: ", err)
 	defer row.Close()
 
 	var allPosts []Post
 
 	for row.Next() {
+		var currentPostId string
 		var currentPost Post
-		row.Scan(&currentPost.UUID, &currentPost.Title, &currentPost.Content, &currentPost.OwnerId, &currentPost.Likes, &currentPost.Dislikes, &currentPost.Tag, &currentPost.Time)
+		row.Scan(&currentPostId)
+		currentPost = SelectPostFromUUID(currentPostId)
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
+		currentPost.Tags = SelectAllTagsFromPost(currentPost.UUID)
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
+		fmt.Println("found post from tag: ", tagName, "the post: ", currentPost)
 		allPosts = append(allPosts, currentPost)
 	}
+
 	return allPosts
 }

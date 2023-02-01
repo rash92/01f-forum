@@ -8,6 +8,7 @@ type User struct {
 	Email         string
 	Password      string
 	Permission    string
+	IsLoggedIn    int
 	Notifications []Notification
 	LimitTokens   int
 }
@@ -19,10 +20,11 @@ type Post struct {
 	OwnerId       string
 	Likes         int
 	Dislikes      int
-	Tag           string
+	Tags          []Tag
 	Time          time.Time
 	FormattedTime string
 	NumOfComments int
+	ImageName     string
 }
 
 type Comment struct {
@@ -49,10 +51,13 @@ type Tag struct {
 }
 
 type AdminRequest struct {
-	UUID            string
-	RequestFromId   string
-	RequestFromName string
-	Content         string
+	UUID              string
+	RequestFromId     string
+	RequestFromName   string
+	ReportedPostId    string
+	ReportedCommentId string
+	ReportedUserId    string
+	Description       string
 }
 
 type Notification struct {
