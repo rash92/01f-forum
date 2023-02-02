@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/tls"
-	"forum/controller"
 	"forum/dbmanagement"
 	"html/template"
 	"log"
@@ -15,27 +14,6 @@ var tmpl *template.Template
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
 
-}
-
-func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "GET" {
-			controller.PageErrors(w, r, tmpl, 400, "Bad Request")
-			return
-		}
-		h(w, r)
-
-	}
-}
-
-func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
-			controller.PageErrors(w, r, tmpl, 400, "Bad Request")
-			return
-		}
-		h(w, r)
-	}
 }
 
 func main() {
@@ -63,27 +41,27 @@ func main() {
 	mux.HandleFunc("/posts/", PostsHandler)
 
 	// authentication handlers
-	mux.HandleFunc("/login", LoginHandler)
-	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
-	mux.HandleFunc("/logout", LogoutHandler)
-	mux.HandleFunc("/register", RegisterHandler)
-	mux.HandleFunc("/register_account", RegisterAccountHandler)
+	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
+	mux.HandleFunc("/authenticate", AuthenticateHandler)
+	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
+	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
+	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
-	mux.HandleFunc("/google/login", GoogleLoginHandler)
-	mux.HandleFunc("/google/callback", GoogleCallbackHandler)
-	mux.HandleFunc("/github/login", GithubLoginHandler)
-	mux.HandleFunc("/github/callback", GithubCallbackHandler)
-	mux.HandleFunc("/facebook/login", FacebookLoginHandler)
-	mux.HandleFunc("/facebook/callback", FacebookCallbackHandler)
+	mux.HandleFunc("/google/login", protectPostRequests(GoogleLoginHandler))
+	mux.HandleFunc("/google/callback", protectGetRequests(GoogleCallbackHandler))
+	mux.HandleFunc("/github/login", protectPostRequests(GithubLoginHandler))
+	mux.HandleFunc("/github/callback", protectGetRequests(GithubCallbackHandler))
+	mux.HandleFunc("/facebook/login", protectPostRequests(FacebookLoginHandler))
+	mux.HandleFunc("/facebook/callback", protectGetRequests(FacebookCallbackHandler))
 
 	// forum handlers
-	mux.HandleFunc("/forum", ForumHandler)
-	mux.HandleFunc("/submitpost", SubmitPostHandler)
-	mux.HandleFunc("/admin", AdminHandler)
-	mux.HandleFunc("/user", UserHandler)
-	mux.HandleFunc("/privacy_policy", PrivacyPolicyHandler)
-	mux.HandleFunc("/error", ErrorHandler)
+	mux.HandleFunc("/forum", protectPostGetRequests(ForumHandler))
+	mux.HandleFunc("/submitpost", protectPostGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/admin", protectGetRequests(AdminHandler))
+	mux.HandleFunc("/user", protectGetRequests(UserHandler))
+	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
+	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 
 	// dbmanagement.DeleteUser("Yell Tro")
 	dbmanagement.DeleteAllSessions()

@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"forum/utils"
 	"html/template"
 	"net/http"
@@ -22,6 +21,7 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	state := r.FormValue("state")
 	if state != Randomstate {
 		utils.WriteMessageToLogFile("Github auth state error")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -43,7 +43,6 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	// parse response
 	value := ParseOauthResponse(resp)
-	fmt.Println(value)
 
 	account := OauthAccount{
 		Name:  utils.AssertString(value["name"]),

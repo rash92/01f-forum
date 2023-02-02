@@ -12,13 +12,15 @@ import (
 Generates a new user in the database.  The UUID is generated internally here and stored to the database (this can also be referred to as the userID).
 The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
 */
+const Limit = 15
+
 func InsertUser(name string, email string, password string, permission string, IsLoggedIn int) (User, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	utils.WriteMessageToLogFile("Inserting user record...")
 
 	UUID := GenerateUUIDString()
-	tokens := 3
+	tokens := Limit
 	insertUserData := "INSERT INTO Users(UUID, name, email, password, permission, IsLoggedIn, limitTokens) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	statement, err := db.Prepare(insertUserData)
 	utils.HandleError("User Prepare failed in InserUser function", err)
@@ -191,8 +193,6 @@ func SelectUserFromSession(UUID string) (User, error) {
 
 	return user, err
 }
-
-const Limit = 15
 
 func UpdateUserToken(UUID string, n int) error {
 	usertoken := GetUserToken(UUID)

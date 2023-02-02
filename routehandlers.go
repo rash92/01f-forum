@@ -9,7 +9,7 @@ import (
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" && r.URL.Path != "/posts" {
-		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		controller.PageErrors(w, r, tmpl, 400, "Bad requests")
 		return
 	}
 	controller.AllPosts(w, r, tmpl)
@@ -30,7 +30,7 @@ func CategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 	if !tagexists && r.URL.Path != "/categories/" {
-		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		controller.PageErrors(w, r, tmpl, 400, "Bad requests")
 		return
 	}
 
@@ -57,7 +57,7 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 	if !postexists && r.URL.Path != "/posts/" {
-		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		controller.PageErrors(w, r, tmpl, 400, "Bad requests")
 		return
 	}
 	if postexists && r.URL.Path != "/" {
@@ -116,10 +116,6 @@ func FacebookCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 // forum handlers
 func ForumHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" && r.Method != "GET" {
-		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
-		return
-	}
 	controller.AllPosts(w, r, tmpl)
 }
 
