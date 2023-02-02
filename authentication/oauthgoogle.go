@@ -21,6 +21,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	state := r.FormValue("state")
 	if state != Randomstate {
 		utils.WriteMessageToLogFile("Google auth state error")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
