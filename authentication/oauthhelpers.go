@@ -64,8 +64,7 @@ func LoginUserWithOauth(w http.ResponseWriter, r *http.Request, tmpl *template.T
 		LimitRequests(w, r, user)
 		err = dbmanagement.UpdateUserToken(user.UUID, 1)
 		if err != nil {
-			http.Redirect(w, r, "/rate_error", http.StatusSeeOther)
-			return
+			http.Redirect(w, r, "/error", http.StatusSeeOther)
 		}
 	}
 	http.Redirect(w, r, "/", http.StatusFound)

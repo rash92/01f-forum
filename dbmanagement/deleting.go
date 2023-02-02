@@ -64,6 +64,27 @@ func DeleteAllPostsWithTag(tagName string) {
 	}
 }
 
+func DeleteUser(name string) error {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement := "DELETE FROM Users WHERE name = ?"
+	stm, err := db.Prepare(statement)
+	utils.HandleError("Failed to delete user statement in", err)
+
+	defer stm.Close()
+
+	res, err := stm.Exec(name)
+	utils.HandleError("Failed to delete user in", err)
+
+	n, err := res.RowsAffected()
+	utils.HandleError("Rows affected error in", err)
+
+	message := fmt.Sprintf("The statement has affected %d rows\n", n)
+	utils.WriteMessageToLogFile(message)
+	return err
+}
+
 // Delete session from database
 func DeleteSessionByUUID(UUID string) (err error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")

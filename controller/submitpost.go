@@ -21,41 +21,38 @@ type SubmitData struct {
 }
 
 func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	err := auth.LoggedInStatus(w, r, tmpl, 1)
-	if err != nil {
-		PageErrors(w, r, tmpl, 401, "Page Not Found")
-	} else {
-		data := SubmitData{}
-		user := dbmanagement.User{}
-		tags := []dbmanagement.Tag{}
-		sessionId, err := auth.GetSessionFromBrowser(w, r)
-		utils.HandleError("Unable to get session from browser in SubmitPost function", err)
-		user, err = dbmanagement.SelectUserFromSession(sessionId)
-		utils.HandleError("Unable to select user with sessionID in SubmitPost function", err)
-		if r.Method == "POST" {
-			err := dbmanagement.UpdateUserToken(user.UUID, 1)
-			if err != nil {
-				http.Redirect(w, r, "/error", http.StatusSeeOther)
-				return
-			}
+	auth.LoggedInStatus(w, r, tmpl, 1)
 
-			idToEdit := r.FormValue("editpost")
-			if idToEdit != "" {
-				data.IsEdit = true
-				data.EditPost = dbmanagement.SelectPostFromUUID(idToEdit)
-				tags = dbmanagement.SelectAllTagsFromPost(data.EditPost.UUID)
-			}
+	data := SubmitData{}
+	user := dbmanagement.User{}
+	tags := []dbmanagement.Tag{}
+	sessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Unable to get session from browser in SubmitPost function", err)
+	user, err = dbmanagement.SelectUserFromSession(sessionId)
+	utils.HandleError("Unable to select user with sessionID in SubmitPost function", err)
+	if r.Method == "POST" {
+		err := dbmanagement.UpdateUserToken(user.UUID, 1)
+		if err != nil {
+			http.Redirect(w, r, "/error", http.StatusSeeOther)
+			return
 		}
-		data.TitleName = "Submit to Forum"
-		data.Cookie = sessionId
-		data.UserInfo = user
-		tagsAsString := ""
-		for _, v := range tags {
-			tagsAsString += v.TagName
-			tagsAsString += " "
+
+		idToEdit := r.FormValue("editpost")
+		if idToEdit != "" {
+			data.IsEdit = true
+			data.EditPost = dbmanagement.SelectPostFromUUID(idToEdit)
+			tags = dbmanagement.SelectAllTagsFromPost(data.EditPost.UUID)
 		}
-		data.Tags = tagsAsString
-		data.TagsList = dbmanagement.SelectAllTags()
-		tmpl.ExecuteTemplate(w, "submitpost.html", data)
 	}
+	data.TitleName = "Submit to Forum"
+	data.Cookie = sessionId
+	data.UserInfo = user
+	tagsAsString := ""
+	for _, v := range tags {
+		tagsAsString += v.TagName
+		tagsAsString += " "
+	}
+	data.Tags = tagsAsString
+	data.TagsList = dbmanagement.SelectAllTags()
+	tmpl.ExecuteTemplate(w, "submitpost.html", data)
 }

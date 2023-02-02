@@ -1,45 +1,18 @@
-Wed Feb  1 19:35:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:35:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:36:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:36:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:36:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:36:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:37:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:37:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:37:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:37:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:38:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:38:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:38:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:38:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:39:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:39:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:39:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:39:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:40:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:40:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:40:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:40:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:41:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:41:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:41:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:41:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:42:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:42:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:42:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:42:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:43:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:43:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:43:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:43:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:44:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:44:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:44:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:44:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:45:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:45:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:45:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:45:49 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:46:04 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:46:19 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
-Wed Feb  1 19:46:34 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 267 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
+Thu Feb  2 11:01:51 GMT 2023: Inserting user record... on line 18 in forum/dbmanagement.InsertUser at file userdbutils.go
+Thu Feb  2 11:01:51 GMT 2023: forum.db created successfully! on line 160 in forum/dbmanagement.CreateDatabaseWithTables at file dbutils.go
+Thu Feb  2 11:01:51 GMT 2023: updating user login status to: 0 on line 48 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 11:02:03 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Thu Feb  2 11:02:03 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Thu Feb  2 11:02:03 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 11:02:03 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 11:02:03 GMT 2023: session id is: b7112e31-fd93-4258-a3fb-77566b4c1f16user info is: {     0 [] 0}cookie data is: b7112e31-fd93-4258-a3fb-77566b4c1f16 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 11:02:58 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 11:02:58 GMT 2023: Current Cookie: session=b7112e31-fd93-4258-a3fb-77566b4c1f16 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 11:02:58 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 11:06:59 GMT 2023: Current Cookie: session=b7112e31-fd93-4258-a3fb-77566b4c1f16 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 11:06:59 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 11:07:09 GMT 2023: ***** Query Row failed: sql: no rows in result set on line 155 in forum/dbmanagement.SelectUserFromEmail at file userdbutils.go *****
+Thu Feb  2 11:07:09 GMT 2023: ***** Query Row failed in: sql: no rows in result set on line 138 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Thu Feb  2 11:07:09 GMT 2023: Inserting user record... on line 18 in forum/dbmanagement.InsertUser at file userdbutils.go
+Thu Feb  2 11:07:09 GMT 2023: ***** Query Row failed: sql: expected 7 destination arguments in Scan, not 6 on line 240 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
+Thu Feb  2 11:07:09 GMT 2023: Token limit reached for user on line 198 in forum/dbmanagement.UpdateUserToken at file userdbutils.go

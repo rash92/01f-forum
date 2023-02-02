@@ -10,7 +10,6 @@ import (
 
 /*
 Generates a new user in the database.  The UUID is generated internally here and stored to the database (this can also be referred to as the userID).
-
 The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
 */
 func InsertUser(name string, email string, password string, permission string, IsLoggedIn int) (User, error) {
@@ -45,7 +44,8 @@ func ResetAllUserLoggedInStatus() {
 	logoutInt := 0
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("updating user login status to: ", logoutInt)
+	message := fmt.Sprint("updating user login status to: ", logoutInt)
+	utils.WriteMessageToLogFile(message)
 	updateUserData := "UPDATE Users SET IsLoggedIn = ?"
 	statement, err := db.Prepare(updateUserData)
 	utils.HandleError("User Reset Prepare failed: ", err)
@@ -82,32 +82,6 @@ func UpdateUserPermissionFromName(Name string, newpermission string) {
 }
 
 /*
-Generates a new user in the database.  The UUID is generated internally here and stored to the database (this can also be referred to as the userID).
-
-The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
-*/
-func DeleteUser(name string) error {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-
-	statement := "DELETE FROM Users WHERE name = ?"
-	stm, err := db.Prepare(statement)
-	utils.HandleError("Failed to delete user statement in", err)
-
-	defer stm.Close()
-
-	res, err := stm.Exec(name)
-	utils.HandleError("Failed to delete user in", err)
-
-	n, err := res.RowsAffected()
-	utils.HandleError("Rows affected error in", err)
-
-	message := fmt.Sprintf("The statement has affected %d rows\n", n)
-	utils.WriteMessageToLogFile(message)
-	return err
-}
-
-/*
 Used to display all currently registered users.  Should only be used internally as information is not relevant for the website.
 */
 func DisplayAllUsers() {
@@ -119,7 +93,6 @@ func DisplayAllUsers() {
 	defer row.Close()
 
 	for row.Next() {
-
 		var UUID string
 		var name string
 		var email string
@@ -127,8 +100,8 @@ func DisplayAllUsers() {
 		var permission string
 		var isLoggedIn string
 		var tokens int
-		row.Scan(&UUID, &name, &email, &password, &permission, &tokens)
-		message := fmt.Sprint("User: ", UUID, " ", name, " ", email, " ", password, " ", permission, " ", isLoggedIn)
+		row.Scan(&UUID, &name, &email, &password, &permission, &isLoggedIn, &tokens)
+		message := fmt.Sprint("User: ", UUID, " ", name, " ", email, " ", password, " ", permission, " ", isLoggedIn, " ", tokens, " ")
 		utils.WriteMessageToLogFile(message)
 	}
 }
