@@ -190,18 +190,8 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 
 	title := r.FormValue("submission-title")
 	content := r.FormValue("post")
-	log.Println(r.FormValue("tag-select"))
-	customTags := r.FormValue("tag")
-	allTags := dbmanagement.SelectAllTags()
-	selectedTags := ""
-	for _, tag := range allTags {
-		tagsfromselectbox := r.FormValue(tag.TagName)
-		if tagsfromselectbox != "" {
-			selectedTags = selectedTags + " " + tag.TagName
-		}
-	}
-	log.Println("got here and selected tags are: ", selectedTags)
-	tags := selectedTags
+	log.Println("select form values are: ", r.FormValue("tags[]"))
+	tags := r.Form["tags"]
 	edit := r.FormValue("editpost")
 
 	if edit != "" {
@@ -221,8 +211,11 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")
 			}
 			dbmanagement.UpdateTaggedPost(edit)
-			InputTags(tags, editedPost)
-			InputTags(customTags, editedPost)
+			for _, tag := range tags {
+				InputTags(tag, editedPost)
+				InputTags(tag, editedPost)
+			}
+
 		}
 	} else {
 		if CheckInputs(content) && CheckInputs(title) {
@@ -232,8 +225,10 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 			if err != nil {
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")
 			}
-			InputTags(tags, post)
-			InputTags(customTags, post)
+			for _, tag := range tags {
+				InputTags(tag, post)
+				InputTags(tag, post)
+			}
 		}
 	}
 }
