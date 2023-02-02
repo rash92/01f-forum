@@ -6,14 +6,12 @@ import (
 )
 
 type Errors struct {
-	Errorcode    int
-	Errormessage string
+	Errorcode int
 }
 
 func PageErrors(w http.ResponseWriter, r *http.Request, tmpl *template.Template, errorcode int, errormessage string) {
 	errors := Errors{
-		Errorcode:    errorcode,
-		Errormessage: errormessage,
+		Errorcode: errorcode,
 	}
 	w.WriteHeader(errorcode)
 	tmpl.ExecuteTemplate(w, "error.html", errors)

@@ -226,3 +226,54 @@ Thu Feb  2 11:53:41 GMT 2023: session id is: 3b1cf03d-2096-461e-8f3f-3b56e363a88
 Thu Feb  2 11:53:41 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Thu Feb  2 11:53:41 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
 Thu Feb  2 11:53:41 GMT 2023: session id is: 3b1cf03d-2096-461e-8f3f-3b56e363a88duser info is: {     0 [] 0}cookie data is: 3b1cf03d-2096-461e-8f3f-3b56e363a88d on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:04:10 GMT 2023: updating user login status to: 0 on line 48 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 12:04:32 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Thu Feb  2 12:04:32 GMT 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Thu Feb  2 12:04:32 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:04:32 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:04:32 GMT 2023: session id is: d965897e-9cff-4392-a438-4ea86c20b6afuser info is: {     0 [] 0}cookie data is: d965897e-9cff-4392-a438-4ea86c20b6af on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:04:39 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:04:39 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:04:39 GMT 2023: session id is: d965897e-9cff-4392-a438-4ea86c20b6afuser info is: {     0 [] 0}cookie data is: d965897e-9cff-4392-a438-4ea86c20b6af on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:04:39 GMT 2023: ***** Query Row failed: sql: no rows in result set on line 240 in forum/dbmanagement.GetUserToken at file userdbutils.go *****
+Thu Feb  2 12:04:39 GMT 2023: Token limit reached for user on line 207 in forum/dbmanagement.UpdateUserToken at file userdbutils.go
+Thu Feb  2 12:05:35 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:05:35 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:05:35 GMT 2023: session id is: d965897e-9cff-4392-a438-4ea86c20b6afuser info is: {     0 [] 0}cookie data is: d965897e-9cff-4392-a438-4ea86c20b6af on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:06:22 GMT 2023: updating user login status to: 0 on line 48 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 12:06:24 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:06:24 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:06:24 GMT 2023: session id is: d965897e-9cff-4392-a438-4ea86c20b6afuser info is: {     0 [] 0}cookie data is: d965897e-9cff-4392-a438-4ea86c20b6af on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:10 GMT 2023: updating user login status to: 0 on line 48 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 12:07:24 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:24 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:24 GMT 2023: Current Cookie: session=c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 12:07:24 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:24 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:27 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:27 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:27 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:07:27 GMT 2023: session id is: c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093user info is: {     0 [] 0}cookie data is: c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:27 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:27 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:27 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Feb  2 12:07:27 GMT 2023: session id is: c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093user info is: {     0 [] 0}cookie data is: c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:29 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:29 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:29 GMT 2023: Current Cookie: session=c3f17ed5-36f4-4b6c-bf61-63ffdf5dc093 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 12:07:29 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 186 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:29 GMT 2023: ***** User query failed: sql: no rows in result set on line 190 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 12:07:33 GMT 2023: %!s(int=0) on line 64 in forum/authentication.Authenticate at file authenticate.go
+Thu Feb  2 12:07:33 GMT 2023: session id is: 0b702767-4738-4225-945f-0bf8a7ffde17user info is: {98d2de1e-d0b6-4722-8192-0ba2c22b4604 r r@r $2a$10$JMbTc9OkjbVCPWKq0l8eiuxf0dnYvv1ILxKlztwj9Tq3T.UxHZAeq user 1 [] 1}cookie data is: 0b702767-4738-4225-945f-0bf8a7ffde17 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:35 GMT 2023: Current Cookie: session=0b702767-4738-4225-945f-0bf8a7ffde17 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 12:07:38 GMT 2023: session id is: 0b702767-4738-4225-945f-0bf8a7ffde17user info is: {98d2de1e-d0b6-4722-8192-0ba2c22b4604 r r@r $2a$10$JMbTc9OkjbVCPWKq0l8eiuxf0dnYvv1ILxKlztwj9Tq3T.UxHZAeq user 1 [] 1}cookie data is: 0b702767-4738-4225-945f-0bf8a7ffde17 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:38 GMT 2023: ***** error retrieving file from form: http: no such file on line 172 in forum/controller.SubmissionHandler at file forum.go *****
+Thu Feb  2 12:07:38 GMT 2023: Inserting post record... on line 18 in forum/dbmanagement.InsertPost at file postdbutils.go
+Thu Feb  2 12:07:39 GMT 2023: Current Cookie: session=0b702767-4738-4225-945f-0bf8a7ffde17 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 12:07:41 GMT 2023: session id is: 0b702767-4738-4225-945f-0bf8a7ffde17user info is: {98d2de1e-d0b6-4722-8192-0ba2c22b4604 r r@r $2a$10$JMbTc9OkjbVCPWKq0l8eiuxf0dnYvv1ILxKlztwj9Tq3T.UxHZAeq user 1 [] 0}cookie data is: 0b702767-4738-4225-945f-0bf8a7ffde17 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:07:41 GMT 2023: Token limit reached for user on line 207 in forum/dbmanagement.UpdateUserToken at file userdbutils.go
+Thu Feb  2 12:07:41 GMT 2023: ***** error retrieving file from form: http: no such file on line 172 in forum/controller.SubmissionHandler at file forum.go *****
+Thu Feb  2 12:07:41 GMT 2023: Inserting post record... on line 18 in forum/dbmanagement.InsertPost at file postdbutils.go
+Thu Feb  2 12:09:12 GMT 2023: updating user login status to: 0 on line 48 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 12:09:12 GMT 2023: session id is: 0b702767-4738-4225-945f-0bf8a7ffde17user info is: {98d2de1e-d0b6-4722-8192-0ba2c22b4604 r r@r $2a$10$JMbTc9OkjbVCPWKq0l8eiuxf0dnYvv1ILxKlztwj9Tq3T.UxHZAeq user 0 [] 0}cookie data is: 0b702767-4738-4225-945f-0bf8a7ffde17 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Feb  2 12:09:25 GMT 2023: session id is: 0b702767-4738-4225-945f-0bf8a7ffde17user info is: {98d2de1e-d0b6-4722-8192-0ba2c22b4604 r r@r $2a$10$JMbTc9OkjbVCPWKq0l8eiuxf0dnYvv1ILxKlztwj9Tq3T.UxHZAeq user 0 [] 0}cookie data is: 0b702767-4738-4225-945f-0bf8a7ffde17 on line 54 in forum/controller.AllPosts at file forum.go

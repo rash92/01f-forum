@@ -27,11 +27,20 @@ func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
 func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
-			controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+			controller.PageErrors(w, r, tmpl, 400, "Page Not Found")
 		}
 		h(w, r)
 	}
 }
+
+// func protectBadServerRequests(h http.HandlerFunc) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		if r.Method != "POST" {
+// 			controller.PageErrors(w, r, tmpl, 500, "Internal Server error")
+// 		}
+// 		h(w, r)
+// 	}
+// }
 
 func main() {
 	mux := http.NewServeMux()
