@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const Limit = 3
+const Limit = 15
 
 func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.User) dbmanagement.User {
-	limitTime := time.Minute * 2
+	limitTime := time.Minute * 1
 	userSession, err := user.ReturnSession(user.UUID)
 	if err != nil {
 		utils.HandleError("Unable to get user or no user", err)

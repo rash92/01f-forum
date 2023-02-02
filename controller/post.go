@@ -62,19 +62,31 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("Unable to get user with uuid in all posts", err)
 				thisComment := dbmanagement.InsertComment(comment, postid, userFromUUID.UUID, 0, 0, time.Now())
-				post := dbmanagement.SelectPostFromUUID(postid)
+				post, err := dbmanagement.SelectPostFromUUID(postid)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, postid, thisComment.UUID, user.UUID, 0, "")
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
-				post := dbmanagement.SelectPostFromUUID(like)
+				post, err := dbmanagement.SelectPostFromUUID(like)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-				post := dbmanagement.SelectPostFromUUID(dislike)
+				post, err := dbmanagement.SelectPostFromUUID(dislike)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 			}
@@ -90,10 +102,16 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, "", commentdislike, user.UUID, -1, "")
 			}
-			message := fmt.Sprintf("Deleting post with id: %v and contents: %v", idToDelete, dbmanagement.SelectPostFromUUID(idToDelete))
-			utils.WriteMessageToLogFile(message)
+
 			if idToDelete != "" {
+				post, err := dbmanagement.SelectPostFromUUID(idToDelete)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				dbmanagement.DeletePostWithUUID(idToDelete)
+				message := fmt.Sprintf("Deleting post with id: %v and contents: %v", idToDelete, post)
+				utils.WriteMessageToLogFile(message)
 			}
 			if idToReport != "" {
 				dbmanagement.CreateAdminRequest(user.UUID, user.Name, idToReport, "", "", "this post has been reported by a moderator")
@@ -108,7 +126,11 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		}
 
 		utils.HandleError("Unable to get user", err)
-		post := dbmanagement.SelectPostFromUUID(postid)
+		post, err := dbmanagement.SelectPostFromUUID(postid)
+		if err != nil {
+			PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			return
+		}
 		comments := dbmanagement.SelectAllCommentsFromPost(postid)
 		for i, j := 0, len(comments)-1; i < j; i, j = i+1, j-1 {
 			comments[i], comments[j] = comments[j], comments[i]

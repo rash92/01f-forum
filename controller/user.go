@@ -23,10 +23,10 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	auth.LoggedInStatus(w, r, tmpl, 1)
 	data := UserData{}
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Unable to find user session id", err)
+
 	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
-	if err != nil {
-		utils.HandleError("Unable to find user session id", err)
-	}
+	utils.HandleError("Unable to find user session id", err)
 
 	if SessionId == "" {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
@@ -36,7 +36,11 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserInfo, err = dbmanagement.SelectUserFromSession(SessionId)
 	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
 	utils.HandleError("Could not get user session in user", err)
-	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
+	data.UserPosts, err = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
+	if err != nil {
+		PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		return
+	}
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.Name)
 	utils.WriteMessageToLogFile(data.UserComments)
 	data.TitleName = "Welcome"
@@ -68,9 +72,21 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 	data.UserInfo.Notifications = dbmanagement.SelectAllNotificationsFromUser(data.UserInfo.UUID)
 	utils.HandleError("Could not get user session in user", err)
-	data.UserPosts = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
-	data.LikedUserPosts = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
-	data.DislikedUserPosts = dbmanagement.SelectAllDislikedPostsFromUser(data.UserInfo)
+	data.UserPosts, err = dbmanagement.SelectAllPostsFromUser(data.UserInfo.Name)
+	if err != nil {
+		PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		return
+	}
+	data.LikedUserPosts, err = dbmanagement.SelectAllLikedPostsFromUser(data.UserInfo)
+	if err != nil {
+		PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		return
+	}
+	data.DislikedUserPosts, err = dbmanagement.SelectAllDislikedPostsFromUser(data.UserInfo)
+	if err != nil {
+		PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		return
+	}
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
 	data.TitleName = data.UserInfo.Name
 	data.TagsList = dbmanagement.SelectAllTags()

@@ -40,7 +40,11 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 		idToEdit := r.FormValue("editpost")
 		if idToEdit != "" {
 			data.IsEdit = true
-			data.EditPost = dbmanagement.SelectPostFromUUID(idToEdit)
+			data.EditPost, err = dbmanagement.SelectPostFromUUID(idToEdit)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+				return
+			}
 			tags = dbmanagement.SelectAllTagsFromPost(data.EditPost.UUID)
 		}
 	}

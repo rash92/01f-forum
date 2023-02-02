@@ -64,13 +64,21 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 			if like != "" {
 				dbmanagement.AddReactionToPost(user.UUID, like, 1)
-				post := dbmanagement.SelectPostFromUUID(like)
+				post, err := dbmanagement.SelectPostFromUUID(like)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 			}
 			if dislike != "" {
 				dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-				post := dbmanagement.SelectPostFromUUID(dislike)
+				post, err := dbmanagement.SelectPostFromUUID(dislike)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
 				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 				dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 			}
@@ -83,7 +91,11 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		}
 
 		utils.HandleError("Unable to select user using sessionid", err)
-		posts := dbmanagement.SelectAllPostsFromTag(tag)
+		posts, err := dbmanagement.SelectAllPostsFromTag(tag)
+		if err != nil {
+			PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			return
+		}
 		if !filterOrder {
 			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
 				posts[i], posts[j] = posts[j], posts[i]

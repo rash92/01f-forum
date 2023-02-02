@@ -10,9 +10,10 @@ import (
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" && r.URL.Path != "/posts" {
 		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
-	} else {
-		controller.AllPosts(w, r, tmpl)
+		return
 	}
+	controller.AllPosts(w, r, tmpl)
+
 }
 
 func CategoriesHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +31,7 @@ func CategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if !tagexists && r.URL.Path != "/categories/" {
 		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		return
 	}
 
 	if tagexists && r.URL.Path != "/" {
@@ -38,7 +40,11 @@ func CategoriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostsHandler(w http.ResponseWriter, r *http.Request) {
-	posts := dbmanagement.SelectAllPosts()
+	posts, err := dbmanagement.SelectAllPosts()
+	if err != nil {
+		controller.PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		return
+	}
 	postexists := false
 	var url string
 	for _, v := range posts {
@@ -52,6 +58,7 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if !postexists && r.URL.Path != "/posts/" {
 		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		return
 	}
 	if postexists && r.URL.Path != "/" {
 		controller.Post(w, r, tmpl, url)
@@ -111,6 +118,7 @@ func FacebookCallbackHandler(w http.ResponseWriter, r *http.Request) {
 func ForumHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" && r.Method != "GET" {
 		controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+		return
 	}
 	controller.AllPosts(w, r, tmpl)
 }

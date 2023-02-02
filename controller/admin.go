@@ -4,6 +4,7 @@ import (
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
+
 	"forum/utils"
 	"html/template"
 	"net/http"
@@ -93,7 +94,13 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData.AdminRequests = dbmanagement.SelectAllAdminRequests()
 	for _, adminRequest := range adminData.AdminRequests {
 		if adminRequest.ReportedPostId != "" {
-			adminData.ReportedPosts = append(adminData.ReportedPosts, dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId))
+			postdata, err := dbmanagement.SelectPostFromUUID(adminRequest.ReportedPostId)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+				return
+			}
+			adminData.ReportedPosts = append(adminData.ReportedPosts, postdata)
+
 			message := fmt.Sprint("reported posts retrieved are: ", adminRequest)
 			utils.WriteMessageToLogFile(message)
 		}

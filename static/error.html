@@ -9,7 +9,7 @@
 		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="/static/stylesheets/styles.css">
-	<title>{{.Error}}</title>
+	<title>{{.Errorcode}}</title>
 </head>
 <body>
   <nav class="navbar">
@@ -19,7 +19,7 @@
   <div class="container-error">
     <div class="error">
       <div>
-        <h1>{{.Error}}: something went wrong</h1>
+        <h1>{{.Errorcode}}: {{.Errormessage}}!</h1>
       </div>
       <div>
         <p>It was definitely not our fault...</p>

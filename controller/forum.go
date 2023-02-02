@@ -63,10 +63,15 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			if filter == "oldest" {
 				filterOrder = true
 			}
-			SubmissionHandler(w, r, user)
+			SubmissionHandler(w, r, user, tmpl)
 		}
 
-		posts := dbmanagement.SelectAllPosts()
+		posts, err := dbmanagement.SelectAllPosts()
+		if err != nil {
+			PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			return
+		}
+
 		if !filterOrder {
 			for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
 				posts[i], posts[j] = posts[j], posts[i]
@@ -123,7 +128,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 }
 
 // followed this: https://freshman.tech/file-upload-golang/
-func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User) {
+func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, tmpl *template.Template) {
 	// 20 megabytes
 
 	idToDelete := r.FormValue("deletepost")
@@ -141,13 +146,20 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 
 	if like != "" {
 		dbmanagement.AddReactionToPost(user.UUID, like, 1)
-		post := dbmanagement.SelectPostFromUUID(like)
+		post, err := dbmanagement.SelectPostFromUUID(like)
+		if err != nil {
+			PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			return
+		}
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
 	}
 	if dislike != "" {
 		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-		post := dbmanagement.SelectPostFromUUID(dislike)
+		post, err := dbmanagement.SelectPostFromUUID(dislike)
+		if err != nil {
+			PageErrors(w, r, tmpl, 500, "Internal Server Error")
+		}
 		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
 		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 	}
@@ -185,7 +197,18 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
-			editedPost := dbmanagement.UpdatePost(edit, title, content, userFromUUID.Name, dbmanagement.SelectPostFromUUID(edit).Likes, dbmanagement.SelectPostFromUUID(edit).Dislikes, time.Now(), fileName)
+			getLikes, err := dbmanagement.SelectPostFromUUID(edit)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			}
+			getDislikes, err := dbmanagement.SelectPostFromUUID(edit)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			}
+			editedPost, err := dbmanagement.UpdatePost(edit, title, content, userFromUUID.Name, getLikes.Likes, getDislikes.Dislikes, time.Now(), fileName)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			}
 			dbmanagement.UpdateTaggedPost(edit)
 			InputTags(tags, editedPost)
 		}
@@ -193,7 +216,10 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
-			post := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
+			post, err := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
+			if err != nil {
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			}
 			InputTags(tags, post)
 		}
 	}

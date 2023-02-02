@@ -7,42 +7,42 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
+
 }
 
 func protectGetRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
-			controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+			controller.PageErrors(w, r, tmpl, 400, "Bad Request")
+			return
 		}
 		h(w, r)
+
 	}
 }
 
 func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
-			controller.PageErrors(w, r, tmpl, 400, "Page Not Found")
+			controller.PageErrors(w, r, tmpl, 400, "Bad Request")
+			return
 		}
 		h(w, r)
 	}
 }
 
-// func protectBadServerRequests(h http.HandlerFunc) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		if r.Method != "POST" {
-// 			controller.PageErrors(w, r, tmpl, 500, "Internal Server error")
-// 		}
-// 		h(w, r)
-// 	}
-// }
-
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--reset" {
+		dbmanagement.CreateDatabaseWithTables()
+	}
+
 	mux := http.NewServeMux()
 	cert, _ := tls.LoadX509KeyPair("https/localhost.crt", "https/localhost.key")
 	s := &http.Server{
@@ -58,13 +58,13 @@ func main() {
 
 	// handlers
 	mux.HandleFunc("/", protectGetRequests(IndexHandler))
-	mux.HandleFunc("/posts", IndexHandler)
+	// mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
 	mux.HandleFunc("/categories/", CategoriesHandler)
 	mux.HandleFunc("/posts/", PostsHandler)
 
 	// authentication handlers
 	mux.HandleFunc("/login", LoginHandler)
-	mux.HandleFunc("/authenticate", AuthenticateHandler)
+	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
 	mux.HandleFunc("/logout", LogoutHandler)
 	mux.HandleFunc("/register", RegisterHandler)
 	mux.HandleFunc("/register_account", RegisterAccountHandler)
@@ -86,9 +86,9 @@ func main() {
 	mux.HandleFunc("/error", ErrorHandler)
 
 	// dbmanagement.DeleteUser("Yell Tro")
-	// dbmanagement.CreateDatabaseWithTables()
-	// dbmanagement.DeleteAllSessions()
+	dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
+	dbmanagement.ResetAllTokens()
 	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

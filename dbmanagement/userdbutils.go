@@ -192,30 +192,31 @@ func SelectUserFromSession(UUID string) (User, error) {
 	return user, err
 }
 
+const Limit = 15
+
 func UpdateUserToken(UUID string, n int) error {
 	usertoken := GetUserToken(UUID)
 	var tokenStatement string
 
 	if n == 1 {
 		tokenStatement = `
-	UPDATE Users 
+	UPDATE Users
 	SET limitTokens = limitTokens - ?
 	WHERE uuid = ?
 `
 	}
-	if usertoken == 0 && n != 3 {
+	if usertoken == 0 && n != Limit {
 		utils.WriteMessageToLogFile("Token limit reached for user")
 		return errors.New("limit reached")
 	} else {
-		if n == 3 {
+		if n == Limit {
 			tokenStatement = `
-	UPDATE Users 
+	UPDATE Users
 	SET limitTokens = ?
 	WHERE uuid = ?
 `
 		}
 	}
-
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
@@ -223,6 +224,64 @@ func UpdateUserToken(UUID string, n int) error {
 	utils.HandleError("token statement failed", err)
 
 	_, err = statement.Exec(n, UUID)
+	utils.HandleError("token statement Exec failed", err)
+
+	return err
+}
+
+// func UpdateUserToken(UUID string, atLimit bool) error {
+// 	usertoken := GetUserToken(UUID)
+// 	var tokenStatement string
+
+// 	if !atLimit {
+// 		tokenStatement = `
+// 	UPDATE Users
+// 	SET limitTokens = limitTokens - 1
+// 	WHERE uuid = ?
+// `
+// 	}
+// 	if usertoken == 0 && !atLimit {
+// 		utils.WriteMessageToLogFile("Token limit reached for user")
+// 		return errors.New("limit reached")
+// 	} else {
+// 		if atLimit {
+// 			tokenStatement = `
+// 	UPDATE Users
+// 	SET limitTokens = ?
+// 	WHERE uuid = ?
+// `
+// 		}
+// 	}
+// 	db, _ := sql.Open("sqlite3", "./forum.db")
+// 	defer db.Close()
+
+// 	statement, err := db.Prepare(tokenStatement)
+// 	utils.HandleError("token statement failed", err)
+
+// 	if !atLimit {
+// 		_, err = statement.Exec(UUID)
+// 		utils.HandleError("token statement Exec failed", err)
+// 	} else {
+// 		_, err = statement.Exec(Limit, UUID)
+// 		utils.HandleError("token statement Exec failed", err)
+// 	}
+
+// 	return err
+// }
+
+func ResetAllTokens() error {
+
+	tokenStatement := `
+	UPDATE Users 
+	SET limitTokens = ?
+`
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement, err := db.Prepare(tokenStatement)
+	utils.HandleError("token statement failed", err)
+
+	_, err = statement.Exec(Limit)
 	utils.HandleError("token statement Exec failed", err)
 
 	return err
