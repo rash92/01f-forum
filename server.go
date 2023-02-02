@@ -38,6 +38,16 @@ func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func protectPostGetRequests(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" && r.Method != "GET" {
+			controller.PageErrors(w, r, tmpl, 400, "Bad requests")
+			return
+		}
+		h(w, r)
+	}
+}
+
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--reset" {
 		dbmanagement.CreateDatabaseWithTables()
@@ -70,20 +80,20 @@ func main() {
 	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
-	mux.HandleFunc("/google/login", GoogleLoginHandler)
-	mux.HandleFunc("/google/callback", GoogleCallbackHandler)
-	mux.HandleFunc("/github/login", GithubLoginHandler)
-	mux.HandleFunc("/github/callback", GithubCallbackHandler)
-	mux.HandleFunc("/facebook/login", FacebookLoginHandler)
-	mux.HandleFunc("/facebook/callback", FacebookCallbackHandler)
+	mux.HandleFunc("/google/login", protectPostRequests(GoogleLoginHandler))
+	mux.HandleFunc("/google/callback", protectGetRequests(GoogleCallbackHandler))
+	mux.HandleFunc("/github/login", protectPostRequests(GithubLoginHandler))
+	mux.HandleFunc("/github/callback", protectGetRequests(GithubCallbackHandler))
+	mux.HandleFunc("/facebook/login", protectPostRequests(FacebookLoginHandler))
+	mux.HandleFunc("/facebook/callback", protectGetRequests(FacebookCallbackHandler))
 
 	// forum handlers
-	mux.HandleFunc("/forum", ForumHandler)
-	mux.HandleFunc("/submitpost", SubmitPostHandler)
-	mux.HandleFunc("/admin", AdminHandler)
-	mux.HandleFunc("/user", UserHandler)
-	mux.HandleFunc("/privacy_policy", PrivacyPolicyHandler)
-	mux.HandleFunc("/error", ErrorHandler)
+	mux.HandleFunc("/forum", protectPostGetRequests(ForumHandler))
+	mux.HandleFunc("/submitpost", protectPostGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/admin", protectGetRequests(AdminHandler))
+	mux.HandleFunc("/user", protectGetRequests(UserHandler))
+	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
+	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 
 	// dbmanagement.DeleteUser("Yell Tro")
 	dbmanagement.DeleteAllSessions()

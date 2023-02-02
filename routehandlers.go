@@ -116,10 +116,6 @@ func FacebookCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 // forum handlers
 func ForumHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" && r.Method != "GET" {
-		controller.PageErrors(w, r, tmpl, 400, "Bad requests")
-		return
-	}
 	controller.AllPosts(w, r, tmpl)
 }
 
