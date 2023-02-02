@@ -63,11 +63,11 @@ func main() {
 	mux.HandleFunc("/posts/", PostsHandler)
 
 	// authentication handlers
-	mux.HandleFunc("/login", LoginHandler)
+	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
 	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
-	mux.HandleFunc("/logout", LogoutHandler)
-	mux.HandleFunc("/register", RegisterHandler)
-	mux.HandleFunc("/register_account", RegisterAccountHandler)
+	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
+	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
+	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
 	mux.HandleFunc("/google/login", GoogleLoginHandler)
