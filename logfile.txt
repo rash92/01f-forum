@@ -280,3 +280,14 @@ Thu Feb  2 15:43:09 GMT 2023: ***** Query Row failed: : sql: no rows in result s
 Thu Feb  2 15:43:09 GMT 2023: ***** Query Row failed: : sql: no rows in result set on line 145 in forum/dbmanagement.SelectReactionFromPost at file reactiondbutils.go *****
 Thu Feb  2 15:43:09 GMT 2023: ***** Query Row failed: : sql: no rows in result set on line 145 in forum/dbmanagement.SelectReactionFromPost at file reactiondbutils.go *****
 Thu Feb  2 15:43:09 GMT 2023: ***** Query Row failed: : sql: no rows in result set on line 145 in forum/dbmanagement.SelectReactionFromPost at file reactiondbutils.go *****
+Thu Feb  2 15:48:48 GMT 2023: The statement has affected 2 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Thu Feb  2 15:48:48 GMT 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 15:49:12 GMT 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Thu Feb  2 15:49:12 GMT 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Feb  2 15:49:15 GMT 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Thu Feb  2 15:49:15 GMT 2023: ***** Unable to get user error:: sql: no rows in result set on line 54 in forum/authentication.Authenticate at file authenticate.go *****
+Thu Feb  2 15:49:15 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 15:49:15 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 15:49:15 GMT 2023: Current Cookie: session=dfa58372-308d-40b2-832b-622d28e2c885 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Thu Feb  2 15:49:15 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Feb  2 15:49:15 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
