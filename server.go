@@ -77,7 +77,7 @@ func main() {
 	mux.HandleFunc("/error", ErrorHandler)
 
 	// dbmanagement.DeleteUser("Yell Tro")
-	dbmanagement.CreateDatabaseWithTables()
+	// dbmanagement.CreateDatabaseWithTables()
 	// dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	// dbmanagement.DisplayAllUsers()

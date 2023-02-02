@@ -132,5 +132,5 @@ func PrivacyPolicyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request) {
-	controller.PageErrors(w, r, tmpl, 404, "Page Not Found")
+	controller.PageErrors(w, r, tmpl, 429, "Too much requests")
 }

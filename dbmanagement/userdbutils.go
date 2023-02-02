@@ -194,38 +194,38 @@ func SelectUserFromSession(UUID string) (User, error) {
 
 func UpdateUserToken(UUID string, n int) error {
 	usertoken := GetUserToken(UUID)
+	var tokenStatement string
+
+	if n == 1 {
+		tokenStatement = `
+	UPDATE Users 
+	SET limitTokens = limitTokens - ?
+	WHERE uuid = ?
+`
+	}
 	if usertoken == 0 && n != 3 {
 		utils.WriteMessageToLogFile("Token limit reached for user")
 		return errors.New("limit reached")
 	} else {
-
-		var tokenStatement string
-
 		if n == 3 {
 			tokenStatement = `
 	UPDATE Users 
 	SET limitTokens = ?
 	WHERE uuid = ?
 `
-		} else {
-			tokenStatement = `
-	UPDATE Users 
-	SET limitTokens = limitTokens - ?
-	WHERE uuid = ?
-`
 		}
-
-		db, _ := sql.Open("sqlite3", "./forum.db")
-		defer db.Close()
-
-		statement, err := db.Prepare(tokenStatement)
-		utils.HandleError("token statement failed", err)
-
-		_, err = statement.Exec(n, UUID)
-		utils.HandleError("token statement Exec failed", err)
-
-		return err
 	}
+
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	statement, err := db.Prepare(tokenStatement)
+	utils.HandleError("token statement failed", err)
+
+	_, err = statement.Exec(n, UUID)
+	utils.HandleError("token statement Exec failed", err)
+
+	return err
 }
 
 func GetUserToken(UUID string) int {
@@ -236,7 +236,7 @@ func GetUserToken(UUID string) int {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
 	utils.HandleError("Statement failed", err)
 
-	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.LimitTokens)
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn, &user.LimitTokens)
 	utils.HandleError("Query Row failed", err)
 
 	return user.LimitTokens
