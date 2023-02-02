@@ -42,7 +42,7 @@ func main() {
 
 	// authentication handlers
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
-	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
+	mux.HandleFunc("/authenticate", AuthenticateHandler)
 	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
 	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
 	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
