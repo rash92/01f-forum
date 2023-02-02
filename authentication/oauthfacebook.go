@@ -20,7 +20,8 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	// state
 	state := r.FormValue("state")
 	if state != Randomstate {
-		utils.WriteMessageToLogFile("Fcaebook auth state error")
+		utils.WriteMessageToLogFile("Facebook auth state error")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
