@@ -118,6 +118,12 @@
 		{{end}}
 	</nav>
 	{{end}}
+</body>
+
+{{ define "footer"}}
+	<footer>
+		<p>privacy policy</p><a href="/privacy_policy">here</a>
+	</footer>
 	<script>
 		function searchTags() {
 			console.log("got here");
@@ -140,11 +146,5 @@
 			listContainer.style.display = noResults ? "none" : "block";
 		}
 	</script>
-</body>
-
-{{ define "footer"}}
-	<footer>
-		<p>privacy policy</p><a href="/privacy_policy">here</a>
-	</footer>
 </html>
 {{end}}

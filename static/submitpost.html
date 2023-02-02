@@ -19,7 +19,12 @@
         <form action="/forum" method="POST" enctype="multipart/form-data">
             <input type="text" name="submission-title" placeholder="Title" maxlength="300" autocomplete="off" autofocus required>
             <textarea name="post" id="" cols="30" rows="10" placeholder="Text" required></textarea>
-            <input type="text" name="tag" placeholder="Tags (#General etc.)">
+            <div class="submission-bottom-row">
+                {{range .TagsList}}
+                <input type="checkbox" id="{{.TagName}}" name="{{.TagName}}" value="{{.TagName}}">
+                <label for="{{.TagName}}">{{.TagName}}</label>
+                {{end}}
+            </div>
             <div class="submission-bottom-row">
                 <label for="file-upload" class="image-upload">
                     <i class="fa-solid fa-image"></i> Upload Image
