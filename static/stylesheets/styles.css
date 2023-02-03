@@ -22,9 +22,19 @@ body {
     padding-top: 32px;
 }
 
+footer {
+    bottom: 0;
+    position: fixed;
+    width: 100vw;
+}
+
 a {
     text-decoration: none;
     color: black;
+}
+
+a:hover {
+    color: var(--dim-font);
 }
 
 li {
@@ -306,6 +316,16 @@ p {
     height: 100vh;
     width: 100vw;
     padding: 5px;
+}
+
+.container-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+
 }
 
 /* FILTER */
@@ -661,6 +681,17 @@ h3 {
     height: 10%;
     padding: 10px;
 
+}
+
+.submission select {
+    margin: 10px 0;
+    width: 100%;
+    background: transparent;
+    border-style: none;
+    border: 1px solid var(--dim-font);
+    overflow-y: auto;
+    padding: 10px;
+    font-size: 1rem;
 }
 
 .submission textarea {

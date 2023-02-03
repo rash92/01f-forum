@@ -190,7 +190,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 
 	title := r.FormValue("submission-title")
 	content := r.FormValue("post")
-	tags := r.FormValue("tag")
+	tags := r.Form["tags"]
 	edit := r.FormValue("editpost")
 
 	if edit != "" {
@@ -210,7 +210,11 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")
 			}
 			dbmanagement.UpdateTaggedPost(edit)
-			InputTags(tags, editedPost)
+			for _, tag := range tags {
+				InputTags(tag, editedPost)
+				InputTags(tag, editedPost)
+			}
+
 		}
 	} else {
 		if CheckInputs(content) && CheckInputs(title) {
@@ -220,7 +224,10 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 			if err != nil {
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")
 			}
-			InputTags(tags, post)
+			for _, tag := range tags {
+				InputTags(tag, post)
+				InputTags(tag, post)
+			}
 		}
 	}
 }
