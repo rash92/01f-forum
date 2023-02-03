@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
 	"net/http"
@@ -23,7 +22,7 @@ func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.Use
 	go func() {
 		for {
 			time.Sleep(15 * time.Second)
-			user, err := dbmanagement.SelectUserFromSession(userSession.UUID)
+			_, err := dbmanagement.SelectUserFromSession(userSession.UUID)
 			if err != nil {
 				utils.HandleError("Unable to get user or no user", err)
 				continue
@@ -33,7 +32,7 @@ func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.Use
 				startTime = endTime
 				endTime = startTime.Add(limitTime)
 			}
-			fmt.Println(user.LimitTokens)
+			// fmt.Println(user.LimitTokens)
 		}
 	}()
 
