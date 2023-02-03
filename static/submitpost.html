@@ -7,7 +7,12 @@
             <input type="text" name="submission-title" value="{{.EditPost.Title}}" maxlength="300" autocomplete="off"
                 autofocus required>
             <textarea name="post" id="" cols="30" rows="10" required>{{.EditPost.Content}}</textarea>
-            <input type="text" name="tag" value="{{.Tags}}">
+            <select name="tags" id="tags" multiple="multiple">
+                <option value="" disabled>Select a tag (Hold Ctrl for mulitple tags)</option>
+                {{range .TagsList}}
+                <option value="{{.TagName}}">{{.TagName}}</option>
+                {{end}}
+            </select>
             <div class="submission-bottom-row">
                 <label for="file-upload" class="image-upload">
                     <i class="fa-solid fa-image"></i> Upload Image
@@ -22,11 +27,12 @@
             <input type="text" name="submission-title" placeholder="Title" maxlength="300" autocomplete="off" autofocus
                 required>
             <textarea name="post" id="" cols="30" rows="10" placeholder="Text" required></textarea>
-            <select name="tags" id="tags" multiple="multiple">
-                {{range .TagsList}}
-                <option value="{{.TagName}}">{{.TagName}}</option>
-                {{end}}
-            </select>
+                <select name="tags" id="tags" multiple="multiple">
+                    <option value="" disabled>Select a tag (Hold Ctrl for mulitple tags)</option>
+                    {{range .TagsList}}
+                    <option value="{{.TagName}}">{{.TagName}}</option>
+                    {{end}}
+                </select>
             <div class="submission-bottom-row">
                 <label for="file-upload" class="image-upload">
                     <i class="fa-solid fa-image"></i> Upload Image

@@ -190,7 +190,6 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 
 	title := r.FormValue("submission-title")
 	content := r.FormValue("post")
-	log.Println("select form values are: ", r.FormValue("tags[]"))
 	tags := r.Form["tags"]
 	edit := r.FormValue("editpost")
 

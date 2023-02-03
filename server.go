@@ -58,7 +58,7 @@ func main() {
 	// forum handlers
 	mux.HandleFunc("/forum", protectPostGetRequests(ForumHandler))
 	mux.HandleFunc("/submitpost", protectPostGetRequests(SubmitPostHandler))
-	mux.HandleFunc("/admin", protectGetRequests(AdminHandler))
+	mux.HandleFunc("/admin", protectPostGetRequests(AdminHandler))
 	mux.HandleFunc("/user", protectGetRequests(UserHandler))
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
 	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))

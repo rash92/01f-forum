@@ -65,7 +65,7 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		if userToChange != "" {
 			dbmanagement.DeleteFromTableWithUUID("Users", userToChange)
 		}
-		tagsToCreate := r.FormValue("create-tag")
+		tagsToCreate := r.FormValue("tags")
 		if tagsToCreate != "" {
 			dbmanagement.InsertTag(tagsToCreate)
 		}
