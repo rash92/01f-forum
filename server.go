@@ -44,7 +44,7 @@ func main() {
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
 	mux.HandleFunc("/authenticate", AuthenticateHandler)
 	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
-	mux.HandleFunc("/register", protectPostGetRequests(RegisterHandler))
+	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
 	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
 
 	// oauth handlers
