@@ -39,7 +39,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			utils.HandleError("Unable to create visitor session", err)
 		} else {
 			sessionId, _ = auth.GetSessionFromBrowser(w, r)
-			http.Redirect(w, r, "/", http.StatusFound)
+
 		}
 	}
 
@@ -64,6 +64,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 				filterOrder = true
 			}
 			SubmissionHandler(w, r, user, tmpl)
+			http.Redirect(w, r, "/", http.StatusFound)
 		}
 
 		posts, err := dbmanagement.SelectAllPosts()

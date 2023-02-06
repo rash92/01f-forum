@@ -79,7 +79,7 @@
                     </div>
                 </a>
             </div>
-            <form action="/forum" method="post" target="_self">
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
                 <div class="post-likes-dislikes">
                     {{if ne $UserInfo.Name "" }}
                     <button class="like" name="like" value="{{.UUID}}">
@@ -163,7 +163,7 @@
                     </div>
                 </a>
             </div>
-            <form action="/forum" method="post" target="_self">
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
                 <div class="post-likes-dislikes">
                     {{if ne $UserInfo.Name "" }}
                     <button class="like" name="like" value="{{.UUID}}">
@@ -248,7 +248,7 @@
                     </div>
                 </a>
             </div>
-            <form action="/forum" method="post" target="_self">
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
                 <div class="post-likes-dislikes">
                     {{if ne $UserInfo.Name "" }}
                     <button class="like" name="like" value="{{.UUID}}">

@@ -67,6 +67,7 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "", "", "", "this user is asking to become a moderator")
 			utils.WriteMessageToLogFile("new request description is: " + newrequest.Description)
 		}
+		http.Redirect(w, r, "/user", http.StatusFound)
 
 	}
 

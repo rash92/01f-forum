@@ -35,7 +35,7 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// handlers
-	mux.HandleFunc("/", protectGetRequests(IndexHandler))
+	mux.HandleFunc("/", protectPostGetRequests(IndexHandler))
 	// mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
 	mux.HandleFunc("/categories/", CategoriesHandler)
 	mux.HandleFunc("/posts/", PostsHandler)

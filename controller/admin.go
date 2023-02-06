@@ -91,7 +91,7 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, responseMessage)
 			}
 		}
-
+		http.Redirect(w, r, "/admin", http.StatusFound)
 	}
 	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()

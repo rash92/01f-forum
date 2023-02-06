@@ -123,6 +123,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 			if editComment != "" {
 				dbmanagement.UpdateComment(commentuuid, editComment, postid, user.UUID, dbmanagement.SelectCommentFromUUID(editComment).Likes, dbmanagement.SelectCommentFromUUID(editComment).Dislikes, time.Now())
 			}
+			http.Redirect(w, r, "/posts/"+postid, http.StatusFound)
 		}
 
 		utils.HandleError("Unable to get user", err)

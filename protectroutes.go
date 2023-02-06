@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"forum/controller"
 	"net/http"
 )
@@ -28,6 +29,7 @@ func protectPostRequests(h http.HandlerFunc) http.HandlerFunc {
 
 func protectPostGetRequests(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method)
 		if r.Method != "POST" && r.Method != "GET" {
 			controller.PageErrors(w, r, tmpl, 400, "Bad requests")
 			return

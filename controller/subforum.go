@@ -88,6 +88,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			if idToDelete != "" {
 				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 			}
+			http.Redirect(w, r, "/categories/"+tag, http.StatusFound)
 		}
 
 		utils.HandleError("Unable to select user using sessionid", err)
