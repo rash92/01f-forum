@@ -517,6 +517,11 @@ h3 {
     color: black;
 }
 
+.post-tags {
+    display: flex;
+    gap: 0.3em;
+}
+
 .post-author-time {
     display: flex;
     flex-direction: row;
