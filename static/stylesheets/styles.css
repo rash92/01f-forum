@@ -801,3 +801,15 @@ input[type="file"] {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+@media screen and (max-width: 1012px) {
+    .menu {
+        gap: 1em;
+    }
+
+    .searchbar {
+        width: 50%;
+        max-width: 300px;
+    
+    }
+}
