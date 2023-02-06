@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const Limit = 15
+const Limit = 100
 
 func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.User) dbmanagement.User {
 	limitTime := time.Minute * 1

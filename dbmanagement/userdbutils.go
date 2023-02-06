@@ -12,7 +12,7 @@ import (
 Generates a new user in the database.  The UUID is generated internally here and stored to the database (this can also be referred to as the userID).
 The inserted User is also returned in case it is needed to be used straight away but it is not necessary.
 */
-const Limit = 15
+const Limit = 100
 
 func InsertUser(name string, email string, password string, permission string, IsLoggedIn int) (User, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
