@@ -1301,3 +1301,61 @@ Mon Feb  6 14:11:00 GMT 2023: session id is: 28e5d50b-6e77-453c-9c82-4c5e8377e7f
 Mon Feb  6 14:11:06 GMT 2023: Current Cookie: session=28e5d50b-6e77-453c-9c82-4c5e8377e7f2 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
 Mon Feb  6 14:11:06 GMT 2023: [] on line 45 in forum/controller.User at file user.go
 Mon Feb  6 14:11:11 GMT 2023: session id is: 28e5d50b-6e77-453c-9c82-4c5e8377e7f2user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 11}cookie data is: 28e5d50b-6e77-453c-9c82-4c5e8377e7f2 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:50:30 GMT 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Feb  6 14:50:30 GMT 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Feb  6 14:50:33 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:33 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:33 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Mon Feb  6 14:50:33 GMT 2023: session id is: f1be147a-7686-451e-b929-84d540e8d78euser info is: {     0 [] 0}cookie data is: f1be147a-7686-451e-b929-84d540e8d78e on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:50:48 GMT 2023: Current Cookie: session=f1be147a-7686-451e-b929-84d540e8d78e on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:50:48 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:48 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:57 GMT 2023: Inserting user record... on line 20 in forum/dbmanagement.InsertUser at file userdbutils.go
+Mon Feb  6 14:50:57 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:57 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:57 GMT 2023: Current Cookie: session=f1be147a-7686-451e-b929-84d540e8d78e on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:50:57 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:50:57 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:51:08 GMT 2023: %!s(int=0) on line 64 in forum/authentication.Authenticate at file authenticate.go
+Mon Feb  6 14:51:08 GMT 2023: session id is: f5a31be3-d661-4bad-b6da-bbd36d611629user info is: {2d598836-0b09-4c6e-82ea-52bb616c6b92 audit a@g $2a$10$GZOCF6jcnDFaPVpIhAJh5ekC7cEmXwC2ZVaH09ELqCZ/VrYqHn05K user 1 [] 14}cookie data is: f5a31be3-d661-4bad-b6da-bbd36d611629 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:54:18 GMT 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Feb  6 14:54:18 GMT 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Feb  6 14:54:42 GMT 2023: Current Cookie: session=f5a31be3-d661-4bad-b6da-bbd36d611629 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:54:42 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** Unable to select user with sessionID in SubmitPost function: sql: no rows in result set on line 32 in forum/controller.SubmitPost at file submitpost.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:42 GMT 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Mon Feb  6 14:54:42 GMT 2023: session id is: f5a31be3-d661-4bad-b6da-bbd36d611629user info is: {     0 [] 0}cookie data is: f5a31be3-d661-4bad-b6da-bbd36d611629 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:54:44 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:44 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:44 GMT 2023: Current Cookie: session=f5a31be3-d661-4bad-b6da-bbd36d611629 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:54:44 GMT 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:44 GMT 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Feb  6 14:54:46 GMT 2023: %!s(int=0) on line 64 in forum/authentication.Authenticate at file authenticate.go
+Mon Feb  6 14:54:46 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 14}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:54:52 GMT 2023: Current Cookie: session=6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:55:19 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 14}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:19 GMT 2023: Inserting post record... on line 18 in forum/dbmanagement.InsertPost at file postdbutils.go
+Mon Feb  6 14:55:19 GMT 2023: ***** Statement Exec failed: : UNIQUE constraint failed: TaggedPosts.tagId, TaggedPosts.postId on line 35 in forum/dbmanagement.InsertTaggedPost at file tagsdbutils.go *****
+Mon Feb  6 14:55:19 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 13}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:21 GMT 2023: Current Cookie: session=6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 139 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Feb  6 14:55:45 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 13}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:45 GMT 2023: ***** error retrieving file from form: http: no such file on line 185 in forum/controller.SubmissionHandler at file forum.go *****
+Mon Feb  6 14:55:45 GMT 2023: Inserting post record... on line 18 in forum/dbmanagement.InsertPost at file postdbutils.go
+Mon Feb  6 14:55:45 GMT 2023: ***** Statement Exec failed: : UNIQUE constraint failed: TaggedPosts.tagId, TaggedPosts.postId on line 35 in forum/dbmanagement.InsertTaggedPost at file tagsdbutils.go *****
+Mon Feb  6 14:55:45 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 12}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:48 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 15}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:48 GMT 2023: ***** error retrieving file from form: http: no such file on line 185 in forum/controller.SubmissionHandler at file forum.go *****
+Mon Feb  6 14:55:48 GMT 2023: Inserting post record... on line 18 in forum/dbmanagement.InsertPost at file postdbutils.go
+Mon Feb  6 14:55:48 GMT 2023: ***** Statement Exec failed: : UNIQUE constraint failed: TaggedPosts.tagId, TaggedPosts.postId on line 35 in forum/dbmanagement.InsertTaggedPost at file tagsdbutils.go *****
+Mon Feb  6 14:55:48 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 14}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:50 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 14}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:50 GMT 2023: Deleting posts record for uuid: 661ea979-f9e7-4abd-98fa-66523a8cd3b4... on line 17 in forum/dbmanagement.DeleteFromTableWithUUID at file deleting.go
+Mon Feb  6 14:55:50 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 13}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:59 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 13}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go
+Mon Feb  6 14:55:59 GMT 2023: Deleting posts record for uuid: a52607c0-6ca7-487b-88ec-3b3b2b9cd844... on line 17 in forum/dbmanagement.DeleteFromTableWithUUID at file deleting.go
+Mon Feb  6 14:55:59 GMT 2023: session id is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4user info is: {79ef2ea4-6c61-4c71-be5c-54169868f101 admin a@a $2a$10$hq4IJ3je/Y7tnpdlsGgLXONpbXHgqT74SvnDxvdGKuZVnFStpZ4fW admin 1 [] 12}cookie data is: 6174cc8f-4d26-44ce-9967-fc65c189e6a4 on line 54 in forum/controller.AllPosts at file forum.go

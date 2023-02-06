@@ -62,9 +62,10 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			filter := r.FormValue("filter")
 			if filter == "oldest" {
 				filterOrder = true
+			} else {
+				SubmissionHandler(w, r, user, tmpl)
+				http.Redirect(w, r, "/", http.StatusFound)
 			}
-			SubmissionHandler(w, r, user, tmpl)
-			http.Redirect(w, r, "/", http.StatusFound)
 		}
 
 		posts, err := dbmanagement.SelectAllPosts()
