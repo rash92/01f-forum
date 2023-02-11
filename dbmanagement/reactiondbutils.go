@@ -3,7 +3,6 @@ package dbmanagement
 import (
 	"database/sql"
 	"forum/utils"
-	"log"
 )
 
 // add either a like or dislike or return to neutral with reaction taking values of 1,-1 or 0
@@ -11,7 +10,7 @@ import (
  */
 func AddReactionToPost(userId string, postId string, reaction int) {
 	if reaction > 1 || reaction < -1 || reaction == 0 {
-		log.Println("Incorrect reaction integer")
+		utils.WriteMessageToLogFile("Incorrect reaction integer")
 		return
 	}
 

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"forum/utils"
-	"log"
 )
 
 /*
@@ -34,7 +33,8 @@ func InsertUser(name string, email string, password string, permission string, I
 func UpdateUserLoggedInStatus(UUUID string, isLoggedIn int) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("updating user login status to: ", isLoggedIn)
+	message := fmt.Sprint("updating user login status to: ", isLoggedIn)
+	utils.WriteMessageToLogFile(message)
 	updateUserData := "UPDATE Users SET IsLoggedIn = ? WHERE uuid = ?"
 	statement, err := db.Prepare(updateUserData)
 	utils.HandleError("User Update Prepare failed: ", err)

@@ -32,7 +32,6 @@ func LimitRequests(w http.ResponseWriter, r *http.Request, user dbmanagement.Use
 				startTime = endTime
 				endTime = startTime.Add(limitTime)
 			}
-			// fmt.Println(user.LimitTokens)
 		}
 	}()
 

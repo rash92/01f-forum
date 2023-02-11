@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"forum/utils"
-	"log"
 	"strings"
 	"time"
 )
@@ -39,7 +38,7 @@ func InsertPost(title string, content string, ownerId string, likes int, dislike
 func UpdatePost(postuuid string, title string, content string, ownerId string, likes int, dislikes int, edittime time.Time, imageName string) (Post, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Updating post record...")
+	utils.WriteMessageToLogFile("Updating post record...")
 
 	updatePostData := `
 	UPDATE Posts
@@ -87,7 +86,8 @@ func DisplayAllPosts() error {
 		row.Scan(&UUID, &title, &content, &ownerId, &likes, &dislikes, &time, &imageName)
 		owner, err := SelectUserFromUUID(ownerId)
 		utils.HandleError("unable to get user to display post", err)
-		log.Println("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time, "tags ", SelectAllTagsFromPost(UUID))
+		message := fmt.Sprint("Post: ", UUID, " content: ", content, " owner: ", owner.Name, " likes ", likes, " dislikes ", dislikes, " time ", time, "tags ", SelectAllTagsFromPost(UUID))
+		utils.WriteMessageToLogFile(message)
 	}
 	return err
 }
@@ -224,7 +224,8 @@ func SelectAllPostsFromTag(tagName string) ([]Post, error) {
 		currentPost.FormattedTime = strings.TrimSuffix(currentPost.Time.Format(time.RFC822), "UTC")
 		currentPost.Tags = SelectAllTagsFromPost(currentPost.UUID)
 		currentPost.NumOfComments = len(SelectAllCommentsFromPost(currentPost.UUID))
-		fmt.Println("found post from tag: ", tagName, "the post: ", currentPost)
+		message := fmt.Sprint("found post from tag: ", tagName, "the post: ", currentPost)
+		utils.WriteMessageToLogFile(message)
 		allPosts = append(allPosts, currentPost)
 	}
 

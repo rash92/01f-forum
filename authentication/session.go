@@ -38,7 +38,6 @@ func CreateUserSession(w http.ResponseWriter, r *http.Request, user dbmanagement
 		HttpOnly: true,
 		Path:     "/",
 	}
-	// fmt.Println("google user cookie created here")
 	http.SetCookie(w, &cookie)
 	return err
 }

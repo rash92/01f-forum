@@ -21,7 +21,6 @@ type SubData struct {
 func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, tag string) {
 	data := SubData{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
@@ -38,8 +37,6 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		data.Cookie = sessionId
 		filterOrder := false
 		data.UserInfo = user
-		// fmt.Println("session id is: ", sessionId, "user info is: ", data.UserInfo, "cookie data is: ", data.Cookie)
-
 		if r.Method == "POST" {
 			err := dbmanagement.UpdateUserToken(user.UUID, 1)
 			if err != nil {
@@ -57,7 +54,6 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 				userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 				utils.HandleError("Unable get user with UUID in all Subforum function", err)
 				dbmanagement.InsertPost("", content, userFromUUID.Name, 0, 0, time.Now(), "")
-				// log.Println(tag)
 				if !ExistingTag(tag) {
 					dbmanagement.InsertTag(tag)
 				}
@@ -84,7 +80,6 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 			}
 
 			idToDelete := r.FormValue("deletepost")
-			// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 			if idToDelete != "" {
 				dbmanagement.DeleteFromTableWithUUID("Posts", idToDelete)
 			}

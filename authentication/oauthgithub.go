@@ -36,7 +36,6 @@ func GithubCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	client := githubConfig.Client(context.Background(), token)
 	resp, err := client.Get(GithubAuthURL)
-	// fmt.Println(resp.Body)
 	utils.HandleError("Failed to fetch user data from github:", err)
 
 	defer resp.Body.Close()

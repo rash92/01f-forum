@@ -3,7 +3,6 @@ package dbmanagement
 import (
 	"database/sql"
 	"forum/utils"
-	"log"
 	"os"
 	"time"
 
@@ -154,7 +153,7 @@ func CreateDatabaseWithTables() {
 	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
 	e := os.RemoveAll("./static/uploads/")
 	if e != nil {
-		log.Fatal(e)
+		utils.HandleError("Unable to insert user", e)
 	}
 
 	utils.WriteMessageToLogFile("forum.db created successfully!")

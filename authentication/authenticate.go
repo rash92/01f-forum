@@ -5,7 +5,6 @@ import (
 	"forum/dbmanagement"
 	"forum/utils"
 	"html/template"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -65,7 +64,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		http.Redirect(w, r, "/forum", http.StatusSeeOther)
 	} else {
 		if user.IsLoggedIn != 0 {
-			log.Println("Already Logged In!")
+			utils.WriteMessageToLogFile("Already Logged In!")
 			data := Data{}
 			data.TitleName = "Login"
 			data.IsCorrect = true
@@ -73,7 +72,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.TagsList = dbmanagement.SelectAllTags()
 			tmpl.ExecuteTemplate(w, "login.html", data)
 		} else {
-			log.Println("Incorrect Password!")
+			utils.WriteMessageToLogFile("Incorrect Password!")
 			data := Data{}
 			data.TitleName = "Login"
 			data.IsCorrect = false
@@ -91,7 +90,7 @@ func Logout(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	session := cookie.Value
 	user, _ := dbmanagement.SelectUserFromSession(session)
 	dbmanagement.UpdateUserLoggedInStatus(user.UUID, 0)
-	log.Println(user.IsLoggedIn)
+	utils.WriteMessageToLogFile(user.IsLoggedIn)
 	if err != http.ErrNoCookie {
 		err := dbmanagement.DeleteSessionByUUID(session)
 		utils.HandleError("Failed to get cookie", err)

@@ -2,8 +2,8 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
-	"log"
 )
 
 func InsertTag(tag string) Tag {
@@ -25,7 +25,8 @@ func InsertTag(tag string) Tag {
 func InsertTaggedPost(tagId string, postId string) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	log.Println("Inserting tagged post record...")
+	message := fmt.Sprintln("Inserting tagged post record...")
+	utils.WriteMessageToLogFile(message)
 
 	insertTaggedPost := "INSERT INTO TaggedPosts(tagId, postId) VALUES (?, ?)"
 	statement, err := db.Prepare(insertTaggedPost)
@@ -36,7 +37,8 @@ func InsertTaggedPost(tagId string, postId string) {
 }
 
 func UpdateTaggedPost(postId string) {
-	log.Println("Updating tagged post record...")
+	message := fmt.Sprintln("Updating tagged post record...")
+	utils.WriteMessageToLogFile(message)
 	DeleteFromTableWithPostId("TaggedPosts", postId)
 }
 

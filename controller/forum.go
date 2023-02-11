@@ -7,7 +7,6 @@ import (
 	"forum/utils"
 	"html/template"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -32,7 +31,6 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	// fmt.Println("session error is: ", err)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
@@ -124,7 +122,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 		return ""
 	}
 
-	log.Println("file uploaded successfully")
+	utils.WriteMessageToLogFile("file uploaded successfully")
 	fileName := destinationFile.Name()[1:]
 	return fileName
 }
@@ -132,9 +130,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 // followed this: https://freshman.tech/file-upload-golang/
 func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, tmpl *template.Template) {
 	// 20 megabytes
-
 	idToDelete := r.FormValue("deletepost")
-	// fmt.Println("deleting post with id: ", idToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(idToDelete))
 	if idToDelete != "" {
 		dbmanagement.DeletePostWithUUID(idToDelete)
 	}
@@ -185,7 +181,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		// if you were trying to make a post without an image it will log this 'error' but still submit the text and tags
 		utils.HandleError("error retrieving file from form", err)
 	} else {
-		fmt.Println("trying to retrieve file...")
+		utils.WriteMessageToLogFile("trying to retrieve file...")
 		defer file.Close()
 		fileName = UploadHandler(w, r, file, fileHeader)
 	}

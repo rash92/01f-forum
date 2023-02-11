@@ -52,17 +52,14 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			return
 		}
 		postIdToDelete := r.FormValue("deletepost")
-		// fmt.Println("deleting post with id: ", postIdToDelete, " and contents: ", dbmanagement.SelectPostFromUUID(postIdToDelete))
 		if postIdToDelete != "" {
 			dbmanagement.DeletePostWithUUID(postIdToDelete)
 		}
 		commentIdToDelete := r.FormValue("deletecomment")
-		// fmt.Println("deleting comment with id: ", commentIdToDelete, " and contents: ", dbmanagement.SelectCommentFromUUID(commentIdToDelete))
 		if commentIdToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("Comments", commentIdToDelete)
 		}
 		userIdToRequestModerator := r.FormValue("request to become moderator")
-		// fmt.Println("requesting user id: ", userIdToRequestModerator, "to become moderator")
 		if userIdToRequestModerator != "" {
 			newrequest := dbmanagement.CreateAdminRequest(userIdToRequestModerator, data.UserInfo.Name, "", "", "", "this user is asking to become a moderator")
 			utils.WriteMessageToLogFile("new request description is: " + newrequest.Description)
