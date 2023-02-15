@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"forum/utils"
 	"html/template"
 	"net/http"
@@ -40,6 +41,12 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	defer resp.Body.Close()
 	// parse response
 	value := ParseOauthResponse(resp)
+
+	if value["email"] == nil || value["name"] == nil {
+		http.Redirect(w, r, "/error", http.StatusFound)
+		utils.HandleError("unable to get ", errors.New("unable to get email address or name"))
+		return
+	}
 
 	account := OauthAccount{
 		Name:  utils.AssertString(value["name"]),

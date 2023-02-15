@@ -42,7 +42,7 @@ func main() {
 
 	// authentication handlers
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
-	mux.HandleFunc("/authenticate", AuthenticateHandler)
+	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
 	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
 	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
 	mux.HandleFunc("/register_account", protectPostRequests(RegisterAccountHandler))
@@ -63,7 +63,7 @@ func main() {
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
 	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 
-	// dbmanagement.DeleteUser("Yell Tro")
+	dbmanagement.DeleteUser("rhem")
 	dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.ResetAllTokens()
