@@ -41,7 +41,7 @@ func main() {
 	mux.HandleFunc("/posts/", PostsHandler)
 
 	// authentication handlers
-	mux.HandleFunc("/login", LoginHandler)
+	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
 	mux.HandleFunc("/authenticate", protectPostRequests(AuthenticateHandler))
 	mux.HandleFunc("/logout", protectGetRequests(LogoutHandler))
 	mux.HandleFunc("/register", protectGetRequests(RegisterHandler))
