@@ -1,6 +1,0 @@
-Wed Feb 15 00:49:21 GMT 2023: Inserting user record... on line 19 in forum/dbmanagement.InsertUser at file userdbutils.go
-Wed Feb 15 00:49:21 GMT 2023: forum.db created successfully! on line 159 in forum/dbmanagement.CreateDatabaseWithTables at file dbutils.go
-Wed Feb 15 00:49:21 GMT 2023: The statement has affected 0 rows
- on line 124 in forum/dbmanagement.DeleteUser at file deleting.go
-Wed Feb 15 00:49:21 GMT 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
-Wed Feb 15 00:49:21 GMT 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go

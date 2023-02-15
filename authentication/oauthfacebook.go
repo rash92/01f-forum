@@ -43,7 +43,7 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request, tmpl *template.Tem
 	value := ParseOauthResponse(resp)
 
 	if value["email"] == nil || value["name"] == nil {
-		http.Redirect(w, r, "/error", http.StatusFound)
+		http.Redirect(w, r, "/oautherror", http.StatusFound)
 		utils.HandleError("unable to get ", errors.New("unable to get email address or name"))
 		return
 	}

@@ -62,8 +62,8 @@ func main() {
 	mux.HandleFunc("/user", protectPostGetRequests(UserHandler))
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
 	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
+	mux.HandleFunc("/oautherror", protectGetRequests(OauthErrorHandler))
 
-	dbmanagement.DeleteUser("rhem")
 	dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.ResetAllTokens()

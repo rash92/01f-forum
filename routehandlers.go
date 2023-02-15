@@ -138,3 +138,7 @@ func PrivacyPolicyHandler(w http.ResponseWriter, r *http.Request) {
 func ErrorHandler(w http.ResponseWriter, r *http.Request) {
 	controller.PageErrors(w, r, tmpl, 429, "Too much requests")
 }
+
+func OauthErrorHandler(w http.ResponseWriter, r *http.Request) {
+	controller.PageErrors(w, r, tmpl, 500, "Something went wrong...")
+}
