@@ -1,0 +1,48 @@
+Mon Jun 12 12:09:56 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:09:56 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:10:02 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:10:02 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:10:05 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:10:05 BST 2023: ***** Unable to get user: sql: no rows in result set on line 52 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 12:10:05 BST 2023: session id is: 9cbdd9ce-82c3-4ab2-98e7-34e9ed90a232user info is: {     0 [] 0}cookie data is: 9cbdd9ce-82c3-4ab2-98e7-34e9ed90a232 on line 57 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 12:10:14 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:10:14 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:11:34 BST 2023: The statement has affected 2 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:11:34 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:11:42 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:11:42 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:12:31 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:12:31 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:12:33 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:12:33 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:12:33 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:12:33 BST 2023: ***** Unable to get user: sql: no rows in result set on line 52 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 12:12:33 BST 2023: session id is: f33a226c-2ace-4ffa-84f2-310b33170616user info is: {     0 [] 0}cookie data is: f33a226c-2ace-4ffa-84f2-310b33170616 on line 57 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 12:12:40 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:12:40 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:12:40 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:12:40 BST 2023: ***** Unable to get user: sql: no rows in result set on line 52 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 12:12:40 BST 2023: session id is: 3678c626-4e25-4ca0-810a-c1bcce6ba623user info is: {     0 [] 0}cookie data is: 3678c626-4e25-4ca0-810a-c1bcce6ba623 on line 57 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 12:12:55 BST 2023: The statement has affected 2 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:12:55 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:13:06 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:13:06 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:13:09 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:09 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:13:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 52 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 12:13:09 BST 2023: session id is: 5b038897-e730-4863-ba58-0f09172c8118user info is: {     0 [] 0}cookie data is: 5b038897-e730-4863-ba58-0f09172c8118 on line 57 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 12:13:11 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:13:11 BST 2023: Current Cookie: session=5b038897-e730-4863-ba58-0f09172c8118 on line 138 in forum/authentication.LoggedInStatus at file authenticate.go
+Mon Jun 12 12:13:11 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:13:31 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:13:31 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:13:33 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:33 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:44 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 12:13:44 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 12:13:45 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:45 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 12:13:45 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 12:13:45 BST 2023: ***** Unable to get user: sql: no rows in result set on line 52 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 12:13:45 BST 2023: session id is: 4f8b6f77-b5dc-4dc9-abae-268fba6b47f3user info is: {     0 [] 0}cookie data is: 4f8b6f77-b5dc-4dc9-abae-268fba6b47f3 on line 57 in forum/controller.AllPosts at file forum.go

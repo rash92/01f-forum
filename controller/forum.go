@@ -42,6 +42,11 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	user := dbmanagement.User{}
+
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		utils.HandleError("Unable to get user", err)
